@@ -663,7 +663,7 @@ function render(){
   const barryD   = distPool * (S.barry/100);
   const taylorD  = distPool * (S.taylor/100);
   const maloneyD = distPool * (S.maloney/100);
-  const unallocD = distPool * (unalloc/100);
+  unallocD = distPool * (unalloc/100);
   const avgPartner = (travisD+joeD+nickD)/3;
 
   // Ascend from Ascend tab
@@ -698,7 +698,6 @@ function render(){
   set('cv-joe-dist',    S.joeDist+'%');
   set('cv-nick-dist',   S.nickDist+'%');
 
-  const coreDist = S.travisDist + S.joeDist + S.nickDist;
   const cds = document.getElementById('core-dist-sum');
   if(cds){cds.textContent=coreDist+'%';cds.className='sum-val '+(Math.abs(coreDist+advTotal-100)<1?'ok':'warn');}
 
