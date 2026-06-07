@@ -1,862 +1,167 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Alethia · Economics v3</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-:root {
-  --gold:#C9A84C; --gold-light:#e8c870; --gold-dim:#8a6e28; --gold-bg:rgba(201,168,76,0.07);
-  --bg:#0d0d0d; --bg2:#111108; --bg3:#181508; --bg4:#221e0a;
-  --border:rgba(201,168,76,0.16); --border-hi:rgba(201,168,76,0.36);
-  --text:#f0e8cc; --text-dim:#d4c090; --text-muted:#a89060; --text-faint:#605838;
-  --green:#4ecb97; --red:#e06060; --blue:#6aaddd; --purple:#a07acc; --coral:#d4856a;
-}
-*{box-sizing:border-box;margin:0;padding:0;}
-body{background:var(--bg);color:var(--text);font-family:'Source Sans 3',sans-serif;font-size:14px;line-height:1.5;min-height:100vh;}
-
-/* HEADER */
-.header{background:var(--bg2);border-bottom:1px solid var(--border);padding:18px 36px;display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap;}
-.h-left .eyebrow{font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:var(--text-faint);margin-bottom:3px;}
-.h-left h1{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;color:var(--gold-light);letter-spacing:.04em;}
-.h-left .sub{font-size:10px;color:var(--text-muted);margin-top:2px;}
-.kpis{display:flex;gap:8px;flex-wrap:wrap;}
-.kpi{background:var(--bg3);border:.5px solid var(--border);border-radius:5px;padding:8px 14px;text-align:center;min-width:108px;}
-.kpi-label{font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-faint);margin-bottom:3px;}
-.kpi-val{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--gold-light);}
-.kpi-val.g{color:var(--green);} .kpi-val.b{color:var(--blue);} .kpi-val.p{color:var(--purple);}
-
-/* TABS */
-.tabs{display:flex;background:var(--bg2);border-bottom:.5px solid var(--border);padding:0 36px;}
-.tab{padding:10px 20px;font-size:13px;font-weight:600;color:var(--text-faint);cursor:pointer;border:none;background:transparent;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s;font-family:'Source Sans 3',sans-serif;}
-.tab:hover{color:var(--text-dim);}
-.tab.active{color:var(--gold-light);border-bottom-color:var(--gold);}
-.tab-pane{display:none;} .tab-pane.active{display:grid;grid-template-columns:300px 1fr;min-height:calc(100vh - 120px);}
-
-/* SIDEBAR */
-.sb{background:var(--bg2);border-right:.5px solid var(--border);padding:20px 18px;overflow-y:auto;}
-.sb-section{font-size:8px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-dim);font-weight:700;padding-bottom:6px;border-bottom:.5px solid var(--border);margin-bottom:14px;margin-top:22px;}
-.sb-section:first-child{margin-top:0;}
-
-/* CONTROLS */
-.ctrl{margin-bottom:16px;}
-.ctrl-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px;}
-.ctrl-label{font-size:12px;font-weight:600;color:var(--text-dim);}
-.ctrl-val{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--gold-light);}
-.ctrl-desc{font-size:10px;color:var(--text-faint);margin-bottom:6px;line-height:1.4;}
-input[type=range]{width:100%;-webkit-appearance:none;height:3px;border-radius:2px;background:var(--bg4);outline:none;cursor:pointer;}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:var(--gold);border:1.5px solid var(--gold-light);cursor:pointer;}
-.range-ends{display:flex;justify-content:space-between;font-size:9px;color:var(--text-faint);margin-top:2px;}
-
-/* PARTNER BLOCKS */
-.pblock{background:var(--bg3);border:.5px solid var(--border);border-radius:5px;padding:12px 12px 8px;margin-bottom:10px;}
-.pb-name{font-size:12px;font-weight:700;color:var(--text-dim);}
-.pb-role{font-size:9px;color:var(--text-faint);margin-bottom:8px;}
-.pb-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
-.pb-lbl{font-size:10px;color:var(--text-muted);width:60px;flex-shrink:0;}
-.pb-val{font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--gold-light);min-width:36px;text-align:right;}
-.pb-row input[type=range]{flex:1;}
-.pb-notes{width:100%;margin-top:6px;background:var(--bg4);border:.5px solid var(--border);border-radius:3px;color:var(--text-muted);font-family:'Source Sans 3',sans-serif;font-size:10px;padding:5px 8px;resize:none;height:40px;outline:none;}
-.pb-notes:focus{border-color:var(--gold-dim);}
-.pb-notes::placeholder{color:var(--text-faint);}
-
-/* ADV BLOCKS */
-.ablock{background:var(--bg3);border:.5px solid var(--border);border-radius:5px;padding:12px 12px 8px;margin-bottom:10px;}
-.ab-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px;}
-.ab-name{font-size:12px;font-weight:700;color:var(--text-dim);}
-.ab-badge{font-size:8px;letter-spacing:.1em;text-transform:uppercase;padding:2px 7px;border-radius:10px;font-weight:700;}
-.badge-cross{background:rgba(106,173,221,.12);color:var(--blue);border:.5px solid rgba(106,173,221,.3);}
-.badge-health{background:rgba(160,122,204,.12);color:var(--purple);border:.5px solid rgba(160,122,204,.3);}
-.badge-brand{background:rgba(212,133,106,.12);color:var(--coral);border:.5px solid rgba(212,133,106,.3);}
-.ab-role{font-size:9px;color:var(--text-faint);margin-bottom:8px;}
-.ab-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
-.ab-lbl{font-size:10px;color:var(--text-muted);width:60px;flex-shrink:0;}
-.ab-val{font-family:'Cormorant Garamond',serif;font-size:15px;min-width:36px;text-align:right;}
-.ab-row input[type=range]{flex:1;}
-.ab-notes{width:100%;margin-top:6px;background:var(--bg4);border:.5px solid var(--border);border-radius:3px;color:var(--text-muted);font-family:'Source Sans 3',sans-serif;font-size:10px;padding:5px 8px;resize:none;height:40px;outline:none;}
-.ab-notes:focus{border-color:var(--gold-dim);}
-.ab-notes::placeholder{color:var(--text-faint);}
-
-/* TOGGLE */
-.toggle-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:.5px solid rgba(201,168,76,.07);}
-.toggle-row:last-child{border-bottom:none;}
-.tgl-info{flex:1;}
-.tgl-label{font-size:12px;color:var(--text-dim);font-weight:600;}
-.tgl-sub{font-size:9px;color:var(--text-faint);margin-top:1px;}
-.tgl-switch{position:relative;width:34px;height:18px;flex-shrink:0;}
-.tgl-switch input{opacity:0;width:0;height:0;}
-.tgl-track{position:absolute;top:0;left:0;right:0;bottom:0;background:var(--bg4);border:.5px solid var(--border);border-radius:9px;cursor:pointer;transition:background .2s;}
-.tgl-switch input:checked+.tgl-track{background:var(--gold-dim);border-color:var(--gold);}
-.tgl-track:after{content:'';position:absolute;top:2px;left:2px;width:12px;height:12px;background:var(--text-faint);border-radius:50%;transition:all .2s;}
-.tgl-switch input:checked+.tgl-track:after{left:18px;background:var(--gold-light);}
-.tgl-cost{font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--gold-light);min-width:50px;text-align:right;}
-
-/* PREP TBD INPUT */
-.prep-input{width:100%;background:var(--bg4);border:.5px solid var(--gold-dim);border-radius:3px;color:var(--gold-light);font-family:'Cormorant Garamond',serif;font-size:16px;padding:5px 8px;outline:none;margin-top:6px;}
-.prep-input:focus{border-color:var(--gold);}
-.prep-note{font-size:9px;color:var(--text-faint);margin-top:4px;}
-
-/* SUM ROW */
-.sum-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-top:.5px solid var(--border);margin-top:4px;}
-.sum-label{font-size:10px;color:var(--text-faint);}
-.sum-val{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:600;}
-.ok{color:var(--green);} .warn{color:var(--red);}
-
-/* CONTENT */
-.content{padding:20px 28px;overflow-y:auto;}
-
-/* RESULT CARDS */
-.rcards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px;}
-.rcard{background:var(--bg2);border:.5px solid var(--border);border-radius:5px;padding:12px 14px;}
-.rcard-label{font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-faint);margin-bottom:4px;}
-.rcard-val{font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--gold-light);}
-.rcard-val.g{color:var(--green);} .rcard-val.b{color:var(--blue);} .rcard-val.p{color:var(--purple);}
-.rcard-sub{font-size:10px;color:var(--text-faint);margin-top:3px;}
-
-/* WATERFALL */
-.wf-head{font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:10px;}
-.wf-row{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:.5px solid rgba(201,168,76,.05);}
-.wf-row:last-child{border-bottom:none;}
-.wf-lbl{font-size:11px;color:var(--text-muted);width:180px;flex-shrink:0;}
-.wf-lbl.bold{color:var(--text-dim);font-weight:700;}
-.wf-bar-wrap{flex:1;height:4px;background:var(--bg4);border-radius:2px;overflow:hidden;}
-.wf-bar{height:100%;border-radius:2px;transition:width .3s;}
-.wf-val{font-family:'Cormorant Garamond',serif;font-size:13px;width:80px;text-align:right;}
-.wf-val.r{color:var(--red);} .wf-val.g{color:var(--green);} .wf-val.gold{color:var(--gold-light);}
-.wf-sep{border-top:.5px solid var(--border-hi);margin:4px 0;}
-
-/* DISTRIBUTION TABLE */
-.dist-wrap{margin:20px 0;}
-.dist-table{width:100%;border-collapse:collapse;}
-.dist-table th{font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-faint);font-weight:700;padding:6px 10px;border-bottom:.5px solid var(--border);text-align:left;}
-.dist-table th:last-child,.dist-table th:nth-child(4){text-align:right;}
-.dist-table td{padding:9px 10px;border-bottom:.5px solid rgba(201,168,76,.05);font-size:12px;vertical-align:middle;}
-.dist-table tr:hover td{background:var(--gold-bg);}
-.dist-table tr.total-row td{border-top:.5px solid var(--border-hi);background:var(--bg3);font-weight:700;}
-.dist-table tr.section-row td{background:rgba(0,0,0,.2);color:var(--text-faint);font-size:9px;letter-spacing:.14em;text-transform:uppercase;padding:4px 10px;}
-.d-name{font-weight:700;color:var(--text-dim);}
-.d-role{font-size:9px;color:var(--text-faint);display:block;margin-top:1px;font-weight:400;}
-.d-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;vertical-align:middle;}
-.d-pct{font-size:11px;color:var(--text-muted);}
-.d-amt{font-family:'Cormorant Garamond',serif;font-size:15px;text-align:right;color:var(--text);}
-.d-amt.gold{color:var(--gold-light);} .d-amt.muted{color:var(--text-muted);font-size:13px;}
-.d-per{font-size:9px;color:var(--text-faint);display:block;text-align:right;margin-top:1px;}
-
-/* ENGAGEMENT TIER TABLE */
-.tier-wrap{margin-bottom:20px;}
-.tier-table{width:100%;border-collapse:collapse;}
-.tier-table th{font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-faint);font-weight:700;padding:6px 10px;border-bottom:.5px solid var(--border);text-align:left;}
-.tier-table td{padding:9px 10px;border-bottom:.5px solid rgba(201,168,76,.05);font-size:12px;}
-.tier-table tr.ht td{background:rgba(160,122,204,.05);}
-.tier-val{font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--gold-light);}
-.tier-tag{font-size:8px;letter-spacing:.1em;text-transform:uppercase;padding:2px 7px;border-radius:10px;display:inline-block;}
-.t-std{background:rgba(201,168,76,.12);color:var(--gold);border:.5px solid rgba(201,168,76,.3);}
-.t-ht{background:rgba(160,122,204,.12);color:var(--purple);border:.5px solid rgba(160,122,204,.3);}
-.t-ent{background:rgba(106,173,221,.12);color:var(--blue);border:.5px solid rgba(106,173,221,.3);}
-
-/* ASCEND */
-.asc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;}
-.asc-card{background:var(--bg2);border:.5px solid var(--border);border-radius:5px;padding:12px 14px;}
-.asc-lbl{font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-faint);margin-bottom:4px;}
-.asc-val{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--green);}
-.asc-sub{font-size:9px;color:var(--text-faint);margin-top:3px;}
-
-/* ADVISORY PROJECTION */
-.adv-proj{background:var(--bg2);border:.5px solid var(--border);border-radius:5px;padding:16px 18px;margin-bottom:20px;}
-.adv-proj-head{font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:14px;}
-.adv-proj-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
-.adv-proj-card{background:var(--bg3);border:.5px solid var(--border);border-radius:4px;padding:10px 12px;}
-.apc-name{font-size:11px;font-weight:700;color:var(--text-dim);margin-bottom:2px;}
-.apc-pct{font-size:9px;color:var(--text-faint);margin-bottom:8px;}
-.apc-row{display:flex;justify-content:space-between;align-items:baseline;padding:3px 0;border-bottom:.5px solid rgba(201,168,76,.05);}
-.apc-row:last-child{border-bottom:none;}
-.apc-lbl{font-size:9px;color:var(--text-faint);}
-.apc-val{font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--green);}
-
-/* ALERT */
-.alert{background:rgba(224,96,96,.08);border:.5px solid rgba(224,96,96,.3);border-radius:4px;padding:7px 12px;font-size:10px;color:var(--red);margin-bottom:10px;display:none;}
-.alert.show{display:block;}
-
-@media(max-width:900px){
-  .tab-pane.active{grid-template-columns:1fr;}
-  .sb{border-right:none;border-bottom:.5px solid var(--border);}
-  .rcards{grid-template-columns:1fr 1fr;}
-}
-</style>
-</head>
-<body>
-
-<div class="header">
-  <div class="h-left">
-    <div class="eyebrow">Alethia · Internal · Confidential</div>
-    <h1>Economics Calculator v3</h1>
-    <div class="sub">Core 3 · Advisory Board · PREP · Healthcare Tier · Automation · Ascend</div>
-  </div>
-  <div class="kpis">
-    <div class="kpi"><div class="kpi-label">Gross Revenue</div><div class="kpi-val" id="hb-gross">—</div></div>
-    <div class="kpi"><div class="kpi-label">Distributable</div><div class="kpi-val g" id="hb-dist">—</div></div>
-    <div class="kpi"><div class="kpi-label">Avg / Partner</div><div class="kpi-val b" id="hb-each">—</div></div>
-    <div class="kpi"><div class="kpi-label">Ascend ARR</div><div class="kpi-val p" id="hb-asc">—</div></div>
-    <div class="kpi"><div class="kpi-label">Corp Reserve</div><div class="kpi-val" id="hb-res">—</div></div>
-  </div>
-</div>
-
-<div class="tabs">
-  <button class="tab active" onclick="switchTab('economics',this)">Economics</button>
-  <button class="tab" onclick="switchTab('advisory',this)">Advisory Board</button>
-  <button class="tab" onclick="switchTab('tiers',this)">Engagement Tiers</button>
-  <button class="tab" onclick="switchTab('ascend',this)">Ascend</button>
-</div>
-
-<!-- ══════════ TAB 1: ECONOMICS ══════════ -->
-<div id="tab-economics" class="tab-pane active">
-  <div class="sb">
-
-    <div class="sb-section">Revenue Inputs</div>
-    <div class="ctrl">
-      <div class="ctrl-top"><span class="ctrl-label">Engagements / Year</span><span class="ctrl-val" id="cv-eng">20</span></div>
-      <div class="ctrl-desc">All tiers combined. First 5: Travis + Joe only.</div>
-      <input type="range" min="1" max="120" step="1" value="20" oninput="upd('eng',this.value)">
-      <div class="range-ends"><span>1</span><span>120</span></div>
-    </div>
-    <div class="ctrl">
-      <div class="ctrl-top"><span class="ctrl-label">Standard Avg Value</span><span class="ctrl-val" id="cv-avg">$125K</span></div>
-      <div class="ctrl-desc">$3–7M companies. Floor is $100K.</div>
-      <input type="range" min="75" max="200" step="5" value="125" oninput="upd('avg',this.value)">
-      <div class="range-ends"><span>$75K</span><span>$200K</span></div>
-    </div>
-    <div class="ctrl">
-      <div class="ctrl-top"><span class="ctrl-label">Healthcare Tier Avg</span><span class="ctrl-val" id="cv-htavg">$225K</span></div>
-      <div class="ctrl-desc">Taylor/Maloney referrals — MSO, multi-site, practice acquisitions.</div>
-      <input type="range" min="150" max="400" step="25" value="225" oninput="upd('htavg',this.value)">
-      <div class="range-ends"><span>$150K</span><span>$400K</span></div>
-    </div>
-    <div class="ctrl">
-      <div class="ctrl-top"><span class="ctrl-label">Healthcare Engagements</span><span class="ctrl-val" id="cv-hteng">4</span></div>
-      <div class="ctrl-desc">Subset of total. Via Taylor / Maloney advisory network.</div>
-      <input type="range" min="0" max="40" step="1" value="4" oninput="upd('hteng',this.value)">
-      <div class="range-ends"><span>0</span><span>40</span></div>
-    </div>
-
-    <div class="sb-section">Operating Costs</div>
-    <div class="ctrl">
-      <div class="ctrl-top"><span class="ctrl-label">Field Architect / Engagement</span><span class="ctrl-val" id="cv-fa">$10K</span></div>
-      <div class="ctrl-desc">Byron + future FAs. Engagements 6+.</div>
-      <input type="range" min="0" max="25" step="1" value="10" oninput="upd('fa',this.value)">
-      <div class="range-ends"><span>$0</span><span>$25K</span></div>
-    </div>
-    <div class="ctrl">
-      <div class="ctrl-top"><span class="ctrl-label">FA Engagements</span><span class="ctrl-val" id="cv-faeng">12</span></div>
-      <div class="ctrl-desc">How many this year use a Field Architect.</div>
-      <input type="range" min="0" max="100" step="1" value="12" oninput="upd('faeng',this.value)">
-      <div class="range-ends"><span>0</span><span>100</span></div>
-    </div>
-    <div class="ctrl">
-      <div class="ctrl-top"><span class="ctrl-label">Automation / Specialist</span><span class="ctrl-val" id="cv-auto">$15K</span></div>
-      <div class="ctrl-desc">Andrew Saltzman + specialists. Per engagement where bots are built.</div>
-      <input type="range" min="0" max="50" step="5" value="15" oninput="upd('auto',this.value)">
-      <div class="range-ends"><span>$0</span><span>$50K</span></div>
-    </div>
-    <div class="ctrl">
-      <div class="ctrl-top"><span class="ctrl-label">Engagements with Automation</span><span class="ctrl-val" id="cv-autoeng">8</span></div>
-      <div class="ctrl-desc">Subset needing bot/automation builds.</div>
-      <input type="range" min="0" max="80" step="1" value="8" oninput="upd('autoeng',this.value)">
-      <div class="range-ends"><span>0</span><span>80</span></div>
-    </div>
-    <div class="ctrl">
-      <div class="ctrl-top"><span class="ctrl-label">GTM / Tech Stack Annual</span><span class="ctrl-val" id="cv-gtm">$0</span></div>
-      <div class="ctrl-desc">Nick owns GTM. Model paid tools or future SDR costs here.</div>
-      <input type="range" min="0" max="300" step="10" value="0" oninput="upd('gtm',this.value)">
-      <div class="range-ends"><span>$0</span><span>$300K</span></div>
-    </div>
-
-    <div class="sb-section">PREP — Mandatory Per Engagement</div>
-    <div class="toggle-row">
-      <div class="tgl-info">
-        <div class="tgl-label">PREP Behavioral Profiling</div>
-        <div class="tgl-sub">Barry Saltzman tool · non-negotiable on every engagement</div>
-      </div>
-      <label class="tgl-switch">
-        <input type="checkbox" id="prep-toggle" checked onchange="upd('prepOn', this.checked?1:0)">
-        <div class="tgl-track"></div>
-      </label>
-      <span class="tgl-cost" id="cv-prep-cost">TBD</span>
-    </div>
-    <input type="number" class="prep-input" id="prep-price" placeholder="Enter PREP cost per person ($)" oninput="upd('prepPrice', this.value)" min="0" max="5000">
-    <div class="ctrl" style="margin-top:8px;">
-      <div class="ctrl-top"><span class="ctrl-label">People profiled / engagement</span><span class="ctrl-val" id="cv-prepcount">4</span></div>
-      <input type="range" min="1" max="10" step="1" value="4" oninput="upd('prepCount',this.value)">
-      <div class="range-ends"><span>1</span><span>10</span></div>
-    </div>
-    <div class="prep-note">Pass-through: billed to client at cost. Keeps Barry's tool respected and separately valued. Enter price Monday after call.</div>
-
-    <div class="sb-section">Corporate Reserve</div>
-    <div class="ctrl">
-      <div class="ctrl-top"><span class="ctrl-label">Reserve %</span><span class="ctrl-val" id="cv-res">10%</span></div>
-      <div class="ctrl-desc">Off net revenue. Funds ops, tech, legal, future hires.</div>
-      <input type="range" min="5" max="25" step="1" value="10" oninput="upd('res',this.value)">
-      <div class="range-ends"><span>5%</span><span>25%</span></div>
-    </div>
-
-    <div class="sb-section">Core 3 — Equity %</div>
-    <div id="alert-pct" class="alert">Total allocation exceeds 100% — adjust sliders</div>
-
-    <div class="pblock">
-      <div class="pb-name">Travis Roderick</div>
-      <div class="pb-role">CEO · Chief Architect · IP Owner</div>
-      <div class="pb-row">
-        <span class="pb-lbl">Equity</span>
-        <input type="range" min="15" max="60" step="1" value="34" oninput="upd('travis',this.value)">
-        <span class="pb-val" id="cv-travis">34%</span>
-      </div>
-      <textarea class="pb-notes" placeholder="Notes…">Chief Architect. All five first engagements. IP owner of AOS.</textarea>
-    </div>
-
-    <div class="pblock">
-      <div class="pb-name">Joe Pung</div>
-      <div class="pb-role">COO · Integrator · Client Execution</div>
-      <div class="pb-row">
-        <span class="pb-lbl">Equity</span>
-        <input type="range" min="15" max="50" step="1" value="28" oninput="upd('joe',this.value)">
-        <span class="pb-val" id="cv-joe">28%</span>
-      </div>
-      <textarea class="pb-notes" placeholder="Notes…">Integrator. All five first engagements alongside Travis.</textarea>
-    </div>
-
-    <div class="pblock">
-      <div class="pb-name">Nick McGuire</div>
-      <div class="pb-role">GTM · Brand · Tech Stack</div>
-      <div class="pb-row">
-        <span class="pb-lbl">Equity</span>
-        <input type="range" min="10" max="40" step="1" value="23" oninput="upd('nick',this.value)">
-        <span class="pb-val" id="cv-nick">23%</span>
-      </div>
-      <textarea class="pb-notes" placeholder="Notes…">Full GTM authority. Tech stack owner. Lead engine.</textarea>
-    </div>
-
-    <div class="sum-row">
-      <span class="sum-label">Core 3 subtotal</span>
-      <span class="sum-val" id="core-sum">85%</span>
-    </div>
-    <div class="sum-row" style="border-top:none;padding-top:0;">
-      <span class="sum-label">Unallocated (after advisory)</span>
-      <span class="sum-val" id="unalloc-pct">—</span>
-    </div>
-
-    <div class="sb-section">Ascend</div>
-    <div class="ctrl">
-      <div class="ctrl-top"><span class="ctrl-label">Retained Clients</span><span class="ctrl-val" id="cv-asc">5</span></div>
-      <div class="ctrl-desc">$2.5K/mo + $5K/qtr + $7.5K annual per client.</div>
-      <input type="range" min="0" max="60" step="1" value="5" oninput="upd('asc',this.value)">
-      <div class="range-ends"><span>0</span><span>60</span></div>
-    </div>
-
-  </div><!-- /sb -->
-
-  <div class="content">
-
-    <div class="rcards">
-      <div class="rcard"><div class="rcard-label">Gross Revenue</div><div class="rcard-val" id="r-gross">—</div><div class="rcard-sub" id="r-gross-sub">—</div></div>
-      <div class="rcard"><div class="rcard-label">Net (after costs)</div><div class="rcard-val g" id="r-net">—</div><div class="rcard-sub" id="r-net-sub">—</div></div>
-      <div class="rcard"><div class="rcard-label">Distributable Pool</div><div class="rcard-val b" id="r-dist">—</div><div class="rcard-sub" id="r-dist-sub">—</div></div>
-      <div class="rcard"><div class="rcard-label">Total All-In Revenue</div><div class="rcard-val p" id="r-total">—</div><div class="rcard-sub" id="r-total-sub">incl. Ascend ARR</div></div>
-    </div>
-
-    <div class="wf-head">Revenue Waterfall</div>
-    <div style="margin-bottom:20px;">
-      <div class="wf-row"><span class="wf-lbl bold">Gross Revenue</span><div class="wf-bar-wrap"><div class="wf-bar" id="wb-gross" style="background:var(--gold);width:100%"></div></div><span class="wf-val gold" id="wv-gross">—</span></div>
-      <div class="wf-row"><span class="wf-lbl">− Field Architects</span><div class="wf-bar-wrap"><div class="wf-bar" id="wb-fa" style="background:var(--red)"></div></div><span class="wf-val r" id="wv-fa">—</span></div>
-      <div class="wf-row"><span class="wf-lbl">− Automation / Specialists</span><div class="wf-bar-wrap"><div class="wf-bar" id="wb-auto" style="background:var(--red)"></div></div><span class="wf-val r" id="wv-auto">—</span></div>
-      <div class="wf-row"><span class="wf-lbl">− GTM / Tech Stack</span><div class="wf-bar-wrap"><div class="wf-bar" id="wb-gtm" style="background:var(--red)"></div></div><span class="wf-val r" id="wv-gtm">—</span></div>
-      <div class="wf-sep"></div>
-      <div class="wf-row"><span class="wf-lbl bold">Net Revenue</span><div class="wf-bar-wrap"><div class="wf-bar" id="wb-net" style="background:var(--blue)"></div></div><span class="wf-val" id="wv-net">—</span></div>
-      <div class="wf-row"><span class="wf-lbl">− Corp Reserve</span><div class="wf-bar-wrap"><div class="wf-bar" id="wb-res" style="background:var(--text-faint)"></div></div><span class="wf-val r" id="wv-res">—</span></div>
-      <div class="wf-sep"></div>
-      <div class="wf-row"><span class="wf-lbl bold">Distributable Pool</span><div class="wf-bar-wrap"><div class="wf-bar" id="wb-dist" style="background:var(--green)"></div></div><span class="wf-val g" id="wv-dist">—</span></div>
-    </div>
-
-    <div class="dist-wrap">
-      <div class="wf-head">Distribution</div>
-      <table class="dist-table">
-        <thead><tr>
-          <th style="width:200px">Partner / Role</th><th style="width:45px">%</th>
-          <th>Share</th><th style="text-align:right">Annual</th><th style="text-align:right">Per Engagement</th>
-        </tr></thead>
-        <tbody id="dist-body"></tbody>
-      </table>
-    </div>
-
-  </div>
-</div>
-
-<!-- ══════════ TAB 2: ADVISORY ══════════ -->
-<div id="tab-advisory" class="tab-pane">
-  <div class="sb">
-
-    <div class="sb-section">Barry Saltzman</div>
-    <div class="ablock">
-      <div class="ab-header">
-        <div>
-          <div class="ab-name">Barry Saltzman</div>
-          <div class="ab-role">Saltzman Enterprise Group · Chicago · Behavioral Profiling · PREP tool owner<br>Former $650M division COO/CEO · Cross-industry connector · 2,000+ ICP relationships</div>
-        </div>
-        <span class="ab-badge badge-cross">Cross-Industry</span>
-      </div>
-      <div class="ab-row">
-        <span class="ab-lbl">Equity %</span>
-        <input type="range" min="0" max="15" step="0.5" value="5" oninput="upd('barry',this.value)" style="flex:1">
-        <span class="ab-val" id="cv-barry" style="color:var(--gold-light)">5.0%</span>
-      </div>
-      <textarea class="ab-notes" id="barry-notes" placeholder="Notes on Barry's role, terms, expectations…">Equity for referrals. PREP pass-through on every engagement. Son Andrew = automation specialist (direct expense, not equity). Call Monday — confirm PREP pricing and exclusivity.</textarea>
-    </div>
-
-    <div class="sb-section">James G. Taylor, MBA, PhD</div>
-    <div class="ablock">
-      <div class="ab-header">
-        <div>
-          <div class="ab-name">James G. Taylor</div>
-          <div class="ab-role">BORVO Healthcare · Tampa · Strategic acquisitions of medical practices<br>Former Director of Equities ($100M+) · VP BD ($1B AUM) · MSO specialist</div>
-        </div>
-        <span class="ab-badge badge-health">Healthcare MSO</span>
-      </div>
-      <div class="ab-row">
-        <span class="ab-lbl">Equity %</span>
-        <input type="range" min="0" max="15" step="0.5" value="3" oninput="upd('taylor',this.value)" style="flex:1">
-        <span class="ab-val" id="cv-taylor" style="color:var(--purple)">3.0%</span>
-      </div>
-      <textarea class="ab-notes" id="taylor-notes" placeholder="Notes on Taylor's role, terms, expectations…">Healthcare MSO and practice acquisition referrals. $175K–$350K engagement tier. Travis has built 10 MSOs — Taylor opens those doors. Tampa market overlap with Maloney.</textarea>
-    </div>
-
-    <div class="sb-section">Mary E. Maloney, FACHE</div>
-    <div class="ablock">
-      <div class="ab-header">
-        <div>
-          <div class="ab-name">Mary E. Maloney, FACHE</div>
-          <div class="ab-role">Revealing Genius LLC · Tampa · Cornell faculty · ACHE Regent Advisory Council FL<br>Former CEO/CMO · Executive presence + brand strategist · Physician/surgeon network</div>
-        </div>
-        <span class="ab-badge badge-brand">Brand + HC</span>
-      </div>
-      <div class="ab-row">
-        <span class="ab-lbl">Equity %</span>
-        <input type="range" min="0" max="15" step="0.5" value="3" oninput="upd('maloney',this.value)" style="flex:1">
-        <span class="ab-val" id="cv-maloney" style="color:var(--coral)">3.0%</span>
-      </div>
-      <textarea class="ab-notes" id="maloney-notes" placeholder="Notes on Maloney's role, terms, expectations…">Dual role: (1) referrals from physician/healthcare exec network, (2) potential brand strategy for Alethia itself — executive presence, positioning, Cornell credibility. Consider separate structure for brand work vs equity referral role.</textarea>
-    </div>
-
-    <div class="sb-section">Advisory Totals</div>
-    <div class="sum-row" style="border-top:none;">
-      <span class="sum-label">Total advisory equity</span>
-      <span class="sum-val" id="adv-total-pct">11.0%</span>
-    </div>
-    <div class="sum-row" style="border-top:none;padding-top:0;">
-      <span class="sum-label">Core 3 + Advisory</span>
-      <span class="sum-val" id="adv-grand-pct">—</span>
-    </div>
-    <div class="sum-row" style="border-top:none;padding-top:0;">
-      <span class="sum-label">Remaining unallocated</span>
-      <span class="sum-val" id="adv-unalloc">—</span>
-    </div>
-
-  </div>
-
-  <div class="content">
-    <div class="adv-proj">
-      <div class="adv-proj-head">What Each Advisor Earns — Scenarios</div>
-      <div class="adv-proj-grid" id="adv-proj-grid"><!-- JS --></div>
-    </div>
-
-    <div class="wf-head" style="margin-bottom:12px;">Advisory Board — Who They Are</div>
-    <table class="dist-table" style="margin-bottom:24px;">
-      <thead><tr>
-        <th>Name</th><th>Type</th><th>Primary Value</th><th style="text-align:right">Equity %</th><th style="text-align:right">At $3M Dist.</th>
-      </tr></thead>
-      <tbody id="adv-table-body"></tbody>
-    </table>
-
-    <div class="wf-head" style="margin-bottom:10px;">Is This an All-Healthcare Board?</div>
-    <div style="background:var(--bg2);border:.5px solid var(--border);border-radius:5px;padding:16px 18px;font-size:12px;color:var(--text-muted);line-height:1.8;">
-      <strong style="color:var(--text-dim);">No — and that's a strength.</strong><br><br>
-      <strong style="color:var(--gold);">Barry Saltzman</strong> — Cross-industry. $650M operator background. 2,000+ relationships across your full ICP. PREP tool is sector-agnostic. His son Andrew is your automation specialist. This is your highest-volume referral channel.<br><br>
-      <strong style="color:var(--purple);">James G. Taylor</strong> — Healthcare-specific. MSO acquisition, medical practice consolidation, capital markets background. Opens your highest-ticket engagements ($175K–$350K). Travis's MSO expertise plus Taylor's network = unfair advantage in that sector.<br><br>
-      <strong style="color:var(--coral);">Mary Maloney</strong> — Healthcare-adjacent. Physician and healthcare executive network via ACHE and Cornell. But her real superpower may be Alethia's own brand — executive presence, positioning, digital storytelling. Consider whether she holds equity as a referral advisor OR whether there's a separate paid engagement for Alethia brand strategy. These are different conversations.<br><br>
-      <strong style="color:var(--text-dim);">Recommendation:</strong> Keep this board. Add one cross-industry connector outside healthcare when you find your second Barry.
-    </div>
-  </div>
-</div>
-
-<!-- ══════════ TAB 3: ENGAGEMENT TIERS ══════════ -->
-<div id="tab-tiers" class="tab-pane">
-  <div class="sb">
-    <div class="sb-section">Tier Configuration</div>
-    <div class="ctrl">
-      <div class="ctrl-top"><span class="ctrl-label">Diagnostic-Only Engagements</span><span class="ctrl-val" id="cv-dx">3</span></div>
-      <div class="ctrl-desc">$15K Signal DX. Credits toward full engagement.</div>
-      <input type="range" min="0" max="30" step="1" value="3" oninput="upd('dx',this.value)">
-      <div class="range-ends"><span>0</span><span>30</span></div>
-    </div>
-    <div class="ctrl">
-      <div class="ctrl-top"><span class="ctrl-label">Diagnostic Price</span><span class="ctrl-val" id="cv-dxprice">$15K</span></div>
-      <input type="range" min="10" max="25" step="1" value="15" oninput="upd('dxprice',this.value)">
-      <div class="range-ends"><span>$10K</span><span>$25K</span></div>
-    </div>
-    <div class="ctrl">
-      <div class="ctrl-top"><span class="ctrl-label">Standard Engagements</span><span class="ctrl-val" id="cv-std">13</span></div>
-      <div class="ctrl-desc">$3–7M companies. Travis + Joe + FAs from engagement 6.</div>
-      <input type="range" min="0" max="80" step="1" value="13" oninput="upd('std',this.value)">
-      <div class="range-ends"><span>0</span><span>80</span></div>
-    </div>
-    <div class="ctrl">
-      <div class="ctrl-top"><span class="ctrl-label">Standard Avg Price</span><span class="ctrl-val" id="cv-stdprice">$125K</span></div>
-      <input type="range" min="75" max="200" step="5" value="125" oninput="upd('stdprice',this.value)">
-      <div class="range-ends"><span>$75K</span><span>$200K</span></div>
-    </div>
-    <div class="ctrl">
-      <div class="ctrl-top"><span class="ctrl-label">Healthcare Tier Engagements</span><span class="ctrl-val" id="cv-ht2">4</span></div>
-      <div class="ctrl-desc">Taylor / Maloney referrals. MSO, multi-site, clinical ops.</div>
-      <input type="range" min="0" max="30" step="1" value="4" oninput="upd('ht2',this.value)">
-      <div class="range-ends"><span>0</span><span>30</span></div>
-    </div>
-    <div class="ctrl">
-      <div class="ctrl-top"><span class="ctrl-label">Healthcare Tier Avg Price</span><span class="ctrl-val" id="cv-htprice">$225K</span></div>
-      <input type="range" min="150" max="400" step="25" value="225" oninput="upd('htprice',this.value)">
-      <div class="range-ends"><span>$150K</span><span>$400K</span></div>
-    </div>
-    <div class="ctrl">
-      <div class="ctrl-top"><span class="ctrl-label">Enterprise Engagements</span><span class="ctrl-val" id="cv-ent">0</span></div>
-      <div class="ctrl-desc">MSO builds, PE portfolio, $20M+ complexity.</div>
-      <input type="range" min="0" max="10" step="1" value="0" oninput="upd('ent',this.value)">
-      <div class="range-ends"><span>0</span><span>10</span></div>
-    </div>
-    <div class="ctrl">
-      <div class="ctrl-top"><span class="ctrl-label">Enterprise Avg Price</span><span class="ctrl-val" id="cv-entprice">$300K</span></div>
-      <input type="range" min="200" max="500" step="25" value="300" oninput="upd('entprice',this.value)">
-      <div class="range-ends"><span>$200K</span><span>$500K</span></div>
-    </div>
-  </div>
-
-  <div class="content">
-    <div class="rcards" style="grid-template-columns:repeat(4,1fr);">
-      <div class="rcard"><div class="rcard-label">Total Engagements</div><div class="rcard-val" id="t-total-eng">—</div></div>
-      <div class="rcard"><div class="rcard-label">Blended Avg Value</div><div class="rcard-val g" id="t-blend">—</div></div>
-      <div class="rcard"><div class="rcard-label">Tier Revenue</div><div class="rcard-val b" id="t-rev">—</div></div>
-      <div class="rcard"><div class="rcard-label">Healthcare Premium</div><div class="rcard-val p" id="t-hc-prem">—</div></div>
-    </div>
-    <div class="tier-wrap">
-      <div class="wf-head" style="margin-bottom:12px;">Engagement Tier Breakdown</div>
-      <table class="tier-table">
-        <thead><tr>
-          <th>Tier</th><th>Engagements</th><th>Avg Value</th><th>Tier Revenue</th><th>% of Total</th><th>Referred By</th>
-        </tr></thead>
-        <tbody id="tier-body"></tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════ TAB 4: ASCEND ══════════ -->
-<div id="tab-ascend" class="tab-pane">
-  <div class="sb">
-    <div class="sb-section">Ascend Governance</div>
-    <div class="ctrl">
-      <div class="ctrl-top"><span class="ctrl-label">Retained Clients</span><span class="ctrl-val" id="cv-asc2">5</span></div>
-      <div class="ctrl-desc">Post-sprint clients on ongoing governance.</div>
-      <input type="range" min="0" max="60" step="1" value="5" oninput="upd('asc',this.value)">
-      <div class="range-ends"><span>0</span><span>60</span></div>
-    </div>
-    <div class="ctrl">
-      <div class="ctrl-top"><span class="ctrl-label">Monthly Fee / Client</span><span class="ctrl-val" id="cv-ascmo">$2,500</span></div>
-      <input type="range" min="1000" max="5000" step="250" value="2500" oninput="upd('ascmo',this.value)">
-      <div class="range-ends"><span>$1K</span><span>$5K</span></div>
-    </div>
-    <div class="ctrl">
-      <div class="ctrl-top"><span class="ctrl-label">Quarterly Session / Client</span><span class="ctrl-val" id="cv-ascqtr">$5,000</span></div>
-      <input type="range" min="2500" max="10000" step="500" value="5000" oninput="upd('ascqtr',this.value)">
-      <div class="range-ends"><span>$2.5K</span><span>$10K</span></div>
-    </div>
-    <div class="ctrl">
-      <div class="ctrl-top"><span class="ctrl-label">Annual Strategy Session</span><span class="ctrl-val" id="cv-ascann">$7,500</span></div>
-      <input type="range" min="5000" max="15000" step="500" value="7500" oninput="upd('ascann',this.value)">
-      <div class="range-ends"><span>$5K</span><span>$15K</span></div>
-    </div>
-  </div>
-
-  <div class="content">
-    <div class="asc-grid">
-      <div class="asc-card"><div class="asc-lbl">Monthly ARR</div><div class="asc-val" id="asc-mo">—</div><div class="asc-sub">$/mo × clients × 12</div></div>
-      <div class="asc-card"><div class="asc-lbl">Quarterly Revenue</div><div class="asc-val" id="asc-qtr">—</div><div class="asc-sub">$/qtr × clients × 4</div></div>
-      <div class="asc-card"><div class="asc-lbl">Annual Sessions</div><div class="asc-val" id="asc-ann">—</div><div class="asc-sub">$/yr × clients</div></div>
-      <div class="asc-card"><div class="asc-lbl">Total ARR</div><div class="asc-val" id="asc-total">—</div><div class="asc-sub">all tiers combined</div></div>
-      <div class="asc-card"><div class="asc-lbl">Per Client / Year</div><div class="asc-val" id="asc-perclient">—</div><div class="asc-sub">full Ascend package</div></div>
-      <div class="asc-card"><div class="asc-lbl">At 20 Clients</div><div class="asc-val" id="asc-20">—</div><div class="asc-sub">scale target</div></div>
-    </div>
-    <div style="background:var(--bg2);border:.5px solid var(--border);border-radius:5px;padding:16px 18px;font-size:12px;color:var(--text-muted);line-height:1.8;">
-      <strong style="color:var(--text-dim);">Why Ascend matters at scale.</strong><br><br>
-      Ten clients on Ascend generates <strong id="asc-10-inline" style="color:var(--green)">—</strong> per year before closing a single new engagement. Twenty clients generates <strong id="asc-20-inline" style="color:var(--green)">—</strong>. This is the floor revenue that lets Travis and Joe be selective about new engagements — only taking clients who are genuinely the right fit. It also means the company has real enterprise value, not just services revenue.
-    </div>
-  </div>
-</div>
-
-<script>
-const S = {
-  eng:20, avg:125, htavg:225, hteng:4,
-  fa:10, faeng:12, auto:15, autoeng:8, gtm:0,
-  prepOn:1, prepPrice:0, prepCount:4,
-  res:10,
-  travis:34, joe:28, nick:23,
-  barry:5, taylor:3, maloney:3,
-  asc:5, ascmo:2500, ascqtr:5000, ascann:7500,
-  dx:3, dxprice:15, std:13, stdprice:125, ht2:4, htprice:225, ent:0, entprice:300
-};
-
-function fmt(n){
-  if(isNaN(n)||n===undefined)return'—';
-  if(n>=1000000)return'$'+(n/1000000).toFixed(1)+'M';
-  if(n>=1000)return'$'+Math.round(n/1000)+'K';
-  return'$'+Math.round(n).toLocaleString();
-}
-function fmtFull(n){return'$'+Math.round(n).toLocaleString();}
-
-function upd(k,v){
-  S[k]=+v;
-  // sync linked sliders
-  if(k==='avg'){S.stdprice=+v;}
-  if(k==='htavg'){S.htprice=+v;}
-  if(k==='hteng'){S.ht2=+v;}
-  if(k==='stdprice'){S.avg=+v;}
-  if(k==='htprice'){S.htavg=+v;}
-  if(k==='ht2'){S.hteng=+v;}
-  if(k==='asc'){S.asc=+v;}
-  render();
-}
-
-function switchTab(id,btn){
-  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById('tab-'+id).classList.add('active');
-  btn.classList.add('active');
-}
-
-function render(){
-  // Display values
-  const ids={
-    'cv-eng':S.eng, 'cv-avg':'$'+S.avg+'K', 'cv-htavg':'$'+S.htavg+'K',
-    'cv-hteng':S.hteng, 'cv-fa':'$'+S.fa+'K', 'cv-faeng':S.faeng,
-    'cv-auto':'$'+S.auto+'K', 'cv-autoeng':S.autoeng,
-    'cv-gtm':S.gtm===0?'$0':'$'+S.gtm+'K', 'cv-res':S.res+'%',
-    'cv-travis':S.travis+'%','cv-joe':S.joe+'%','cv-nick':S.nick+'%',
-    'cv-barry':S.barry.toFixed(1)+'%','cv-taylor':S.taylor.toFixed(1)+'%','cv-maloney':S.maloney.toFixed(1)+'%',
-    'cv-asc':S.asc,'cv-asc2':S.asc,
-    'cv-ascmo':'$'+S.ascmo.toLocaleString(),'cv-ascqtr':'$'+S.ascqtr.toLocaleString(),'cv-ascann':'$'+S.ascann.toLocaleString(),
-    'cv-dx':S.dx,'cv-dxprice':'$'+S.dxprice+'K','cv-std':S.std,'cv-stdprice':'$'+S.stdprice+'K',
-    'cv-ht2':S.ht2,'cv-htprice':'$'+S.htprice+'K','cv-ent':S.ent,'cv-entprice':'$'+S.entprice+'K',
-    'cv-prepcount':S.prepCount
-  };
-  Object.entries(ids).forEach(([id,val])=>{const el=document.getElementById(id);if(el)el.textContent=val;});
-
-  // PREP cost display
-  const prepPerEng = S.prepOn ? (S.prepPrice||0)*S.prepCount : 0;
-  const prepEl = document.getElementById('cv-prep-cost');
-  if(prepEl) prepEl.textContent = S.prepOn ? (S.prepPrice>0 ? fmt(prepPerEng)+'/eng' : 'TBD') : 'Off';
-
-  // Financials
-  const stdEng = Math.max(0, S.eng - S.hteng);
-  const gross = (stdEng * S.avg * 1000) + (S.hteng * S.htavg * 1000);
-  const faCost = S.faeng * S.fa * 1000;
-  const autoCost = S.autoeng * S.auto * 1000;
-  const gtmCost = S.gtm * 1000;
-  const netRev = gross - faCost - autoCost - gtmCost;
-  const resDollars = netRev * (S.res/100);
-  const distPool = netRev - resDollars;
-
-  // Advisory
-  const advTotal = S.barry + S.taylor + S.maloney;
-  const core3 = S.travis + S.joe + S.nick;
-  const totalAlloc = core3 + advTotal;
-  const unalloc = Math.max(0, 100 - totalAlloc);
-
-  // Partner $
-  const travisD = distPool*(S.travis/100);
-  const joeD = distPool*(S.joe/100);
-  const nickD = distPool*(S.nick/100);
-  const barryD = distPool*(S.barry/100);
-  const taylorD = distPool*(S.taylor/100);
-  const maloneyD = distPool*(S.maloney/100);
-  const resD = resDollars;
-  const unallocD = distPool*(unalloc/100);
-
-  // Ascend
-  const ascMoTotal = S.asc*S.ascmo*12;
-  const ascQtrTotal = S.asc*S.ascqtr*4;
-  const ascAnnTotal = S.asc*S.ascann;
-  const ascTotal = ascMoTotal+ascQtrTotal+ascAnnTotal;
-  const ascPerClient = S.asc>0?(ascMoTotal+ascQtrTotal+ascAnnTotal)/S.asc:0;
-  const asc20 = 20*(S.ascmo*12+S.ascqtr*4+S.ascann);
-  const asc10 = 10*(S.ascmo*12+S.ascqtr*4+S.ascann);
-
-  const avgPartner = (travisD+joeD+nickD)/3;
-
-  // HEADER KPIs
-  const h={'hb-gross':fmt(gross),'hb-dist':fmt(distPool),'hb-each':fmt(avgPartner),'hb-asc':fmt(ascTotal),'hb-res':fmt(resDollars)};
-  Object.entries(h).forEach(([id,v])=>{const el=document.getElementById(id);if(el)el.textContent=v;});
-
-  // RESULT CARDS
-  const rc={
-    'r-gross':[fmt(gross),stdEng+' std + '+S.hteng+' HC engagements'],
-    'r-net':[fmt(netRev),'FA: '+fmt(faCost)+' · Auto: '+fmt(autoCost)+' · GTM: '+fmt(gtmCost)],
-    'r-dist':[fmt(distPool),'after '+S.res+'% reserve ('+fmt(resDollars)+')'],
-    'r-total':[fmt(gross+ascTotal),'gross + Ascend ARR']
-  };
-  Object.entries(rc).forEach(([id,[v,s]])=>{
-    const el=document.getElementById(id);if(el)el.textContent=v;
-    const sub=document.getElementById(id+'-sub');if(sub)sub.textContent=s;
-  });
-
-  // WATERFALL
-  const mx=gross||1;
-  function bar(id,val){const el=document.getElementById(id);if(el)el.style.width=Math.max(0,Math.min(100,(val/mx)*100))+'%';}
-  bar('wb-gross',gross);bar('wb-fa',faCost);bar('wb-auto',autoCost);bar('wb-gtm',gtmCost);
-  bar('wb-net',netRev);bar('wb-res',resDollars);bar('wb-dist',distPool);
-  const wv={'wv-gross':fmt(gross),'wv-fa':faCost>0?'−'+fmt(faCost):'$0','wv-auto':autoCost>0?'−'+fmt(autoCost):'$0',
-    'wv-gtm':gtmCost>0?'−'+fmt(gtmCost):'$0','wv-net':fmt(netRev),'wv-res':'−'+fmt(resDollars),'wv-dist':fmt(distPool)};
-  Object.entries(wv).forEach(([id,v])=>{const el=document.getElementById(id);if(el)el.textContent=v;});
-
-  // ALERT
-  const alertEl=document.getElementById('alert-pct');
-  if(alertEl)alertEl.classList.toggle('show',totalAlloc>100);
-
-  // SUM ROWS
-  const cs=document.getElementById('core-sum');
-  if(cs){cs.textContent=core3+'%';cs.className='sum-val '+(core3<=85?'ok':'warn');}
-  const up=document.getElementById('unalloc-pct');
-  if(up){up.textContent=unalloc.toFixed(1)+'%';up.className='sum-val '+(unalloc>=0?'ok':'warn');}
-  const at=document.getElementById('adv-total-pct');if(at)at.textContent=advTotal.toFixed(1)+'%';
-  const ag=document.getElementById('adv-grand-pct');
-  if(ag){ag.textContent=totalAlloc.toFixed(1)+'%';ag.className='sum-val '+(totalAlloc<=100?'ok':'warn');}
-  const au=document.getElementById('adv-unalloc');
-  if(au){au.textContent=unalloc.toFixed(1)+'%';au.className='sum-val '+(unalloc>=0?'ok':'warn');}
-
-  // DIST TABLE
-  const engCount = Math.max(S.eng,1);
-  const rows=[
-    {name:'Travis Roderick',role:'CEO · Chief Architect',pct:S.travis,amt:travisD,color:'#C9A84C',cls:''},
-    {name:'Joe Pung',role:'COO · Integrator',pct:S.joe,amt:joeD,color:'#6aaddd',cls:''},
-    {name:'Nick McGuire',role:'GTM · Brand · Tech',pct:S.nick,amt:nickD,color:'#4ecb97',cls:''},
-  ];
-  const advRows=[
-    {name:'Barry Saltzman',role:'Cross-industry · PREP · Connector',pct:S.barry,amt:barryD,color:'#a07acc',cls:'adv'},
-    {name:'James G. Taylor',role:'Healthcare MSO · Practice Acq.',pct:S.taylor,amt:taylorD,color:'#9b6cc4',cls:'adv'},
-    {name:'Mary Maloney',role:'Brand + HC Executive Network',pct:S.maloney,amt:maloneyD,color:'#d4856a',cls:'adv'},
-  ];
-  const sysRows=[
-    {name:'Corp Reserve',role:S.res+'% of net · ops · tech · legal',pct:S.res,amt:resD,color:'#606040',cls:'res'},
-    {name:'Unallocated',role:'Available · future partners · Andrew Saltzman equity',pct:unalloc,amt:unallocD,color:'#444',cls:'res'},
-  ];
-
-  let html='<tr class="section-row"><td colspan="5">Core Partners</td></tr>';
-  rows.forEach(r=>{
-    html+=`<tr><td><span class="d-name"><span class="d-dot" style="background:${r.color}"></span>${r.name}</span><span class="d-role">${r.role}</span></td>
-    <td><span class="d-pct">${r.pct}%</span></td>
-    <td><div style="height:4px;background:var(--bg4);border-radius:2px;overflow:hidden;"><div style="height:100%;border-radius:2px;background:${r.color};width:${Math.min(100,(r.pct/Math.max(S.travis,1))*100)}%;transition:width .3s;"></div></div></td>
-    <td><span class="d-amt gold">${fmt(r.amt)}</span><span class="d-per">${fmtFull(r.amt)}</span></td>
-    <td><span class="d-amt">${fmt(r.amt/engCount)}</span></td></tr>`;
-  });
-  html+='<tr class="section-row"><td colspan="5">Advisory Board</td></tr>';
-  advRows.forEach(r=>{
-    html+=`<tr><td><span class="d-name"><span class="d-dot" style="background:${r.color}"></span>${r.name}</span><span class="d-role">${r.role}</span></td>
-    <td><span class="d-pct">${r.pct.toFixed(1)}%</span></td>
-    <td><div style="height:4px;background:var(--bg4);border-radius:2px;overflow:hidden;"><div style="height:100%;border-radius:2px;background:${r.color};width:${Math.min(100,(r.pct/Math.max(S.travis,1))*100)}%;transition:width .3s;"></div></div></td>
-    <td><span class="d-amt muted">${fmt(r.amt)}</span><span class="d-per">${fmtFull(r.amt)}</span></td>
-    <td><span class="d-amt muted">${fmt(r.amt/engCount)}</span></td></tr>`;
-  });
-  html+='<tr class="section-row"><td colspan="5">System</td></tr>';
-  sysRows.forEach(r=>{
-    if(r.pct<=0.1)return;
-    html+=`<tr><td><span class="d-name" style="color:var(--text-faint)"><span class="d-dot" style="background:${r.color}"></span>${r.name}</span><span class="d-role">${r.role}</span></td>
-    <td><span class="d-pct">${typeof r.pct==='number'?r.pct.toFixed(1):r.pct}%</span></td><td></td>
-    <td><span class="d-amt muted">${fmt(r.amt)}</span></td><td>—</td></tr>`;
-  });
-  html+=`<tr class="total-row"><td><span class="d-name">Total</span></td><td><span class="d-pct" style="color:${totalAlloc<=100?'var(--green)':'var(--red)'};">${totalAlloc.toFixed(0)}%</span></td><td></td>
-  <td><span class="d-amt gold">${fmt(distPool+resDollars)}</span></td><td><span class="d-amt">${fmt((distPool+resDollars)/engCount)}</span></td></tr>`;
-  const db=document.getElementById('dist-body');if(db)db.innerHTML=html;
-
-  // ADVISORY PROJECTION TAB
-  const scenarios=[1000000,3000000,5000000,10000000];
-  const advisors=[
-    {name:'Barry Saltzman',pct:S.barry,color:'#a07acc'},
-    {name:'James Taylor',pct:S.taylor,color:'#9b6cc4'},
-    {name:'Mary Maloney',pct:S.maloney,color:'#d4856a'},
-  ];
-  let projHtml='';
-  advisors.forEach(a=>{
-    projHtml+=`<div class="adv-proj-card"><div class="apc-name">${a.name}</div><div class="apc-pct">${a.pct.toFixed(1)}% equity</div>`;
-    scenarios.forEach(s=>{
-      projHtml+=`<div class="apc-row"><span class="apc-lbl">At ${fmt(s)}</span><span class="apc-val">${fmt(s*(a.pct/100))}</span></div>`;
-    });
-    projHtml+='</div>';
-  });
-  const apg=document.getElementById('adv-proj-grid');if(apg)apg.innerHTML=projHtml;
-
-  // ADVISORY TABLE
-  let advTabHtml='';
-  const advDefs=[
-    {name:'Barry Saltzman',type:'Cross-Industry',value:'PREP tool · 2,000+ ICP relationships · automation son',pct:S.barry,color:'#a07acc'},
-    {name:'James G. Taylor',type:'Healthcare MSO',value:'Practice acquisitions · capital markets · MSO builds',pct:S.taylor,color:'#9b6cc4'},
-    {name:'Mary Maloney',type:'Brand + Healthcare',value:'ACHE network · Cornell · Alethia brand strategy',pct:S.maloney,color:'#d4856a'},
-  ];
-  advDefs.forEach(a=>{
-    advTabHtml+=`<tr><td><span class="d-name"><span class="d-dot" style="background:${a.color}"></span>${a.name}</span></td>
-    <td><span style="font-size:10px;color:var(--text-muted)">${a.type}</span></td>
-    <td style="font-size:11px;color:var(--text-muted)">${a.value}</td>
-    <td style="text-align:right;font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--gold-light)">${a.pct.toFixed(1)}%</td>
-    <td style="text-align:right;font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--green)">${fmt(3000000*(a.pct/100))}</td></tr>`;
-  });
-  const atb=document.getElementById('adv-table-body');if(atb)atb.innerHTML=advTabHtml;
-
-  // TIER TABLE
-  const dxRev=S.dx*S.dxprice*1000;
-  const stdRev=S.std*S.stdprice*1000;
-  const htRev=S.ht2*S.htprice*1000;
-  const entRev=S.ent*S.entprice*1000;
-  const tierTotal=dxRev+stdRev+htRev+entRev;
-  const totalEng=S.dx+S.std+S.ht2+S.ent;
-  const blended=totalEng>0?tierTotal/totalEng:0;
-  const hcPrem=(S.ht2*(S.htprice-S.stdprice)*1000);
-  const sv={'t-total-eng':totalEng,'t-blend':fmt(blended),'t-rev':fmt(tierTotal),'t-hc-prem':fmt(hcPrem)};
-  Object.entries(sv).forEach(([id,v])=>{const el=document.getElementById(id);if(el)el.textContent=v;});
-
-  const tierRows=[
-    {label:'Signal DX — Diagnostic Only',count:S.dx,price:S.dxprice*1000,rev:dxRev,tag:'t-std',tagLabel:'Diagnostic',referral:'All channels'},
-    {label:'Standard Liberation Sprint',count:S.std,price:S.stdprice*1000,rev:stdRev,tag:'t-std',tagLabel:'Standard',referral:'Barry · Nick GTM'},
-    {label:'Healthcare Tier',count:S.ht2,price:S.htprice*1000,rev:htRev,tag:'t-ht',tagLabel:'Healthcare',referral:'Taylor · Maloney',ht:true},
-    {label:'Enterprise / MSO Build',count:S.ent,price:S.entprice*1000,rev:entRev,tag:'t-ent',tagLabel:'Enterprise',referral:'Taylor · Travis network'},
-  ];
-  let tierHtml='';
-  tierRows.forEach(r=>{
-    tierHtml+=`<tr class="${r.ht?'ht':''}"><td>${r.label}</td><td>${r.count}</td>
-    <td><span class="tier-val">${fmt(r.price)}</span></td>
-    <td><span class="tier-val">${fmt(r.rev)}</span></td>
-    <td style="color:var(--text-muted)">${tierTotal>0?Math.round((r.rev/tierTotal)*100):0}%</td>
-    <td><span class="tier-tag ${r.tag}">${r.tagLabel}</span> <span style="font-size:10px;color:var(--text-faint)">${r.referral}</span></td></tr>`;
-  });
-  tierHtml+=`<tr style="background:var(--bg3);font-weight:700;"><td>Total</td><td>${totalEng}</td>
-  <td><span class="tier-val">${fmt(blended)}</span> <span style="font-size:9px;color:var(--text-faint)">blended</span></td>
-  <td><span class="tier-val">${fmt(tierTotal)}</span></td><td>100%</td><td></td></tr>`;
-  const tb=document.getElementById('tier-body');if(tb)tb.innerHTML=tierHtml;
-
-  // ASCEND TAB
-  const ascVals={
-    'asc-mo':fmt(ascMoTotal),'asc-qtr':fmt(ascQtrTotal),'asc-ann':fmt(ascAnnTotal),
-    'asc-total':fmt(ascTotal),'asc-perclient':fmt(ascPerClient),'asc-20':fmt(asc20)
-  };
-  Object.entries(ascVals).forEach(([id,v])=>{const el=document.getElementById(id);if(el)el.textContent=v;});
-  const a10=document.getElementById('asc-10-inline');if(a10)a10.textContent=fmt(asc10);
-  const a20=document.getElementById('asc-20-inline');if(a20)a20.textContent=fmt(asc20);
-  const cv2=document.getElementById('cv-asc2');if(cv2)cv2.textContent=S.asc;
-}
-
-render();
-</script>
-</body>
-</html>
+Alethia · Internal · Confidential
+Economics Calculator v3
+Single model · all tabs connected · one source of truth
+Gross Revenue
+$2.6M
+Net (after costs)
+$2.3M
+Distributable
+$2.1M
+Avg / Core Partner
+$594K
+Ascend ARR
+$288K
+Total All-In
+$2.9M
+Economics
+Advisory Board
+Engagement Tiers
+Ascend
+Operating Costs
+Field Architect / Engagement
+$10K
+Byron + future FAs. Engagement 6 onwards.
+
+$0
+$25K
+FA Engagements / Year
+12
+How many engagements use a Field Architect this year.
+
+0
+100
+Automation / Specialist
+$15K
+Andrew Saltzman + specialists. Per engagement with bots.
+
+$0
+$50K
+Engagements with Automation
+8
+
+0
+80
+GTM / Tech Stack Annual
+$0
+Nick owns GTM. Model paid tools or future SDR costs here.
+
+$0
+$300K
+PREP — Mandatory
+PREP Behavioral Profiling
+Barry tool · non-negotiable · every engagement
+
+TBD
+PREP cost per person ($) — enter Monday
+People profiled / engagement
+4
+
+1
+10
+Pass-through: billed to client at cost. Enter price after Monday Barry call.
+Corporate Reserve
+Reserve %
+10%
+Off net revenue. Ops, tech, legal, future hires.
+
+5%
+25%
+Core 3 — Equity %
+Travis Roderick
+CEO · Chief Architect · IP Owner
+Equity
+
+34%
+Chief Architect. All five first engagements. IP owner of AOS.
+Joe Pung
+COO · Integrator · Client Execution
+Equity
+
+28%
+Integrator. All five first engagements alongside Travis.
+Nick McGuire
+GTM · Brand · Tech Stack
+Equity
+
+23%
+Full GTM authority. Tech stack owner. Lead engine.
+Core 3 subtotal
+85%
+Advisory total
+11.0%
+Unallocated
+4.0%
+Gross Revenue
+$2.6M
+3dx + 13std + 4hc + 0ent engagements
+Net After Costs
+$2.3M
+FA:$120K Auto:$120K PREP:$0 GTM:$0
+Distributable Pool
+$2.1M
+after 10% reserve ($233K)
+Total All-In Revenue
+$2.9M
+gross + Ascend ARR
+Revenue Waterfall — driven by Engagement Tiers tab
+Gross Revenue
+$2.6M
+− Field Architects
+−$120K
+− Automation / Specialists
+−$120K
+− PREP (pass-through)
+TBD
+− GTM / Tech Stack
+$0
+Net Revenue
+$2.3M
+− Corp Reserve
+−$233K
+Distributable Pool
+$2.1M
+Distribution — equity % set in Core 3 (left) and Advisory Board tab
+Partner / Role	%	Share	Annual	Per Engagement
+Core Partners
+Travis Roderick
+CEO · Chief Architect
+34%	
+$713K
+$712,980
+$36K
+Joe Pung
+COO · Integrator
+28%	
+$587K
+$587,160
+$29K
+Nick McGuire
+GTM · Brand · Tech
+23%	
+$482K
+$482,310
+$24K
+Advisory Board — set in Advisory tab
+Barry Saltzman
+Cross-industry · PREP · Connector
+5.0%	
+$105K
+$104,850
+$5K
+James G. Taylor
+Healthcare MSO · Practice Acq.
+3.0%	
+$63K
+$62,910
+$3K
+Mary Maloney
+Brand + HC Executive Network
+3.0%	
+$63K
+$62,910
+$3K
+System
+Unallocated
+Available · future partners · Andrew Saltzman equity
+4.0%		$84K	—
+Total	96%		$2.3M	$117K
