@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alethia — Client Engagement Experience</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f3;padding:2rem;color:#1a1a1a}
+.wrap{max-width:860px;margin:0 auto}
+.page{border:0.5px solid #ddddd8;border-radius:16px;overflow:hidden;margin-bottom:2rem;background:#fff}
+.p1-hero{background:#1C2B4A;padding:2.5rem 2rem 2rem}
+.p1-eyebrow{font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:#8B9BC0;margin-bottom:.75rem}
+.p1-headline{font-size:26px;font-weight:500;color:#fff;line-height:1.25;margin-bottom:.5rem}
+.p1-sub{font-size:14px;color:#B5C4DC;line-height:1.6;margin-bottom:2rem}
+.p1-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:2rem}
+.stat{background:rgba(255,255,255,0.07);border-radius:8px;padding:1rem;text-align:center}
+.stat-num{font-size:28px;font-weight:500;color:#fff;display:block}
+.stat-lbl{font-size:11px;color:#8B9BC0;margin-top:3px;display:block}
+.p1-promise{background:rgba(139,105,20,0.25);border:0.5px solid rgba(139,105,20,0.5);border-radius:8px;padding:1rem 1.25rem}
+.promise-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#D4A843;margin-bottom:.5rem}
+.promise-text{font-size:15px;color:#fff;font-weight:500;line-height:1.5}
+.p1-before-after{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.ba-col{padding:1.5rem 1.75rem}
+.ba-col.before{background:#FAECE7}
+.ba-col.after{background:#EAF3DE}
+.ba-title{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;margin-bottom:1rem}
+.ba-col.before .ba-title{color:#993C1D}
+.ba-col.after .ba-title{color:#3B6D11}
+.ba-item{display:flex;align-items:flex-start;gap:8px;margin-bottom:10px;font-size:13px;line-height:1.4}
+.ba-col.before .ba-item{color:#712B13}
+.ba-col.after .ba-item{color:#27500A}
+.ba-icon{font-size:14px;margin-top:1px;flex-shrink:0}
+.divider-bar{height:4px;background:#8B6914}
+.p2-body{padding:1.75rem}
+.section-lbl{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#888780;margin-bottom:1rem}
+.gold-rule{height:1px;background:#8B6914;margin:1.25rem 0;opacity:.35}
+.diag-box{border:1.5px solid #B5D4F4;border-radius:12px;overflow:hidden;margin-bottom:1rem}
+.diag-header{background:#E6F1FB;padding:.75rem 1rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.diag-badge{font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;background:#185FA5;color:#fff;padding:3px 8px;border-radius:6px}
+.diag-title{font-size:14px;font-weight:500;color:#0C447C}
+.diag-sub{font-size:12px;color:#185FA5;margin-left:auto}
+.diag-body{padding:1rem;background:#fff}
+.diag-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.diag-step{background:#E6F1FB;border-radius:8px;padding:.625rem .75rem}
+.diag-step-icon{font-size:16px;color:#185FA5;margin-bottom:4px}
+.diag-step-title{font-size:12px;font-weight:500;color:#0C447C;margin-bottom:2px}
+.diag-step-sub{font-size:11px;color:#185FA5;line-height:1.35}
+.diag-note{font-size:12px;color:#888780;margin-top:.75rem;font-style:italic;line-height:1.5}
+.arrow-row{display:flex;align-items:center;justify-content:center;gap:8px;margin:1rem 0}
+.arrow-label{font-size:12px;color:#888780}
+.arrow-line{flex:1;height:1px;background:#ddddd8}
+.arrow-icon{font-size:18px;color:#8B6914}
+.ninety-header{background:#1C2B4A;border-radius:8px;padding:.75rem 1rem;display:flex;align-items:center;gap:10px;margin-bottom:1rem;flex-wrap:wrap}
+.ninety-badge{font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;background:#8B6914;color:#fff;padding:3px 8px;border-radius:6px}
+.ninety-title{font-size:14px;font-weight:500;color:#fff}
+.ninety-sub{font-size:12px;color:#8B9BC0;margin-left:auto}
+.phase-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.5rem}
+.phase{border:0.5px solid #ddddd8;border-radius:8px;overflow:hidden}
+.phase-header{padding:.6rem .75rem}
+.phase-num{font-size:10px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;opacity:.85}
+.phase-title{font-size:13px;font-weight:500;margin-top:2px}
+.phase-body{padding:.75rem;background:#fff}
+.phase-week{font-size:10px;color:#888780;margin-bottom:.5rem}
+.phase-item{font-size:12px;color:#888780;margin-bottom:5px;display:flex;align-items:flex-start;gap:6px;line-height:1.35}
+.phase-item i{font-size:13px;flex-shrink:0;margin-top:1px}
+.phase-output{margin-top:.75rem;padding-top:.75rem;border-top:0.5px solid #ddddd8}
+.phase-output-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#888780;margin-bottom:4px}
+.phase-output-item{font-size:11px;font-weight:500;color:#1a1a1a;margin-bottom:3px}
+.phase1-h{background:#FAEEDA}.phase1-h .phase-num{color:#854F0B}.phase1-h .phase-title{color:#633806}
+.phase2-h{background:#EAF3DE}.phase2-h .phase-num{color:#3B6D11}.phase2-h .phase-title{color:#27500A}
+.phase3-h{background:#F1EFE8}.phase3-h .phase-num{color:#5F5E5A}.phase3-h .phase-title{color:#444441}
+.deliverables{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-bottom:1.5rem}
+.del-card{background:#f5f5f3;border-radius:8px;padding:.75rem}
+.del-icon{font-size:18px;color:#888780;margin-bottom:6px}
+.del-title{font-size:12px;font-weight:500;color:#1a1a1a;margin-bottom:3px}
+.del-sub{font-size:11px;color:#888780;line-height:1.35}
+.network-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-bottom:1.5rem}
+.net-card{border:0.5px solid #ddddd8;border-radius:8px;padding:.75rem;background:#fff}
+.net-icon{font-size:18px;color:#8B6914;margin-bottom:5px}
+.net-title{font-size:12px;font-weight:500;color:#1a1a1a;margin-bottom:3px}
+.net-sub{font-size:11px;color:#888780;line-height:1.35}
+.network-intro{font-size:13px;color:#888780;margin-bottom:1rem;line-height:1.6}
+.roi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.5rem}
+.roi-card{border-radius:8px;padding:.875rem}
+.roi-card.time{background:#E6F1FB}
+.roi-card.money{background:#EAF3DE}
+.roi-card.growth{background:#FAEEDA}
+.roi-num{font-size:22px;font-weight:500}
+.roi-card.time .roi-num{color:#0C447C}
+.roi-card.money .roi-num{color:#27500A}
+.roi-card.growth .roi-num{color:#633806}
+.roi-lbl{font-size:11px;margin-top:3px;line-height:1.35}
+.roi-card.time .roi-lbl{color:#185FA5}
+.roi-card.money .roi-lbl{color:#3B6D11}
+.roi-card.growth .roi-lbl{color:#854F0B}
+.early-box{background:#f5f5f3;padding:1rem 1.25rem;margin-bottom:1.5rem;border-left:3px solid #8B6914}
+.early-title{font-size:13px;font-weight:500;color:#1a1a1a;margin-bottom:.5rem}
+.early-items{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.early-item{font-size:12px;color:#888780;display:flex;align-items:flex-start;gap:6px;line-height:1.35}
+.early-item i{font-size:13px;color:#8B6914;flex-shrink:0;margin-top:1px}
+.promise-footer{text-align:center;padding:1.25rem;border-top:0.5px solid #ddddd8}
+.promise-footer-main{font-size:15px;font-weight:500;color:#1a1a1a;margin-bottom:4px}
+.promise-footer-sub{font-size:12px;color:#888780}
+@media(max-width:600px){
+  .p1-stats{grid-template-columns:1fr 1fr}
+  .p1-before-after{grid-template-columns:1fr}
+  .diag-grid{grid-template-columns:1fr}
+  .phase-grid{grid-template-columns:1fr}
+  .roi-grid{grid-template-columns:1fr}
+  .early-items{grid-template-columns:1fr}
+  .diag-sub,.ninety-sub{display:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="page">
+  <div class="p1-hero">
+    <div class="p1-eyebrow">Alethia · AI-Augmented Operational Execution</div>
+    <div class="p1-headline">You built something real.<br>Now let's build it to last.</div>
+    <div class="p1-sub">Most founders at your stage are working harder than ever and growing slower than they should. The problem isn't effort. It isn't market. It isn't even money. It's that the business runs on you — and you can only run so fast.</div>
+    <div class="p1-stats">
+      <div class="stat"><span class="stat-num">90</span><span class="stat-lbl">days to a working OS</span></div>
+      <div class="stat"><span class="stat-num">5+</span><span class="stat-lbl">documents delivered</span></div>
+      <div class="stat"><span class="stat-num">120+</span><span class="stat-lbl">years operator experience</span></div>
+    </div>
+    <div class="p1-promise">
+      <div class="promise-label">The Alethia promise</div>
+      <div class="promise-text">"We do not create dependence. We build organizations capable of thriving long after we leave."</div>
+    </div>
+  </div>
+  <div class="divider-bar"></div>
+  <div class="p1-before-after">
+    <div class="ba-col before">
+      <div class="ba-title">Where you are today</div>
+      <div class="ba-item"><i class="ti ti-x ba-icon" aria-hidden="true"></i>You are the bottleneck in every decision</div>
+      <div class="ba-item"><i class="ti ti-x ba-icon" aria-hidden="true"></i>Leads come in but nothing is tracked</div>
+      <div class="ba-item"><i class="ti ti-x ba-icon" aria-hidden="true"></i>Revenue is unpredictable month to month</div>
+      <div class="ba-item"><i class="ti ti-x ba-icon" aria-hidden="true"></i>Your team waits on you for everything</div>
+      <div class="ba-item"><i class="ti ti-x ba-icon" aria-hidden="true"></i>You work in the business — not on it</div>
+      <div class="ba-item"><i class="ti ti-x ba-icon" aria-hidden="true"></i>Growth feels like more weight, not more freedom</div>
+    </div>
+    <div class="ba-col after">
+      <div class="ba-title">Where you will be in 90 days</div>
+      <div class="ba-item"><i class="ti ti-check ba-icon" aria-hidden="true"></i>A system makes decisions — not just you</div>
+      <div class="ba-item"><i class="ti ti-check ba-icon" aria-hidden="true"></i>Every lead tracked, followed up, closed</div>
+      <div class="ba-item"><i class="ti ti-check ba-icon" aria-hidden="true"></i>Revenue engine predictable and growing</div>
+      <div class="ba-item"><i class="ti ti-check ba-icon" aria-hidden="true"></i>Your team runs jobs without daily intervention</div>
+      <div class="ba-item"><i class="ti ti-check ba-icon" aria-hidden="true"></i>You work on the business — by design</div>
+      <div class="ba-item"><i class="ti ti-check ba-icon" aria-hidden="true"></i>Growth creates capacity — not chaos</div>
+    </div>
+  </div>
+</div>
+
+<div class="page">
+  <div class="p2-body">
+
+    <div class="section-lbl">how the engagement works</div>
+
+    <div class="diag-box">
+      <div class="diag-header">
+        <span class="diag-badge">pre-engagement</span>
+        <span class="diag-title">The diagnostic — determine the truth</span>
+        <span class="diag-sub">Before the 90 days begin</span>
+      </div>
+      <div class="diag-body">
+        <div class="diag-grid">
+          <div class="diag-step">
+            <div class="diag-step-icon"><i class="ti ti-search" aria-hidden="true"></i></div>
+            <div class="diag-step-title">Signal DX™</div>
+            <div class="diag-step-sub">Public-signal reading of your business. What the outside world sees versus what you intend.</div>
+          </div>
+          <div class="diag-step">
+            <div class="diag-step-icon"><i class="ti ti-chart-bar" aria-hidden="true"></i></div>
+            <div class="diag-step-title">Digital Twin™</div>
+            <div class="diag-step-sub">Your business modeled completely — financials, org, systems, leadership capacity.</div>
+          </div>
+          <div class="diag-step">
+            <div class="diag-step-icon"><i class="ti ti-user-check" aria-hidden="true"></i></div>
+            <div class="diag-step-title">Founder Architecture Session™</div>
+            <div class="diag-step-sub">A structured conversation that finds the real constraint — not the one you think it is.</div>
+          </div>
+        </div>
+        <div class="diag-note">The diagnostic fee is credited in full to your engagement. If we are not the right fit, we will tell you — and you will still walk away with the clearest picture of your business you have ever had.</div>
+      </div>
+    </div>
+
+    <div class="arrow-row">
+      <div class="arrow-line"></div>
+      <i class="ti ti-arrow-down arrow-icon" aria-hidden="true"></i>
+      <span class="arrow-label">diagnostic complete — the 90-day OS begins</span>
+      <div class="arrow-line"></div>
+    </div>
+
+    <div class="ninety-header">
+      <span class="ninety-badge">90-day OS</span>
+      <span class="ninety-title">The Founder Liberation Sprint™</span>
+      <span class="ninety-sub">Day 1 through Day 90</span>
+    </div>
+
+    <div class="phase-grid">
+      <div class="phase">
+        <div class="phase-header phase1-h">
+          <div class="phase-num">Phase 1 · Weeks 1–4</div>
+          <div class="phase-title">Build the architecture</div>
+        </div>
+        <div class="phase-body">
+          <div class="phase-item"><i class="ti ti-map" aria-hidden="true"></i>Strategic Blueprint™ — where you are going and why</div>
+          <div class="phase-item"><i class="ti ti-layout-grid" aria-hidden="true"></i>Accountability Chart™ — every seat has one owner</div>
+          <div class="phase-item"><i class="ti ti-file-text" aria-hidden="true"></i>Decision Rights Matrix™ — who decides what</div>
+          <div class="phase-item"><i class="ti ti-trending-up" aria-hidden="true"></i>Growth Constraint Map™ — first fix sequenced</div>
+          <div class="phase-output">
+            <div class="phase-output-lbl">You receive</div>
+            <div class="phase-output-item">Strategic Blueprint™</div>
+            <div class="phase-output-item">Accountability Chart™</div>
+            <div class="phase-output-item">Decision Rights Matrix™</div>
+            <div class="phase-output-item">Growth Constraint Map™</div>
+          </div>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="phase-header phase2-h">
+          <div class="phase-num">Phase 2 · Weeks 5–10</div>
+          <div class="phase-title">Install the OS</div>
+        </div>
+        <div class="phase-body">
+          <div class="phase-item"><i class="ti ti-rocket" aria-hidden="true"></i>Founder Liberation Sprint™ executed week by week</div>
+          <div class="phase-item"><i class="ti ti-settings" aria-hidden="true"></i>Operating systems and cadence activated</div>
+          <div class="phase-item"><i class="ti ti-users" aria-hidden="true"></i>Specialist network deployed where needed</div>
+          <div class="phase-item"><i class="ti ti-chart-bar" aria-hidden="true"></i>KPI scorecard and dashboard installed</div>
+          <div class="phase-output">
+            <div class="phase-output-lbl">You receive</div>
+            <div class="phase-output-item">Liberation Sprint™ Plan</div>
+            <div class="phase-output-item">Operating cadence installed</div>
+            <div class="phase-output-item">Sprint scorecard live</div>
+          </div>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="phase-header phase3-h">
+          <div class="phase-num">Phase 3 · Weeks 11–12</div>
+          <div class="phase-title">Hand it back</div>
+        </div>
+        <div class="phase-body">
+          <div class="phase-item"><i class="ti ti-award" aria-hidden="true"></i>Sovereignty Handoff™ — you own it completely</div>
+          <div class="phase-item"><i class="ti ti-calendar" aria-hidden="true"></i>Governance cadence and quarterly rhythm set</div>
+          <div class="phase-item"><i class="ti ti-arrow-up-right" aria-hidden="true"></i>90-day plan for what comes next</div>
+          <div class="phase-item"><i class="ti ti-infinity" aria-hidden="true"></i>Ascension option — ongoing governance available</div>
+          <div class="phase-output">
+            <div class="phase-output-lbl">You receive</div>
+            <div class="phase-output-item">Sovereignty Handoff™</div>
+            <div class="phase-output-item">Next 90-day plan</div>
+            <div class="phase-output-item">Governance rhythm</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gold-rule"></div>
+    <div class="section-lbl">the specialist network — deployed when you need it</div>
+    <div class="network-intro">Alethia is not two people and a methodology. Behind every engagement sits a curated network of domain specialists — deployed only when relevant, never as overhead.</div>
+    <div class="network-grid">
+      <div class="net-card">
+        <div class="net-icon"><i class="ti ti-brain" aria-hidden="true"></i></div>
+        <div class="net-title">Behavioral assessment</div>
+        <div class="net-sub">Leadership profiling and team dynamic analysis for every engagement</div>
+      </div>
+      <div class="net-card">
+        <div class="net-icon"><i class="ti ti-speakerphone" aria-hidden="true"></i></div>
+        <div class="net-title">Founder storytelling</div>
+        <div class="net-sub">Strategic content and brand narrative to build your market presence</div>
+      </div>
+      <div class="net-card">
+        <div class="net-icon"><i class="ti ti-cpu" aria-hidden="true"></i></div>
+        <div class="net-title">Technology integration</div>
+        <div class="net-sub">CRM, workflow, and systems integration by certified specialists</div>
+      </div>
+      <div class="net-card">
+        <div class="net-icon"><i class="ti ti-building" aria-hidden="true"></i></div>
+        <div class="net-title">Vertical advisors</div>
+        <div class="net-sub">Healthcare, professional services, and trades specialists on call</div>
+      </div>
+      <div class="net-card">
+        <div class="net-icon"><i class="ti ti-users" aria-hidden="true"></i></div>
+        <div class="net-title">Field architects</div>
+        <div class="net-sub">Senior operators who install and run the OS alongside your team</div>
+      </div>
+      <div class="net-card">
+        <div class="net-icon"><i class="ti ti-chart-line" aria-hidden="true"></i></div>
+        <div class="net-title">Advisory board</div>
+        <div class="net-sub">Cross-industry executives with 2,000+ ICP relationships combined</div>
+      </div>
+    </div>
+
+    <div class="gold-rule"></div>
+    <div class="section-lbl">the ROI — what this is worth</div>
+    <div class="roi-grid">
+      <div class="roi-card time">
+        <div class="roi-num">15+ hrs</div>
+        <div class="roi-lbl">founder time recovered per week — returned to growth, not operations</div>
+      </div>
+      <div class="roi-card money">
+        <div class="roi-num">2–4×</div>
+        <div class="roi-lbl">revenue capacity unlocked when the system runs — not the founder</div>
+      </div>
+      <div class="roi-card growth">
+        <div class="roi-num">90 days</div>
+        <div class="roi-lbl">to a business that operates without you carrying every decision</div>
+      </div>
+    </div>
+
+    <div class="gold-rule"></div>
+    <div class="section-lbl">why now — the early engagement advantage</div>
+    <div class="early-box">
+      <div class="early-title">You are one of Alethia's first engagements. That is not a risk. That is a position.</div>
+      <div class="early-items">
+        <div class="early-item"><i class="ti ti-star" aria-hidden="true"></i>Direct access to Travis Roderick and Joe Pung — personally, every session</div>
+        <div class="early-item"><i class="ti ti-adjustments" aria-hidden="true"></i>The OS is built around your business — not a generic template</div>
+        <div class="early-item"><i class="ti ti-shield" aria-hidden="true"></i>Engagement structured to generate a reference and case study</div>
+        <div class="early-item"><i class="ti ti-clock" aria-hidden="true"></i>Pricing reflects the partnership — not the market rate for this level of work</div>
+        <div class="early-item"><i class="ti ti-users" aria-hidden="true"></i>120+ years of combined operator experience in the room with you</div>
+        <div class="early-item"><i class="ti ti-infinity" aria-hidden="true"></i>Ascension support available — quarterly governance after the sprint ends</div>
+      </div>
+    </div>
+
+    <div class="promise-footer">
+      <div class="promise-footer-main">We leave when the system runs without us. That is the only measure of success.</div>
+      <div class="promise-footer-sub">Alethia · AI-Augmented Operational Execution · alethia.com</div>
+    </div>
+
+  </div>
+</div>
+
+</div>
+</body>
+</html>
