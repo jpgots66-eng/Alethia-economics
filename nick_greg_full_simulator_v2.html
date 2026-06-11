@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nick & Greg — Full Revenue Simulator</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f3;color:#1a1a1a;padding:2rem}
+.sw{max-width:860px;margin:0 auto;background:#fff;border-radius:16px;padding:2rem;box-shadow:0 1px 4px rgba(0,0,0,0.08)}
+.sec-lbl{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#888780;margin-bottom:8px}
+.card{background:#fff;border:0.5px solid #ddddd8;border-radius:12px;padding:1rem 1.25rem;margin-bottom:12px}
+.mg{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:16px}
+.mc{background:#f5f5f3;border-radius:8px;padding:.75rem}
+.ml{font-size:11px;color:#888780;margin-bottom:3px}
+.mv{font-size:19px;font-weight:500;color:#1a1a1a}
+.mv.g{color:#3B6D11}.mv.a{color:#854F0B}.mv.r{color:#A32D2D}
+.sr{display:flex;align-items:center;gap:10px;margin-bottom:11px}
+.sr label{font-size:13px;color:#888780;min-width:200px}
+.sr input[type=range]{flex:1;accent-color:#1a1a1a}
+.sv{font-size:13px;font-weight:500;min-width:70px;text-align:right;color:#1a1a1a}
+.dg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px}
+.dc{border:0.5px solid #ddddd8;border-radius:8px;padding:.75rem;background:#fff}
+.dt{font-size:12px;font-weight:500;margin-bottom:7px}
+.db{display:inline-block;font-size:10px;padding:2px 7px;border-radius:8px;margin-bottom:7px}
+.bf{background:#EAF3DE;color:#3B6D11}.bh{background:#E6F1FB;color:#185FA5}.br{background:#FAEEDA;color:#854F0B}.bp{background:#FBEAF0;color:#993556}
+.dr{display:flex;justify-content:space-between;font-size:12px;color:#888780;margin-bottom:3px}
+.dr span:last-child{color:#1a1a1a;font-weight:500}
+.cf{font-size:12px;padding:5px 10px;border-radius:8px;margin-bottom:5px;display:flex;align-items:center;gap:6px}
+.fw{background:#FAEEDA;color:#854F0B}.fk{background:#EAF3DE;color:#3B6D11}.fr{background:#FAECE7;color:#993C1D}
+.tab-row{display:flex;gap:4px;margin-bottom:16px;border-bottom:0.5px solid #ddddd8;flex-wrap:wrap}
+.tab{font-size:13px;padding:6px 14px;cursor:pointer;color:#888780;border-bottom:2px solid transparent;margin-bottom:-1px;background:none;border-top:none;border-left:none;border-right:none}
+.tab.active{color:#1a1a1a;border-bottom:2px solid #1a1a1a;font-weight:500}
+.pane{display:none}.pane.active{display:block}
+.cg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cc{border:0.5px solid #ddddd8;border-radius:8px;padding:.75rem}
+.ct{font-size:12px;font-weight:500;margin-bottom:7px}
+.crow{display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px}
+.crow .l{color:#888780}.crow .v{font-weight:500}
+.win{border:1.5px solid #3B6D11}
+.cw{position:relative;width:100%;height:240px;margin-bottom:8px}
+.cw2{position:relative;width:100%;height:180px;margin-bottom:8px}
+.og{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.oi{background:#f5f5f3;border-radius:8px;padding:.75rem}
+.ol{font-size:11px;color:#888780;margin-bottom:3px}
+.ov{font-size:14px;font-weight:500}
+.on{font-size:11px;color:#888780;margin-top:2px}
+.sb{display:flex;gap:7px;margin-bottom:14px;flex-wrap:wrap}
+.sbn{font-size:12px;padding:5px 12px;border-radius:8px;border:0.5px solid #b4b2a9;background:#fff;cursor:pointer;color:#888780}
+.sbn.active{background:#f5f5f3;color:#1a1a1a;border-color:#5f5e5a;font-weight:500}
+.divider{border:none;border-top:0.5px solid #ddddd8;margin:14px 0}
+.andrew-card{border:1.5px solid #B5D4F4;background:#fff;border-radius:12px;padding:1rem 1.25rem;margin-bottom:12px}
+.andrew-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.andrew-badge{font-size:11px;background:#E6F1FB;color:#185FA5;padding:3px 9px;border-radius:8px;font-weight:500}
+.ref-card{border:1.5px solid #9FE1CB;background:#fff;border-radius:12px;padding:1rem 1.25rem;margin-bottom:12px}
+.flow-row{display:flex;align-items:center;gap:6px;font-size:12px;margin-bottom:6px;flex-wrap:wrap}
+.flow-box{background:#f5f5f3;border-radius:8px;padding:4px 10px;font-size:12px;color:#1a1a1a}
+.flow-arrow{color:#888780;font-size:14px}
+h2{font-size:18px;font-weight:500;color:#1a1a1a;margin-bottom:4px}
+.subtitle{font-size:13px;color:#888780;margin-bottom:16px}
+.alethia-brand{font-size:11px;color:#888780;text-align:center;margin-top:2rem;padding-top:1rem;border-top:0.5px solid #ddddd8}
+</style>
+</head>
+<body>
+<div class="sw">
+<h2>Nick &amp; Greg Construction</h2>
+<p class="subtitle">Business scenario simulator — built by Alethia</p>
+
+<div class="tab-row">
+  <button class="tab active" onclick="swTab('build',this)">scenario builder</button>
+  <button class="tab" onclick="swTab('andrew',this)">andrew + automation</button>
+  <button class="tab" onclick="swTab('gutref',this)">gutter referral engine</button>
+  <button class="tab" onclick="swTab('compare',this)">compare</button>
+  <button class="tab" onclick="swTab('ops',this)">ops impact</button>
+</div>
+
+<!-- SCENARIO BUILDER -->
+<div id="pane-build" class="pane active">
+<div class="card">
+  <div class="sec-lbl">quick scenarios</div>
+  <div class="sb">
+    <button class="sbn active" onclick="loadS('current',this)">current state</button>
+    <button class="sbn" onclick="loadS('gutter2',this)">2 gutter teams</button>
+    <button class="sbn" onclick="loadS('andrewOn',this)">+ andrew active</button>
+    <button class="sbn" onclick="loadS('d2scale',this)">d2 scale push</button>
+    <button class="sbn" onclick="loadS('fullOS',this)">full OS installed</button>
+  </div>
+
+  <div class="sec-lbl">division 1 — fast lane</div>
+  <div class="sr"><label>gutter teams</label><input type="range" min="0" max="4" step="1" id="s-gT" oninput="rc()"><span class="sv" id="v-gT">1</span></div>
+  <div class="sr"><label>gutter days/week per team</label><input type="range" min="0" max="5" step="1" id="s-gD" oninput="rc()"><span class="sv" id="v-gD">3</span></div>
+  <div class="sr"><label>roofing jobs/month (dean)</label><input type="range" min="0" max="12" step="1" id="s-rJ" oninput="rc()"><span class="sv" id="v-rJ">0</span></div>
+  <div class="sr"><label>small exterior jobs/month</label><input type="range" min="0" max="15" step="1" id="s-eJ" oninput="rc()"><span class="sv" id="v-eJ">3</span></div>
+
+  <hr class="divider">
+  <div class="sec-lbl">division 2 — heavy lane</div>
+  <div class="sr"><label>kitchen renos/month</label><input type="range" min="0" max="4" step="1" id="s-kR" oninput="rc()"><span class="sv" id="v-kR">1</span></div>
+  <div class="sr"><label>main floor renos/month</label><input type="range" min="0" max="4" step="1" id="s-mR" oninput="rc()"><span class="sv" id="v-mR">0</span></div>
+  <div class="sr"><label>garage suites/month</label><input type="range" min="0" max="2" step="1" id="s-gS" oninput="rc()"><span class="sv" id="v-gS">0</span></div>
+  <div class="sr"><label>full home renos/month</label><input type="range" min="0" max="2" step="1" id="s-fH" oninput="rc()"><span class="sv" id="v-fH">0</span></div>
+
+  <hr class="divider">
+  <div class="sec-lbl">cost &amp; structure</div>
+  <div class="sr"><label>meninder PM fee %</label><input type="range" min="10" max="30" step="1" id="s-mF" oninput="rc()"><span class="sv" id="v-mF">18%</span></div>
+  <div class="sr"><label>admin activated (rebecca)</label><input type="range" min="0" max="1" step="1" id="s-ad" oninput="rc()"><span class="sv" id="v-ad">no</span></div>
+  <div class="sr"><label>estimator on staff</label><input type="range" min="0" max="1" step="1" id="s-es" oninput="rc()"><span class="sv" id="v-es">no</span></div>
+</div>
+
+<div class="mg" id="metrics"></div>
+<div class="dg" id="divCards"></div>
+<div class="card"><div class="sec-lbl">constraint signals</div><div id="constraints"></div></div>
+</div>
+
+<!-- ANDREW + AUTOMATION -->
+<div id="pane-andrew" class="pane">
+<div class="andrew-card">
+  <div class="andrew-header">
+    <span style="font-size:15px;font-weight:500">Andrew Saltzman — Tellr</span>
+    <span class="andrew-badge">strategic partner</span>
+  </div>
+  <div class="sec-lbl">service tier for nick &amp; greg</div>
+  <div class="sr"><label>Tellr tier (monthly)</label><input type="range" min="0" max="3" step="1" id="s-aT" oninput="rc()"><span class="sv" id="v-aT">off</span></div>
+  <div class="sr"><label>AI automation setup (one-time)</label><input type="range" min="0" max="5000" step="500" id="s-aA" oninput="rc()"><span class="sv" id="v-aA">$0</span></div>
+  <hr class="divider">
+  <div class="sec-lbl">lead generation impact</div>
+  <div class="sr"><label>additional D1 jobs/month from content</label><input type="range" min="0" max="8" step="1" id="s-aD1" oninput="rc()"><span class="sv" id="v-aD1">0</span></div>
+  <div class="sr"><label>additional D2 jobs/month from content</label><input type="range" min="0" max="3" step="1" id="s-aD2" oninput="rc()"><span class="sv" id="v-aD2">0</span></div>
+  <div class="sr"><label>close rate lift from storytelling %</label><input type="range" min="0" max="30" step="5" id="s-aCR" oninput="rc()"><span class="sv" id="v-aCR">0%</span></div>
+  <hr class="divider">
+  <div class="sec-lbl">automation tools deployed</div>
+  <div class="sr"><label>lead response bot (CRM auto-reply)</label><input type="range" min="0" max="1" step="1" id="s-bot1" oninput="rc()"><span class="sv" id="v-bot1">no</span></div>
+  <div class="sr"><label>review request automation</label><input type="range" min="0" max="1" step="1" id="s-bot2" oninput="rc()"><span class="sv" id="v-bot2">no</span></div>
+  <div class="sr"><label>client update bot (progress msgs)</label><input type="range" min="0" max="1" step="1" id="s-bot3" oninput="rc()"><span class="sv" id="v-bot3">no</span></div>
+</div>
+<div id="andrewSummary"></div>
+</div>
+
+<!-- GUTTER REFERRAL ENGINE -->
+<div id="pane-gutref" class="pane">
+<div class="ref-card">
+  <div class="andrew-header">
+    <span style="font-size:15px;font-weight:500">Gutter truck referral engine</span>
+    <span class="andrew-badge" style="background:#E1F5EE;color:#0F6E56">d1 → d2 pipeline</span>
+  </div>
+  <p style="font-size:13px;color:#888780;margin-bottom:12px">Every gutter job is a warm touchpoint. The crew is on site. The homeowner sees the quality. That trust converts to D2 referrals at a measurable rate.</p>
+  <div class="sec-lbl">referral conversion settings</div>
+  <div class="sr"><label>% gutter clients who refer D2 job</label><input type="range" min="0" max="30" step="2" id="s-gRef" oninput="rc()"><span class="sv" id="v-gRef">8%</span></div>
+  <div class="sr"><label>avg D2 job type from referral</label><input type="range" min="0" max="3" step="1" id="s-gRefType" oninput="rc()"><span class="sv" id="v-gRefType">exterior</span></div>
+  <div class="sr"><label>referral close rate %</label><input type="range" min="50" max="100" step="5" id="s-gRefClose" oninput="rc()"><span class="sv" id="v-gRefClose">80%</span></div>
+  <div class="sr"><label>months to first referral revenue</label><input type="range" min="1" max="6" step="1" id="s-gRefLag" oninput="rc()"><span class="sv" id="v-gRefLag">2</span></div>
+</div>
+<div id="gutRefSummary"></div>
+</div>
+
+<!-- COMPARE -->
+<div id="pane-compare" class="pane">
+<div class="card">
+  <div class="sec-lbl">annual revenue — all scenarios</div>
+  <div class="cw"><canvas id="compareChart" role="img" aria-label="Bar chart comparing annual revenue across scenarios">Scenario comparison.</canvas></div>
+  <div style="display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:#888780;margin-top:8px" id="compLegend"></div>
+</div>
+<div class="cg" id="compareCards"></div>
+</div>
+
+<!-- OPS IMPACT -->
+<div id="pane-ops" class="pane">
+<div class="card">
+  <div class="sec-lbl">operational requirements</div>
+  <div class="og" id="opsGrid"></div>
+</div>
+<div class="card" style="margin-top:0">
+  <div class="sec-lbl">founder time audit (hrs/week)</div>
+  <div class="cw2"><canvas id="timeChart" role="img" aria-label="Stacked bar showing founder time allocation">Founder time chart.</canvas></div>
+</div>
+</div>
+
+<div class="alethia-brand">Alethia · AI-Augmented Operational Execution · Built for Nick &amp; Greg Construction</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+const TIER_COST=[0,947,2500,5000];
+const TIER_NAME=['off','tier 1 — $947/mo','tier 2 — $2,500/mo','tier 3 — $5,000/mo'];
+const TIER_SHORT=['off','$947/mo','$2,500/mo','$5,000/mo'];
+const REFT=['exterior','kitchen','main floor','garage suite'];
+const REFT_VAL=[6000,25000,85000,175000];
+const REFT_MARGIN=[0.25,0.37,0.25,0.25];
+
+const SCENARIOS={
+  current: {gT:1,gD:3,rJ:0,eJ:3,kR:1,mR:0,gS:0,fH:0,mF:18,ad:0,es:0,aT:0,aA:0,aD1:0,aD2:0,aCR:0,bot1:0,bot2:0,bot3:0,gRef:8,gRefType:1,gRefClose:80,gRefLag:2},
+  gutter2: {gT:2,gD:4,rJ:0,eJ:3,kR:1,mR:0,gS:0,fH:0,mF:18,ad:0,es:0,aT:0,aA:0,aD1:0,aD2:0,aCR:0,bot1:0,bot2:0,bot3:0,gRef:8,gRefType:1,gRefClose:80,gRefLag:2},
+  andrewOn:{gT:2,gD:4,rJ:2,eJ:4,kR:1,mR:1,gS:0,fH:0,mF:18,ad:1,es:0,aT:2,aA:2000,aD1:3,aD2:1,aCR:15,bot1:1,bot2:1,bot3:0,gRef:12,gRefType:1,gRefClose:85,gRefLag:2},
+  d2scale: {gT:1,gD:3,rJ:2,eJ:3,kR:2,mR:2,gS:1,fH:0,mF:15,ad:1,es:0,aT:2,aA:1500,aD1:2,aD2:1,aCR:10,bot1:1,bot2:1,bot3:1,gRef:10,gRefType:2,gRefClose:85,gRefLag:2},
+  fullOS:  {gT:2,gD:5,rJ:4,eJ:6,kR:2,mR:2,gS:1,fH:1,mF:15,ad:1,es:1,aT:3,aA:3000,aD1:4,aD2:2,aCR:20,bot1:1,bot2:1,bot3:1,gRef:15,gRefType:2,gRefClose:90,gRefLag:1},
+};
+const SNAMES={current:'Current state',gutter2:'2 gutter teams',andrewOn:'+ Andrew active',d2scale:'D2 scale push',fullOS:'Full OS installed'};
+
+function getS(){
+  const ids=['gT','gD','rJ','eJ','kR','mR','gS','fH','mF','ad','es','aT','aA','aD1','aD2','aCR','bot1','bot2','bot3','gRef','gRefType','gRefClose','gRefLag'];
+  const s={};
+  ids.forEach(k=>{s[k]=+document.getElementById('s-'+k).value;});
+  return s;
+}
+
+function calc(s){
+  const pm=s.mF/100;
+  const crLift=1+(s.aCR/100);
+  const d1GutRev=s.gT*s.gD*2000*4.33;
+  const d1GutMar=d1GutRev*0.50;
+  const d1RoofRev=s.rJ*11500*crLift;
+  const d1RoofMar=d1RoofRev*(0.25-pm*0.3);
+  const d1ExtRev=(s.eJ+s.aD1)*6000*crLift;
+  const d1ExtMar=d1ExtRev*(0.25-pm*0.3);
+  const d1Rev=d1GutRev+d1RoofRev+d1ExtRev;
+  const d1Mar=d1GutMar+d1RoofMar+d1ExtMar;
+  const d2KitRev=s.kR*25000*crLift;
+  const d2KitMar=d2KitRev*0.37;
+  const d2MnRev=s.mR*85000*crLift;
+  const d2MnMar=d2MnRev*(0.25-pm);
+  const d2GsRev=s.gS*175000*crLift;
+  const d2GsMar=d2GsRev*(0.25-pm);
+  const d2FhRev=s.fH*300000*crLift;
+  const d2FhMar=d2FhRev*(0.20-pm);
+  const d2AddRev=s.aD2*25000*crLift;
+  const d2AddMar=d2AddRev*0.30;
+  const d2Rev=d2KitRev+d2MnRev+d2GsRev+d2FhRev+d2AddRev;
+  const d2Mar=d2KitMar+d2MnMar+d2GsMar+d2FhMar+d2AddMar;
+  const gutterJobs=s.gT*s.gD*4.33;
+  const refJobsRaw=gutterJobs*(s.gRef/100)*(s.gRefClose/100);
+  const refJobRev=refJobsRaw*REFT_VAL[s.gRefType]*crLift;
+  const refJobMar=refJobRev*REFT_MARGIN[s.gRefType];
+  const tellrCost=TIER_COST[s.aT];
+  const adminCost=s.ad?2500:0;
+  const estimatorCost=s.es?5000:0;
+  const botCount=s.bot1+s.bot2+s.bot3;
+  const automationMonthly=botCount*150;
+  const totalRevWithRef=d1Rev+d2Rev+refJobRev;
+  const totalMarWithRef=d1Mar+d2Mar+refJobMar;
+  const totalCosts=tellrCost+adminCost+estimatorCost+automationMonthly;
+  const netMar=totalMarWithRef-totalCosts;
+  const annualRev=totalRevWithRef*12;
+  const annualMar=totalMarWithRef*12;
+  const annualNet=netMar*12;
+  const marPct=totalRevWithRef>0?totalMarWithRef/totalRevWithRef:0;
+  const activeJobs=s.kR+s.mR+s.gS*3+s.fH*6;
+  const foHrsOps=Math.min(38,activeJobs*8+s.gT*4+s.rJ*2);
+  const foHrsSales=Math.min(18,(s.kR+s.mR)*4+4);
+  const foHrsAdmin=s.ad?2:Math.min(14,activeJobs*3+4);
+  const foFree=Math.max(0,40-foHrsOps-foHrsSales-foHrsAdmin);
+  const activeCrews=s.gT+(s.rJ>0?1:0)+Math.ceil((s.kR+s.mR+s.gS+s.fH)*0.7);
+  const andrewROI=tellrCost>0?((d2AddRev*0.30+d1ExtRev*0.10)-tellrCost):0;
+  return {d1Rev,d1Mar,d1GutRev,d1RoofRev,d1ExtRev,d2Rev,d2Mar,d2KitRev,d2MnRev,d2GsRev,d2FhRev,d2AddRev,refJobRev,refJobMar,refJobsRaw,gutterJobs,totalRevWithRef,totalMarWithRef,netMar,annualRev,annualMar,annualNet,marPct,tellrCost,adminCost,estimatorCost,automationMonthly,totalCosts,foHrsOps,foHrsSales,foHrsAdmin,foFree,activeCrews,activeJobs,botCount,andrewROI};
+}
+
+function fmt(n){return '$'+Math.round(n).toLocaleString();}
+function fmtK(n){return '$'+Math.round(n/1000)+'K';}
+function pct(n){return Math.round(n*100)+'%';}
+
+function ulbls(s){
+  document.getElementById('v-gT').textContent=s.gT;
+  document.getElementById('v-gD').textContent=s.gD;
+  document.getElementById('v-rJ').textContent=s.rJ;
+  document.getElementById('v-eJ').textContent=s.eJ;
+  document.getElementById('v-kR').textContent=s.kR;
+  document.getElementById('v-mR').textContent=s.mR;
+  document.getElementById('v-gS').textContent=s.gS;
+  document.getElementById('v-fH').textContent=s.fH;
+  document.getElementById('v-mF').textContent=s.mF+'%';
+  document.getElementById('v-ad').textContent=s.ad?'yes':'no';
+  document.getElementById('v-es').textContent=s.es?'yes':'no';
+  document.getElementById('v-aT').textContent=TIER_NAME[s.aT];
+  document.getElementById('v-aA').textContent='$'+s.aA;
+  document.getElementById('v-aD1').textContent=s.aD1;
+  document.getElementById('v-aD2').textContent=s.aD2;
+  document.getElementById('v-aCR').textContent=s.aCR+'%';
+  document.getElementById('v-bot1').textContent=s.bot1?'yes':'no';
+  document.getElementById('v-bot2').textContent=s.bot2?'yes':'no';
+  document.getElementById('v-bot3').textContent=s.bot3?'yes':'no';
+  document.getElementById('v-gRef').textContent=s.gRef+'%';
+  document.getElementById('v-gRefType').textContent=REFT[s.gRefType];
+  document.getElementById('v-gRefClose').textContent=s.gRefClose+'%';
+  document.getElementById('v-gRefLag').textContent=s.gRefLag+' mo';
+}
+
+function renderMetrics(r){
+  const mc=r.marPct>=0.30?'g':r.marPct>=0.20?'a':'r';
+  const fc=r.foFree>=15?'g':r.foFree>=5?'a':'r';
+  document.getElementById('metrics').innerHTML=`
+    <div class="mc"><div class="ml">monthly revenue</div><div class="mv">${fmtK(r.totalRevWithRef)}</div></div>
+    <div class="mc"><div class="ml">annual revenue</div><div class="mv">${fmtK(r.annualRev)}</div></div>
+    <div class="mc"><div class="ml">monthly margin</div><div class="mv ${mc}">${fmtK(r.totalMarWithRef)}</div></div>
+    <div class="mc"><div class="ml">net after costs</div><div class="mv ${mc}">${fmtK(r.netMar)}</div></div>
+    <div class="mc"><div class="ml">blended margin %</div><div class="mv ${mc}">${pct(r.marPct)}</div></div>
+    <div class="mc"><div class="ml">founder free hrs/wk</div><div class="mv ${fc}">${r.foFree}h</div></div>`;
+}
+
+function renderDivCards(s,r){
+  document.getElementById('divCards').innerHTML=`
+    <div class="dc"><div class="dt">division 1 — fast lane</div><span class="db bf">cash flow</span>
+      <div class="dr"><span>gutters</span><span>${fmtK(r.d1GutRev)}/mo</span></div>
+      <div class="dr"><span>roofing (dean)</span><span>${fmtK(r.d1RoofRev)}/mo</span></div>
+      <div class="dr"><span>exterior</span><span>${fmtK(r.d1ExtRev)}/mo</span></div>
+      <div class="dr" style="margin-top:5px;border-top:0.5px solid #ddddd8;padding-top:5px"><span>subtotal</span><span>${fmtK(r.d1Rev)}/mo</span></div>
+      <div class="dr"><span>margin</span><span>${fmtK(r.d1Mar)}/mo</span></div></div>
+    <div class="dc"><div class="dt">division 2 — heavy lane</div><span class="db bh">profit engine</span>
+      <div class="dr"><span>kitchens</span><span>${fmtK(r.d2KitRev)}/mo</span></div>
+      <div class="dr"><span>main floor</span><span>${fmtK(r.d2MnRev)}/mo</span></div>
+      <div class="dr"><span>garage suites</span><span>${fmtK(r.d2GsRev)}/mo</span></div>
+      <div class="dr"><span>full home</span><span>${fmtK(r.d2FhRev)}/mo</span></div>
+      <div class="dr"><span>+ andrew leads</span><span>${fmtK(r.d2AddRev)}/mo</span></div>
+      <div class="dr" style="margin-top:5px;border-top:0.5px solid #ddddd8;padding-top:5px"><span>subtotal</span><span>${fmtK(r.d2Rev)}/mo</span></div>
+      <div class="dr"><span>margin after PM</span><span>${fmtK(r.d2Mar)}/mo</span></div></div>
+    <div class="dc"><div class="dt">gutter referral pipeline</div><span class="db br">d1 → d2</span>
+      <div class="dr"><span>gutter jobs/mo</span><span>${Math.round(r.gutterJobs)}</span></div>
+      <div class="dr"><span>referrals generated</span><span>${r.refJobsRaw.toFixed(1)}/mo</span></div>
+      <div class="dr"><span>referral type</span><span>${REFT[s.gRefType]}</span></div>
+      <div class="dr" style="margin-top:5px;border-top:0.5px solid #ddddd8;padding-top:5px"><span>referral revenue</span><span>${fmtK(r.refJobRev)}/mo</span></div>
+      <div class="dr"><span>referral margin</span><span>${fmtK(r.refJobMar)}/mo</span></div></div>`;
+}
+
+function renderConstraints(s,r){
+  const flags=[];
+  if(s.gT===0) flags.push({c:'fr',m:'Gutter machine idle — $0 from the asset you own'});
+  if(s.gT>=2&&s.ad===0) flags.push({c:'fw',m:'2 gutter teams need admin coordination — activate Rebecca'});
+  if(r.activeJobs>3&&s.es===0) flags.push({c:'fw',m:'D2 job count exceeds Nick solo capacity — estimator needed'});
+  if(r.foFree<5) flags.push({c:'fr',m:'Founder free time critical — no capacity for growth'});
+  if(s.mF>20&&r.d2Rev>0) flags.push({c:'fw',m:'Meninder fee above 20% — renegotiate before scaling D2'});
+  if(s.aT>0&&s.ad===0) flags.push({c:'fw',m:'Andrew driving leads with no admin to capture them in CRM'});
+  if(s.aT>0&&r.andrewROI>0) flags.push({c:'fk',m:`Andrew ROI positive — generating ${fmtK(r.andrewROI)}/mo above his cost`});
+  if(s.aT>0&&r.andrewROI<=0) flags.push({c:'fw',m:'Andrew cost not yet covered by lead gen lift — increase D2 jobs or close rate'});
+  if(s.bot1) flags.push({c:'fk',m:'Lead response bot active — no lead goes cold after hours'});
+  if(s.bot2) flags.push({c:'fk',m:'Review automation active — Google rating building passively'});
+  if(s.gRef>10&&s.gT>0) flags.push({c:'fk',m:`Gutter referral engine generating ${fmtK(r.refJobRev)}/mo in D2 pipeline`});
+  if(s.ad===1) flags.push({c:'fk',m:'Rebecca active — admin and CRM off founders'});
+  if(r.annualRev>1500000) flags.push({c:'fk',m:'Revenue trajectory above $1.5M — ICP range achieved'});
+  if(flags.length===0) flags.push({c:'fw',m:'Adjust sliders to model your scenario'});
+  const ico={fr:'ti-x',fw:'ti-alert-triangle',fk:'ti-check'};
+  document.getElementById('constraints').innerHTML=flags.map(f=>`<div class="cf ${f.c}"><i class="ti ${ico[f.c]}"></i> ${f.m}</div>`).join('');
+}
+
+function renderAndrew(s,r){
+  const el=document.getElementById('andrewSummary');
+  if(!el) return;
+  const tier=s.aT;
+  const bots=['Lead response bot','Review request automation','Client update bot'].filter((_,i)=>[s.bot1,s.bot2,s.bot3][i]);
+  const flowHtml=tier===0?`<p style="font-size:13px;color:#888780">No Tellr tier selected. Activate a tier to model lead gen impact.</p>`:`
+    <div class="flow-row"><div class="flow-box">Founder content (podcast/video)</div><span class="flow-arrow">→</span><div class="flow-box">Content factory (AI repurpose)</div><span class="flow-arrow">→</span><div class="flow-box">LinkedIn + YouTube</div></div>
+    <div class="flow-row"><div class="flow-box">Warm inbound leads</div><span class="flow-arrow">→</span><div class="flow-box">+${s.aD1} D1 jobs/mo</div><span class="flow-arrow">+</span><div class="flow-box">+${s.aD2} D2 jobs/mo</div><span class="flow-arrow">+</span><div class="flow-box">+${s.aCR}% close rate</div></div>`;
+  el.innerHTML=`<div class="card"><div class="sec-lbl">revenue impact from andrew</div>
+    <div class="mg">
+      <div class="mc"><div class="ml">tellr monthly cost</div><div class="mv r">${tier>0?fmtK(TIER_COST[tier]):'—'}</div></div>
+      <div class="mc"><div class="ml">automation setup</div><div class="mv r">${s.aA>0?fmt(s.aA)+' one-time':'—'}</div></div>
+      <div class="mc"><div class="ml">automation monthly</div><div class="mv a">${r.automationMonthly>0?fmtK(r.automationMonthly):'—'}</div></div>
+      <div class="mc"><div class="ml">d1 lift from content</div><div class="mv g">${fmtK(s.aD1*6000*(1+s.aCR/100))}/mo</div></div>
+      <div class="mc"><div class="ml">d2 lift from content</div><div class="mv g">${fmtK(r.d2AddRev)}/mo</div></div>
+      <div class="mc"><div class="ml">andrew net ROI</div><div class="mv ${r.andrewROI>0?'g':'r'}">${fmtK(r.andrewROI)}/mo</div></div>
+    </div>
+    <div class="sec-lbl">content → lead flow</div>${flowHtml}
+    ${bots.length>0?`<hr class="divider"><div class="sec-lbl">automation stack deployed</div>${bots.map(b=>`<div class="cf fk"><i class="ti ti-check"></i> ${b} active</div>`).join('')}`:''}
+  </div>`;
+}
+
+function renderGutRef(s,r){
+  const el=document.getElementById('gutRefSummary');
+  if(!el) return;
+  el.innerHTML=`<div class="card"><div class="sec-lbl">referral pipeline output</div>
+    <div class="mg">
+      <div class="mc"><div class="ml">gutter jobs/month</div><div class="mv">${Math.round(r.gutterJobs)}</div></div>
+      <div class="mc"><div class="ml">referrals generated/mo</div><div class="mv">${r.refJobsRaw.toFixed(1)}</div></div>
+      <div class="mc"><div class="ml">referral job type</div><div class="mv">${REFT[s.gRefType]}</div></div>
+      <div class="mc"><div class="ml">referral revenue/mo</div><div class="mv g">${fmtK(r.refJobRev)}</div></div>
+      <div class="mc"><div class="ml">referral margin/mo</div><div class="mv g">${fmtK(r.refJobMar)}</div></div>
+      <div class="mc"><div class="ml">annual referral rev</div><div class="mv g">${fmtK(r.refJobRev*12)}</div></div>
+    </div>
+    <div class="sec-lbl">the math</div>
+    <div class="flow-row"><div class="flow-box">${Math.round(r.gutterJobs)} gutter jobs/mo</div><span class="flow-arrow">×</span><div class="flow-box">${s.gRef}% refer</div><span class="flow-arrow">×</span><div class="flow-box">${s.gRefClose}% close</div><span class="flow-arrow">→</span><div class="flow-box" style="font-weight:500">${r.refJobsRaw.toFixed(1)} jobs/mo</div></div>
+    <div class="flow-row" style="margin-top:8px"><div class="flow-box">${r.refJobsRaw.toFixed(1)} jobs × ${fmt(REFT_VAL[s.gRefType])}</div><span class="flow-arrow">→</span><div class="flow-box" style="font-weight:500">${fmtK(r.refJobRev)}/mo</div><span class="flow-arrow">→</span><div class="flow-box" style="font-weight:500">${fmtK(r.refJobRev*12)}/yr</div></div>
+    <hr class="divider">
+    <p style="font-size:12px;color:#888780">First referral revenue arrives month ${s.gRefLag}. Referral close rate is higher than cold because the homeowner already trusts the crew.</p>
+  </div>`;
+}
+
+let compareChart=null;
+function renderCompare(){
+  const ctx=document.getElementById('compareChart');
+  if(!ctx) return;
+  if(compareChart){compareChart.destroy();compareChart=null;}
+  const keys=Object.keys(SCENARIOS);
+  compareChart=new Chart(ctx,{
+    type:'bar',
+    data:{
+      labels:keys.map(k=>SNAMES[k]),
+      datasets:[
+        {label:'Annual revenue ($K)',data:keys.map(k=>Math.round(calc(SCENARIOS[k]).annualRev/1000)),backgroundColor:'#378ADD',borderRadius:3},
+        {label:'Annual margin ($K)',data:keys.map(k=>Math.round(calc(SCENARIOS[k]).annualMar/1000)),backgroundColor:'#1D9E75',borderRadius:3},
+        {label:'Annual net ($K)',data:keys.map(k=>Math.round(calc(SCENARIOS[k]).annualNet/1000)),backgroundColor:'#EF9F27',borderRadius:3},
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:'#888780',font:{size:10}}},y:{ticks:{color:'#888780',callback:v=>'$'+v+'K'}}}}
+  });
+  document.getElementById('compLegend').innerHTML=`
+    <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:#378ADD"></span>Annual revenue</span>
+    <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:#1D9E75"></span>Annual margin</span>
+    <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:#EF9F27"></span>Net after all costs</span>`;
+  const best=keys.reduce((a,b)=>calc(SCENARIOS[a]).annualRev>calc(SCENARIOS[b]).annualRev?a:b);
+  document.getElementById('compareCards').innerHTML=keys.map(k=>{
+    const r=calc(SCENARIOS[k]);
+    return `<div class="cc ${k===best?'win':''}"><div class="ct">${SNAMES[k]}${k===best?' ★':''}</div>
+      <div class="crow"><span class="l">annual revenue</span><span class="v">${fmtK(r.annualRev)}</span></div>
+      <div class="crow"><span class="l">annual margin</span><span class="v">${fmtK(r.annualMar)}</span></div>
+      <div class="crow"><span class="l">net after costs</span><span class="v">${fmtK(r.annualNet)}</span></div>
+      <div class="crow"><span class="l">margin %</span><span class="v">${pct(r.marPct)}</span></div>
+      <div class="crow"><span class="l">founder free time</span><span class="v">${r.foFree}h/wk</span></div>
+    </div>`;
+  }).join('');
+}
+
+let timeChart=null;
+function renderTime(r){
+  const ctx=document.getElementById('timeChart');
+  if(!ctx) return;
+  if(timeChart){timeChart.destroy();timeChart=null;}
+  timeChart=new Chart(ctx,{
+    type:'bar',
+    data:{
+      labels:['Greg','Nick'],
+      datasets:[
+        {label:'Operations',data:[Math.round(r.foHrsOps*0.3),Math.round(r.foHrsOps*0.7)],backgroundColor:'#378ADD'},
+        {label:'Sales',data:[Math.round(r.foHrsSales*0.8),Math.round(r.foHrsSales*0.2)],backgroundColor:'#1D9E75'},
+        {label:'Admin',data:[Math.round(r.foHrsAdmin*0.4),Math.round(r.foHrsAdmin*0.6)],backgroundColor:'#EF9F27'},
+        {label:'Free',data:[Math.round(r.foFree*0.5),Math.round(r.foFree*0.5)],backgroundColor:'#D3D1C7'},
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{stacked:true,grid:{display:false},ticks:{color:'#888780'}},y:{stacked:true,max:40,ticks:{color:'#888780'},title:{display:true,text:'hrs/week',color:'#888780',font:{size:11}}}}}
+  });
+}
+
+function renderOps(s,r){
+  document.getElementById('opsGrid').innerHTML=`
+    <div class="oi"><div class="ol">active crews needed</div><div class="ov">${r.activeCrews}</div><div class="on">${s.gT} gutter${s.rJ>0?', 1 roofing':''}, ${Math.ceil((s.kR+s.mR+s.gS+s.fH)*0.7)} D2 crews</div></div>
+    <div class="oi"><div class="ol">concurrent D2 jobs</div><div class="ov">${r.activeJobs}</div><div class="on">${r.activeJobs>3?'exceeds solo PM — estimator needed':'within Nick solo range'}</div></div>
+    <div class="oi"><div class="ol">meninder dependency</div><div class="ov">${s.mF}% PM fee</div><div class="on">${s.mF>18?'above target — negotiate':'at or below target'}</div></div>
+    <div class="oi"><div class="ol">admin coverage</div><div class="ov">${s.ad?'Rebecca active':'founder managed'}</div><div class="on">${s.ad?'CRM + invoicing off founders':'risk: leads lost, invoices late'}</div></div>
+    <div class="oi"><div class="ol">estimating</div><div class="ov">${s.es?'on staff':'Nick only'}</div><div class="on">${s.es?'frees Nick for ops leadership':'bottleneck at scale'}</div></div>
+    <div class="oi"><div class="ol">automation bots active</div><div class="ov">${r.botCount} of 3</div><div class="on">${r.botCount===0?'no automation deployed':r.botCount===3?'full stack active':'partial stack'}</div></div>
+    <div class="oi"><div class="ol">andrew content tier</div><div class="ov">${TIER_SHORT[s.aT]}</div><div class="on">${s.aT===0?'not activated':'founder-led content running'}</div></div>
+    <div class="oi"><div class="ol">gutter referrals/mo</div><div class="ov">${r.refJobsRaw.toFixed(1)}</div><div class="on">converting at ${s.gRefClose}% to ${REFT[s.gRefType]} jobs</div></div>`;
+}
+
+function rc(){
+  const s=getS();
+  ulbls(s);
+  const r=calc(s);
+  renderMetrics(r);
+  renderDivCards(s,r);
+  renderConstraints(s,r);
+  renderAndrew(s,r);
+  renderGutRef(s,r);
+  renderOps(s,r);
+  renderTime(r);
+}
+
+function loadS(key,btn){
+  const s=SCENARIOS[key];
+  document.querySelectorAll('.sbn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  Object.keys(s).forEach(k=>{const el=document.getElementById('s-'+k);if(el)el.value=s[k];});
+  rc();
+}
+
+function swTab(id,btn){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('pane-'+id).classList.add('active');
+  if(id==='compare') renderCompare();
+}
+
+rc();
+</script>
+</body>
+</html>
