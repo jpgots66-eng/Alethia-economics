@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MVWW Revenue Simulator v3 — Alethia Team LLC</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#F5F4F0;color:#1A1A1A;padding:20px 16px 80px}
+.wrap{max-width:980px;margin:0 auto}
+.brand-bar{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:#0F1B2E;border-radius:10px;margin-bottom:16px}
+.brand-bar .co{font-size:14px;font-weight:600;color:#C9A84C;letter-spacing:.08em;text-transform:uppercase}
+.brand-bar .doc{font-size:11px;color:rgba(255,255,255,.4);letter-spacing:.06em;text-transform:uppercase}
+.layer-intro{background:#fff;border:1px solid #e8e6e0;border-radius:10px;padding:14px 16px;margin-bottom:16px;font-size:12px;color:#555;line-height:1.6}
+.layer-intro strong{color:#0F1B2E}
+.section-label{font-size:11px;font-weight:600;color:#888;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;margin-top:16px}
+.verdict{padding:18px 20px;background:#0F1B2E;border-radius:10px;margin-bottom:16px}
+.verdict-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px}
+.verdict-rev{font-size:36px;font-weight:600;color:#C9A84C;line-height:1}
+.verdict-label{font-size:11px;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
+.verdict-sub{font-size:12px;color:rgba(255,255,255,.55);margin-top:5px}
+.verdict-stats{display:flex;gap:20px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.1)}
+.vstat .n{font-size:18px;font-weight:600;color:#fff;line-height:1}
+.vstat .l{font-size:10px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.07em;margin-top:3px}
+.timeline-tabs{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.ttab{flex:1;min-width:80px;padding:9px 10px;border-radius:8px;border:1px solid #ddd;background:#fff;cursor:pointer;text-align:center;font-size:12px;font-weight:500;color:#666;transition:all .15s}
+.ttab.active{background:#0F1B2E;color:#C9A84C;border-color:#0F1B2E}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-bottom:16px}
+.mcard{background:#fff;border:1px solid #e8e6e0;border-radius:8px;padding:10px 12px}
+.mcard .ml{font-size:10px;color:#888;margin-bottom:3px}
+.mcard .mv{font-size:17px;font-weight:600;color:#0F1B2E}
+.mcard .ms{font-size:10px;color:#aaa;margin-top:1px}
+.layers{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.layer-card{background:#fff;border-radius:10px;overflow:hidden;border:1px solid #e8e6e0}
+.layer-hdr{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid #f0ede4}
+.layer-num{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.layer-hdr-text{flex:1}
+.layer-hdr-text .lt{font-size:13px;font-weight:600;color:#0F1B2E}
+.layer-hdr-text .ls{font-size:11px;color:#888;margin-top:1px}
+.layer-rev{font-size:16px;font-weight:600;color:#0F1B2E}
+.layer-body{padding:12px 14px}
+.lever-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.lever-row label{font-size:11px;color:#555;min-width:190px;line-height:1.3}
+.atag{font-size:9px;padding:1px 5px;border-radius:10px;margin-left:3px;font-weight:600;vertical-align:middle}
+.atag-c{background:#E1F5EE;color:#0F6E56}
+.atag-a{background:#FAEEDA;color:#854F0B}
+.atag-r{background:#FCEBEB;color:#A32D2D}
+.lever-row input[type=range]{flex:1;accent-color:#C9A84C;height:3px}
+.lever-row .val{font-size:12px;font-weight:600;color:#0F1B2E;min-width:52px;text-align:right}
+.lever-impact{font-size:11px;color:#888;margin-top:6px;padding-top:6px;border-top:1px solid #f0ede4;line-height:1.5}
+.lever-impact strong{color:#0F1B2E}
+.ceiling-bar{margin-top:8px;padding:8px 10px;border-radius:6px;font-size:11px;line-height:1.5}
+.ceiling-warn{background:#FAEEDA;color:#633806}
+.ceiling-ok{background:#E1F5EE;color:#085041}
+.chart-wrap{background:#fff;border:1px solid #e8e6e0;border-radius:10px;padding:14px 16px;margin-bottom:12px}
+.chart-title{font-size:11px;font-weight:600;color:#888;margin-bottom:12px;letter-spacing:.06em;text-transform:uppercase}
+.bar-group{display:flex;flex-direction:column;gap:7px}
+.bar-row{display:flex;align-items:center;gap:8px}
+.bar-label{font-size:11px;color:#666;min-width:130px;text-align:right}
+.bar-track{flex:1;height:26px;background:#F5F4F0;border-radius:4px;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px;transition:width .35s ease;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;min-width:4px}
+.bar-fill span{font-size:10px;font-weight:600;color:#fff;white-space:nowrap}
+.timeline-box{background:#fff;border:1px solid #e8e6e0;border-radius:10px;padding:14px 16px;margin-bottom:12px}
+.timeline-box h3{font-size:13px;font-weight:600;color:#0F1B2E;margin-bottom:10px}
+.trow{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;border-bottom:1px solid #f0ede4}
+.trow:last-child{border-bottom:none}
+.trow .tl{color:#888}
+.trow .tv{font-weight:600;color:#0F1B2E}
+.milestone{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid #f0ede4}
+.milestone:last-child{border-bottom:none}
+.ms-dot{width:8px;height:8px;border-radius:50%;margin-top:5px;flex-shrink:0}
+.ms-text{font-size:11px;color:#666;line-height:1.5}
+.ms-text strong{color:#0F1B2E}
+.alert-box{border-radius:8px;padding:10px 12px;font-size:11px;margin-top:8px;line-height:1.5}
+.alert-warn{background:#FAEEDA;color:#633806}
+.alert-good{background:#E1F5EE;color:#085041}
+.alert-flag{background:#FCEBEB;color:#791F1F}
+.alert-info{background:#E6F1FB;color:#185FA5}
+.footer{margin-top:24px;text-align:center;font-size:10px;color:#aaa;letter-spacing:.04em}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="brand-bar">
+  <div class="co">Mountain View Window Washing</div>
+  <div class="doc">Revenue Simulator v3 · Three-Layer Growth Model · Alethia Team LLC · June 2026</div>
+</div>
+
+<div class="layer-intro">
+  <strong>Three layers. One ceiling per layer.</strong> Layer 1 is crew capacity — the hard floor under every number. Layer 2 is sales activation — freeing Connor to sell and reactivating the existing customer base. Layer 3 is the revenue stack — adjacent services, partnerships, and recurring plan growth that push past the crew ceiling. Move through the layers in sequence. The ceiling of Layer 1 is the starting point for Layer 2.
+</div>
+
+<div class="section-label">View by timeline</div>
+<div class="timeline-tabs">
+  <div class="ttab active" id="tt-90" onclick="setTimeline('90')">90 Days</div>
+  <div class="ttab" id="tt-1" onclick="setTimeline('1')">Year 1</div>
+  <div class="ttab" id="tt-3" onclick="setTimeline('3')">Year 3</div>
+  <div class="ttab" id="tt-5" onclick="setTimeline('5')">Year 5</div>
+</div>
+
+<div class="verdict">
+  <div class="verdict-top">
+    <div>
+      <div class="verdict-label">Projected annual revenue</div>
+      <div class="verdict-rev" id="v-rev">—</div>
+      <div class="verdict-sub" id="v-sub">—</div>
+    </div>
+    <div style="text-align:right">
+      <div class="verdict-label">Revenue ceiling</div>
+      <div style="font-size:20px;font-weight:600;color:#C9A84C" id="v-ceiling">—</div>
+      <div style="font-size:10px;color:rgba(255,255,255,.4);margin-top:3px" id="v-ceiling-label">—</div>
+    </div>
+  </div>
+  <div class="verdict-stats">
+    <div class="vstat"><div class="n" id="v-gp">—</div><div class="l">Gross profit</div></div>
+    <div class="vstat"><div class="n" id="v-margin">—</div><div class="l">Margin</div></div>
+    <div class="vstat"><div class="n" id="v-crews">—</div><div class="l">Crews</div></div>
+    <div class="vstat"><div class="n" id="v-plans">—</div><div class="l">Plan members</div></div>
+    <div class="vstat"><div class="n" id="v-sde">—</div><div class="l">Est. SDE</div></div>
+  </div>
+</div>
+
+<div class="cards">
+  <div class="mcard"><div class="ml">Layer 1 · Crew</div><div class="mv" id="c-crew">—</div><div class="ms">window cleaning</div></div>
+  <div class="mcard"><div class="ml">Layer 2 · Sales</div><div class="mv" id="c-sales">—</div><div class="ms">reactivation + plans</div></div>
+  <div class="mcard"><div class="ml">Layer 3 · Stack</div><div class="mv" id="c-stack">—</div><div class="ms">adjacent + partners</div></div>
+  <div class="mcard"><div class="ml">Christmas lights</div><div class="mv" id="c-xmas">—</div><div class="ms">seasonal recurring</div></div>
+</div>
+
+<div class="section-label">Layer 1 — Crew capacity (hard ceiling)</div>
+<div class="layers">
+  <div class="layer-card">
+    <div class="layer-hdr">
+      <div class="layer-num" style="background:#0F1B2E">1</div>
+      <div class="layer-hdr-text">
+        <div class="lt">Crew capacity — window cleaning core</div>
+        <div class="ls">One crew maxes at ~$238K. Two crews max at ~$475K. This ceiling does not move without technicians.</div>
+      </div>
+      <div class="layer-rev" id="lr-crew">—</div>
+    </div>
+    <div class="layer-body">
+      <div class="lever-row"><label>Number of operating crews <span class="atag atag-c">confirmed: 1</span></label><input type="range" min="1" max="3" step="1" id="l-crews" value="1" oninput="calc()"><div class="val" id="d-crews">1</div></div>
+      <div class="lever-row"><label>Jobs per crew per week <span class="atag atag-c">confirmed: 15</span></label><input type="range" min="10" max="20" step="1" id="l-jpw" value="15" oninput="calc()"><div class="val" id="d-jpw">15</div></div>
+      <div class="lever-row"><label>Avg job value — windows <span class="atag atag-c">confirmed: $317</span></label><input type="range" min="250" max="500" step="25" id="l-jobval" value="317" oninput="calc()"><div class="val" id="d-jobval">$317</div></div>
+      <div class="lever-row"><label>Operating weeks per year <span class="atag atag-c">confirmed</span></label><input type="range" min="40" max="50" step="1" id="l-weeks" value="46" oninput="calc()"><div class="val" id="d-weeks">46</div></div>
+      <div class="lever-impact" id="imp-crew">—</div>
+      <div id="ceiling-msg"></div>
+    </div>
+  </div>
+</div>
+
+<div class="section-label">Layer 2 — Sales activation (Connor freed up)</div>
+<div class="layers">
+  <div class="layer-card">
+    <div class="layer-hdr">
+      <div class="layer-num" style="background:#185FA5">2a</div>
+      <div class="layer-hdr-text">
+        <div class="lt">Past client reactivation</div>
+        <div class="ls">250 one-time customers. Fastest cash. Target 3% producing recurring jobs — conservative and achievable.</div>
+      </div>
+      <div class="layer-rev" id="lr-react">—</div>
+    </div>
+    <div class="layer-body">
+      <div class="lever-row"><label>One-time customers in database <span class="atag atag-c">confirmed: 250</span></label><input type="range" min="0" max="250" step="10" id="l-dormant" value="250" oninput="calc()"><div class="val" id="d-dormant">250</div></div>
+      <div class="lever-row"><label>Response rate <span class="atag atag-a">target: 3% recurring</span></label><input type="range" min="1" max="30" step="1" id="l-response" value="15" oninput="calc()"><div class="val" id="d-response">15%</div></div>
+      <div class="lever-row"><label>Plan conversion of responders <span class="atag atag-a">assumed</span></label><input type="range" min="0" max="60" step="5" id="l-planconv" value="35" oninput="calc()"><div class="val" id="d-planconv">35%</div></div>
+      <div class="lever-impact" id="imp-react">—</div>
+    </div>
+  </div>
+
+  <div class="layer-card">
+    <div class="layer-hdr">
+      <div class="layer-num" style="background:#185FA5">2b</div>
+      <div class="layer-hdr-text">
+        <div class="lt">Service plan recurring base</div>
+        <div class="ls">Every subscriber reduces revenue volatility and raises exit multiple. $875 weighted avg calculated from actual tiers.</div>
+      </div>
+      <div class="layer-rev" id="lr-plans">—</div>
+    </div>
+    <div class="layer-body">
+      <div class="lever-row"><label>Current plan members <span class="atag atag-c">confirmed: 65</span></label><input type="range" min="0" max="400" step="5" id="l-plans" value="65" oninput="calc()"><div class="val" id="d-plans">65</div></div>
+      <div class="lever-row"><label>Weighted avg annual value <span class="atag atag-c">calculated: $875</span></label><input type="range" min="600" max="1400" step="25" id="l-planval" value="875" oninput="calc()"><div class="val" id="d-planval">$875</div></div>
+      <div class="lever-row"><label>New members per month <span class="atag atag-a">assumed</span></label><input type="range" min="0" max="20" step="1" id="l-newplans" value="4" oninput="calc()"><div class="val" id="d-newplans">4</div></div>
+      <div class="lever-impact" id="imp-plans">—</div>
+    </div>
+  </div>
+
+  <div class="layer-card">
+    <div class="layer-hdr">
+      <div class="layer-num" style="background:#185FA5">2c</div>
+      <div class="layer-hdr-text">
+        <div class="lt">Strategic partnerships — Connor led</div>
+        <div class="ls">Realtors and property managers. One good realtor = 15–20 jobs/yr. Byron's relationship motion is the right architecture.</div>
+      </div>
+      <div class="layer-rev" id="lr-partner">—</div>
+    </div>
+    <div class="layer-body">
+      <div class="lever-row"><label>Active referral partners <span class="atag atag-a">assumed</span></label><input type="range" min="0" max="10" step="1" id="l-partners" value="0" oninput="calc()"><div class="val" id="d-partners">0</div></div>
+      <div class="lever-row"><label>Jobs per partner per year <span class="atag atag-a">assumed</span></label><input type="range" min="5" max="30" step="1" id="l-partjobs" value="15" oninput="calc()"><div class="val" id="d-partjobs">15</div></div>
+      <div class="lever-impact" id="imp-partner">—</div>
+    </div>
+  </div>
+</div>
+
+<div class="section-label">Layer 3 — Revenue stack (beyond the crew ceiling)</div>
+<div class="layers">
+
+  <div class="layer-card">
+    <div class="layer-hdr">
+      <div class="layer-num" style="background:#1D9E75">3a</div>
+      <div class="layer-hdr-text">
+        <div class="lt">Adjacent services — same truck, same technician</div>
+        <div class="ls">Pressure washing, screen repair, gutter cleaning, solar panel cleaning. Raises avg job value without adding crew hours.</div>
+      </div>
+      <div class="layer-rev" id="lr-adj">—</div>
+    </div>
+    <div class="layer-body">
+      <div class="lever-row"><label>Upsell rate on window jobs <span class="atag atag-a">assumed</span></label><input type="range" min="0" max="40" step="5" id="l-upsell" value="15" oninput="calc()"><div class="val" id="d-upsell">15%</div></div>
+      <div class="lever-row"><label>Avg upsell value per job <span class="atag atag-a">assumed</span></label><input type="range" min="50" max="300" step="25" id="l-upsellval" value="125" oninput="calc()"><div class="val" id="d-upsellval">$125</div></div>
+      <div class="lever-impact" id="imp-adj">—</div>
+    </div>
+  </div>
+
+  <div class="layer-card">
+    <div class="layer-hdr">
+      <div class="layer-num" style="background:#1D9E75">3b</div>
+      <div class="layer-hdr-text">
+        <div class="lt">Proximity marketing — zero ad spend</div>
+        <div class="ls">Door hangers at every job site. Captures neighborhood demand at moment of proof. All inputs assumed — treat as upside only.</div>
+      </div>
+      <div class="layer-rev" id="lr-prox">—</div>
+    </div>
+    <div class="layer-body">
+      <div class="lever-row"><label>Door hangers per job site <span class="atag atag-a">assumed</span></label><input type="range" min="0" max="20" step="1" id="l-hangers" value="8" oninput="calc()"><div class="val" id="d-hangers">8</div></div>
+      <div class="lever-row"><label>Conversion rate <span class="atag atag-r">treat as upside</span></label><input type="range" min="1" max="8" step="1" id="l-proxconv" value="2" oninput="calc()"><div class="val" id="d-proxconv">2%</div></div>
+      <div class="lever-impact" id="imp-prox">—</div>
+    </div>
+  </div>
+
+  <div class="layer-card">
+    <div class="layer-hdr">
+      <div class="layer-num" style="background:#534AB7">XL</div>
+      <div class="layer-hdr-text">
+        <div class="lt">Christmas lights — seasonal recurring</div>
+        <div class="ls">60% margin year 1. 90% margin year 2+. $30K confirmed 2025. Compounds annually on renewals with no new material cost.</div>
+      </div>
+      <div class="layer-rev" id="lr-xmas">—</div>
+    </div>
+    <div class="layer-body">
+      <div class="lever-row"><label>2025 base revenue <span class="atag atag-c">confirmed: $30K</span></label><input type="range" min="0" max="100000" step="1000" id="l-xmasbase" value="30000" oninput="calc()"><div class="val" id="d-xmasbase">$30K</div></div>
+      <div class="lever-row"><label>New leases this season <span class="atag atag-a">assumed</span></label><input type="range" min="0" max="60" step="5" id="l-xmasnew" value="15" oninput="calc()"><div class="val" id="d-xmasnew">15</div></div>
+      <div class="lever-row"><label>Avg new lease value <span class="atag atag-a">assumed</span></label><input type="range" min="300" max="1000" step="50" id="l-xmasval" value="600" oninput="calc()"><div class="val" id="d-xmasval">$600</div></div>
+      <div class="lever-impact" id="imp-xmas">—</div>
+    </div>
+  </div>
+</div>
+
+<div class="chart-wrap">
+  <div class="chart-title">Revenue by source</div>
+  <div class="bar-group" id="bar-group"></div>
+</div>
+
+<div class="timeline-box" id="timeline-detail">
+  <h3 id="tl-title">—</h3>
+  <div id="tl-rows"></div>
+</div>
+
+<div class="timeline-box">
+  <h3>Milestones</h3>
+  <div id="milestones"></div>
+</div>
+
+<div id="warn-area"></div>
+
+<div class="footer">Alethia Team LLC · Mountain View Window Washing · Confidential · June 2026 · v3 Three-Layer Growth Model</div>
+</div>
+
+<script>
+let currentTimeline='90';
+
+const TIMELINES={
+  '90':{
+    label:'90 Days — Foundation',
+    crews:1,jpw:15,jobval:317,weeks:46,
+    dormant:250,response:15,planconv:35,
+    plans:65,planval:875,newplans:2,
+    partners:0,partjobs:15,
+    upsell:10,upsellval:100,
+    hangers:5,proxconv:2,
+    xmasbase:30000,xmasnew:0,xmasval:600,
+    note:'90 days is about building the machine, not hitting a revenue number.'
+  },
+  '1':{
+    label:'Year 1 — Stabilize One Crew',
+    crews:1,jpw:15,jobval:325,weeks:46,
+    dormant:250,response:20,planconv:35,
+    plans:65,planval:875,newplans:4,
+    partners:1,partjobs:12,
+    upsell:15,upsellval:125,
+    hangers:8,proxconv:2,
+    xmasbase:30000,xmasnew:15,xmasval:600,
+    note:'Realistic ceiling with one stable crew, reactivation complete, and first partnership active.'
+  },
+  '3':{
+    label:'Year 3 — Two Crews, Connor CRO',
+    crews:2,jpw:15,jobval:350,weeks:46,
+    dormant:250,response:25,planconv:40,
+    plans:200,planval:900,newplans:6,
+    partners:3,partjobs:15,
+    upsell:20,upsellval:150,
+    hangers:10,proxconv:3,
+    xmasbase:30000,xmasnew:30,xmasval:650,
+    note:'Two crews running, field supervisor hired, Connor fully in CRO seat.'
+  },
+  '5':{
+    label:'Year 5 — Lean Path, Exit Ready',
+    crews:2,jpw:18,jobval:375,weeks:46,
+    dormant:250,response:30,planconv:45,
+    plans:350,planval:950,newplans:5,
+    partners:5,partjobs:18,
+    upsell:25,upsellval:175,
+    hangers:12,proxconv:3,
+    xmasbase:30000,xmasnew:20,xmasval:700,
+    note:'High-margin semi-passive operation. Exit optionality open at 3–5x SDE.'
+  }
+};
+
+function setTimeline(t){
+  currentTimeline=t;
+  ['90','1','3','5'].forEach(x=>document.getElementById('tt-'+x).classList.toggle('active',x===t));
+  const d=TIMELINES[t];
+  const sets={
+    'l-crews':d.crews,'l-jpw':d.jpw,'l-jobval':d.jobval,'l-weeks':d.weeks,
+    'l-dormant':d.dormant,'l-response':d.response,'l-planconv':d.planconv,
+    'l-plans':d.plans,'l-planval':d.planval,'l-newplans':d.newplans,
+    'l-partners':d.partners,'l-partjobs':d.partjobs,
+    'l-upsell':d.upsell,'l-upsellval':d.upsellval,
+    'l-hangers':d.hangers,'l-proxconv':d.proxconv,
+    'l-xmasbase':d.xmasbase,'l-xmasnew':d.xmasnew,'l-xmasval':d.xmasval
+  };
+  Object.entries(sets).forEach(([id,val])=>{const el=document.getElementById(id);if(el)el.value=val;});
+  calc();
+}
+
+function fmt(n){return '$'+Math.round(n).toLocaleString('en-US')}
+function fmtK(n){return n>=1000?'$'+(n/1000).toFixed(0)+'K':fmt(n)}
+function pct(n){return Math.round(n)+'%'}
+function v(id){return parseFloat(document.getElementById(id).value)||0}
+function dset(id,txt){const el=document.getElementById(id);if(el)el.textContent=txt}
+
+function calc(){
+  const crews=v('l-crews'),jpw=v('l-jpw'),jobval=v('l-jobval'),weeks=v('l-weeks');
+  const dormant=v('l-dormant'),responseRate=v('l-response')/100,planConvRate=v('l-planconv')/100;
+  const plans=v('l-plans'),planVal=v('l-planval'),newPlans=v('l-newplans');
+  const partners=v('l-partners'),partJobs=v('l-partjobs');
+  const upsellRate=v('l-upsell')/100,upsellVal=v('l-upsellval');
+  const hangers=v('l-hangers'),proxConv=v('l-proxconv')/100;
+  const xmasBase=v('l-xmasbase'),xmasNew=v('l-xmasnew'),xmasVal=v('l-xmasval');
+
+  dset('d-crews',Math.round(crews));
+  dset('d-jpw',Math.round(jpw));
+  dset('d-jobval','$'+Math.round(jobval));
+  dset('d-weeks',Math.round(weeks));
+  dset('d-dormant',Math.round(dormant));
+  dset('d-response',Math.round(v('l-response'))+'%');
+  dset('d-planconv',Math.round(v('l-planconv'))+'%');
+  dset('d-plans',Math.round(plans));
+  dset('d-planval','$'+Math.round(planVal));
+  dset('d-newplans',Math.round(newPlans));
+  dset('d-partners',Math.round(partners));
+  dset('d-partjobs',Math.round(partJobs));
+  dset('d-upsell',Math.round(v('l-upsell'))+'%');
+  dset('d-upsellval','$'+Math.round(upsellVal));
+  dset('d-hangers',Math.round(hangers));
+  dset('d-proxconv',Math.round(v('l-proxconv'))+'%');
+  dset('d-xmasbase','$'+Math.round(xmasBase/1000)+'K');
+  dset('d-xmasnew',Math.round(xmasNew));
+  dset('d-xmasval','$'+Math.round(xmasVal));
+
+  // LAYER 1 — Crew
+  const totalJobsYr=crews*jpw*weeks;
+  const crewRev=totalJobsYr*jobval;
+  const crewCeiling=crews*15*46*jobval;
+
+  // LAYER 2 — Sales activation
+  const reactResponders=dormant*responseRate;
+  const reactOneTime=reactResponders*(1-planConvRate);
+  const reactPlanNew=reactResponders*planConvRate;
+  const reactRev=reactOneTime*jobval+reactPlanNew*planVal;
+  const avgNewMos=currentTimeline==='90'?1.5:currentTimeline==='1'?6:currentTimeline==='3'?18:30;
+  const totalPlanMembers=plans+(newPlans*avgNewMos)+reactPlanNew;
+  const planRev=totalPlanMembers*planVal;
+  const partnerRev=partners*partJobs*jobval;
+  const salesRev=reactRev+planRev+partnerRev;
+
+  // LAYER 3 — Stack
+  const adjRev=totalJobsYr*upsellRate*upsellVal;
+  const proxLeads=crews*jpw*weeks*hangers*proxConv;
+  const proxRev=proxLeads*jobval;
+  const xmasRenew=xmasBase*0.90;
+  const xmasNewRev=xmasNew*xmasVal*0.60;
+  const xmasRev=Math.round(xmasBase*0.10+xmasRenew+xmasNewRev);
+  const stackRev=adjRev+proxRev+xmasRev;
+
+  const totalRev=Math.round(crewRev+salesRev+stackRev);
+  const gp=Math.round(crewRev*0.78+salesRev*0.78+xmasRev*0.70+adjRev*0.80+proxRev*0.78);
+  const marginPct=totalRev>0?Math.round(gp/totalRev*100):0;
+  const sde=Math.round(gp-(crews*3800*12)-(crews===1?0:1*5000*12));
+
+  dset('v-rev',fmtK(totalRev));
+  dset('v-gp',fmtK(gp));
+  dset('v-margin',pct(marginPct));
+  dset('v-crews',Math.round(crews)+' crew'+(crews>1?'s':''));
+  dset('v-plans',Math.round(totalPlanMembers));
+  dset('v-sde',fmtK(Math.max(0,sde)));
+
+  const ceilLabel=crews===1?'1 crew max':'2 crew max';
+  dset('v-ceiling',fmtK(crewCeiling));
+  dset('v-ceiling-label',ceilLabel);
+  dset('v-sub',TIMELINES[currentTimeline]?.note||'');
+
+  dset('lr-crew',fmtK(crewRev));
+  dset('lr-react',fmtK(reactRev));
+  dset('lr-plans',fmtK(planRev));
+  dset('lr-partner',fmtK(partnerRev));
+  dset('lr-adj',fmtK(adjRev));
+  dset('lr-prox',fmtK(proxRev));
+  dset('lr-xmas',fmtK(xmasRev));
+
+  dset('c-crew',fmtK(crewRev));
+  dset('c-sales',fmtK(salesRev));
+  dset('c-stack',fmtK(stackRev-xmasRev));
+  dset('c-xmas',fmtK(xmasRev));
+
+  document.getElementById('imp-crew').innerHTML=Math.round(totalJobsYr)+' jobs/yr at '+fmt(jobval)+' avg &rarr; <strong>'+fmtK(crewRev)+'</strong> · Hard ceiling at '+Math.round(crews)+' crew'+(crews>1?'s':'')+': <strong>'+fmtK(crewCeiling)+'</strong>';
+  document.getElementById('imp-react').innerHTML=Math.round(reactResponders)+' of '+Math.round(dormant)+' customers respond · '+Math.round(reactPlanNew)+' convert to plans &rarr; <strong>'+fmtK(reactRev)+'</strong> · Target: 3% of base producing recurring jobs';
+  document.getElementById('imp-plans').innerHTML=Math.round(totalPlanMembers)+' total members at '+fmt(planVal)+' weighted avg &rarr; <strong>'+fmtK(planRev)+'</strong> · $875 calculated from actual tiers and member mix';
+  document.getElementById('imp-partner').innerHTML=(partners>0?Math.round(partners)+' partner'+(partners>1?'s':'')+' × '+Math.round(partJobs)+' jobs = '+Math.round(partners*partJobs)+' referral jobs/yr &rarr; <strong>'+fmtK(partnerRev)+'</strong>':'No active partners yet. First realtor meeting is the 90-day target.');
+  document.getElementById('imp-adj').innerHTML='Adjacent services (pressure washing, screen repair, solar, gutters) on '+Math.round(totalJobsYr*upsellRate)+' of '+Math.round(totalJobsYr)+' jobs &rarr; <strong>'+fmtK(adjRev)+'</strong> · Same truck, same tech, higher job value';
+  document.getElementById('imp-prox').innerHTML=Math.round(proxLeads)+' proximity leads/yr &rarr; <strong>'+fmtK(proxRev)+'</strong> · <em>Treat as upside only — no confirmed data yet</em>';
+  document.getElementById('imp-xmas').innerHTML='Prior season renewals at 90% + '+Math.round(xmasNew)+' new leases at 60% &rarr; <strong>'+fmtK(xmasRev)+'</strong> · Compounds annually with no new material cost on renewals';
+
+  const ceilDiff=totalRev-crewCeiling;
+  const ceilEl=document.getElementById('ceiling-msg');
+  if(ceilDiff>5000){
+    ceilEl.innerHTML='<div class="ceiling-bar ceiling-ok">Layer 2 and Layer 3 are adding <strong>'+fmtK(ceilDiff)+'</strong> above the crew ceiling. This is the model working correctly.</div>';
+  } else {
+    ceilEl.innerHTML='<div class="ceiling-bar ceiling-warn">Revenue is near the crew ceiling. Activate Layer 2 and 3 levers to break through it without adding crew.</div>';
+  }
+
+  const sources=[
+    {label:'Service plans',val:planRev,color:'#185FA5'},
+    {label:'Core windows',val:crewRev,color:'#0F1B2E'},
+    {label:'Adjacent services',val:adjRev,color:'#1D9E75'},
+    {label:'Christmas lights',val:xmasRev,color:'#534AB7'},
+    {label:'Reactivation',val:reactRev,color:'#1D9E75'},
+    {label:'Partnerships',val:partnerRev,color:'#C9A84C'},
+    {label:'Proximity',val:proxRev,color:'#A32D2D'},
+  ].filter(s=>s.val>0).sort((a,b)=>b.val-a.val);
+  const maxVal=Math.max(...sources.map(s=>s.val),1);
+  document.getElementById('bar-group').innerHTML=sources.map(s=>{
+    const w=Math.max(2,Math.round(s.val/maxVal*100));
+    const p=totalRev>0?Math.round(s.val/totalRev*100):0;
+    return`<div class="bar-row"><div class="bar-label">${s.label}</div><div class="bar-track"><div class="bar-fill" style="width:${w}%;background:${s.color}"><span>${fmtK(s.val)} · ${p}%</span></div></div></div>`;
+  }).join('');
+
+  const tlData={
+    '90':{title:'90 Days — Foundation targets (not revenue targets)',rows:[
+      ['Primary goal','Build the machine. Revenue is a byproduct.'],
+      ['Technician','Latrell self-sufficient with 5 clean sign-offs — or replacement hire begun'],
+      ['Reactivation','All 250 customers touched. 30+ respond. 10+ convert to plans.'],
+      ['Plan members','65 → 80 minimum'],
+      ['Adjacent services','Upsell script built. Technician trained on screen repair and pressure wash.'],
+      ['Partnership','1 realtor identified. Meeting requested.'],
+      ['Proximity','Door hangers in Latrell\'s truck. Tracking live in Housecall Pro.'],
+      ['Revenue contribution','$15K–$25K incremental this quarter. Not the point.'],
+    ]},
+    '1':{title:'Year 1 — Stabilize one crew, activate the base',rows:[
+      ['Revenue target','$350K–$420K (honest with one crew)'],
+      ['Crew','1 stable crew, Latrell or replacement self-sufficient'],
+      ['Plan members','65 → 110 (4/month + reactivation converts)'],
+      ['Reactivation','Complete. 250 customers touched, recurring jobs active.'],
+      ['Adjacent services','15% upsell rate on window jobs adds ~$33K'],
+      ['Christmas lights','$30K renewals + 15 new leases'],
+      ['Partnership','1 active referral partner producing jobs'],
+      ['Key risk','Second tech hire before first is stable repeats the cycle'],
+    ]},
+    '3':{title:'Year 3 — Two crews, Connor in CRO seat',rows:[
+      ['Revenue target','$900K–$1.1M'],
+      ['Crew','2 crews, field supervisor hired at $700K revenue'],
+      ['Plan members','200 members at $900 avg = $180K recurring'],
+      ['Adjacent services','20% upsell rate, $150 avg = meaningful margin lift'],
+      ['Christmas lights','$30K renewals + 30 new leases = $57K+'],
+      ['Partnerships','3 active referral partners'],
+      ['Connor\'s role','100% CRO — no field, no oversight, no admin'],
+      ['Exit optionality','SDE approaching $250K–$300K. 3–5x = $750K–$1.5M'],
+    ]},
+    '5':{title:'Year 5 — Lean path, exit ready',rows:[
+      ['Revenue target','$1.3M–$1.5M'],
+      ['Crew','2 crews at optimized capacity, possibly 3rd'],
+      ['Plan members','350 members = $332K pure recurring revenue'],
+      ['Christmas lights','$30K renewals + 20 new leases compounding at 90% margin'],
+      ['Adjacent services','25% upsell rate normalized into every job'],
+      ['Exit value','SDE $350K–$450K · 3–5x multiple = $1M–$2.25M exit'],
+      ['$100M path','Requires franchise model or 8–10 locations. Different conversation.'],
+      ['Decision point','Sell lean operation or invest in scale path. Genuine choice.'],
+    ]}
+  };
+
+  const tl=tlData[currentTimeline];
+  dset('tl-title',tl.title);
+  document.getElementById('tl-rows').innerHTML=tl.rows.map(([l,r])=>`<div class="trow"><div class="tl">${l}</div><div class="tv">${r}</div></div>`).join('');
+
+  const msData=[
+    {dot:'#A32D2D',text:'<strong>Now:</strong> Technician SOP written this week. Reactivation list pulled from Housecall Pro. Door hangers in the truck.'},
+    {dot:'#185FA5',text:'<strong>Day 30:</strong> All 250 customers touched. 30+ respond. Service plan offer formalized in every estimate.'},
+    {dot:'#1D9E75',text:'<strong>Day 60:</strong> First realtor meeting completed. Upsell script trained. Plan members at 80+.'},
+    {dot:'#C9A84C',text:'<strong>Month 6:</strong> Connor fully out of field oversight. Estimates growing to 50+/month.'},
+    {dot:'#0F1B2E',text:'<strong>Year 1:</strong> One stable crew. Reactivation complete. Revenue $350K–$420K. Foundation proven.'},
+    {dot:'#534AB7',text:'<strong>Year 3:</strong> Two crews. Field supervisor. 200 plan members. Connor in CRO seat full time. $1M in sight.'},
+    {dot:'#1D9E75',text:'<strong>Year 5:</strong> Exit ready. Or scale. Genuine choice — not a forced one.'},
+  ];
+  document.getElementById('milestones').innerHTML=msData.map(m=>`<div class="milestone"><div class="ms-dot" style="background:${m.dot}"></div><div class="ms-text">${m.text}</div></div>`).join('');
+
+  const warns=[];
+  if(crews>1&&v('l-newplans')<4) warns.push('<div class="alert-box alert-warn">Two crews without a growing plan base creates a fixed cost risk. Plan conversion must be active before second crew is hired.</div>');
+  if(proxRev>totalRev*0.20) warns.push('<div class="alert-box alert-flag">Proximity is carrying more than 20% of total revenue. No confirmed data supports this. Dial it back and treat the difference as upside.</div>');
+  if(totalRev>crewCeiling*1.5) warns.push('<div class="alert-box alert-info">Layer 2 and 3 are doing heavy lifting here. Confirm the crew can service the job volume before committing to these numbers.</div>');
+  if(currentTimeline==='90') warns.push('<div class="alert-box alert-info">90-day revenue on this model: '+fmtK(Math.round(totalRev/4))+' this quarter. That is not the target. The five foundation must-wins are the target.</div>');
+  document.getElementById('warn-area').innerHTML=warns.join('');
+}
+
+setTimeline('90');
+</script>
+</body>
+</html>
