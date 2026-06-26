@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MVWW Revenue Simulator v5 — Alethia Team LLC</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#F5F4F0;color:#1A1A1A;padding:20px 16px 80px}
+.wrap{max-width:980px;margin:0 auto}
+.brand-bar{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:#0F1B2E;border-radius:10px;margin-bottom:14px}
+.brand-bar .co{font-size:14px;font-weight:600;color:#C9A84C;letter-spacing:.08em;text-transform:uppercase}
+.brand-bar .doc{font-size:11px;color:rgba(255,255,255,.4);letter-spacing:.06em;text-transform:uppercase}
+.layer-intro{background:#fff;border:1px solid #e8e6e0;border-radius:8px;padding:14px 16px;margin-bottom:14px;font-size:12px;color:#444;line-height:1.7}
+.layer-intro strong{color:#0F1B2E}
+.layer-intro .intro-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+.layer-intro .intro-item{background:#F5F4F0;border-radius:6px;padding:10px 12px}
+.layer-intro .intro-item .ih{font-size:11px;font-weight:600;color:#0F1B2E;margin-bottom:4px}
+.layer-intro .intro-item .ib{font-size:11px;color:#666;line-height:1.5}
+.section-label{font-size:11px;font-weight:600;color:#888;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;margin-top:14px}
+.timeline-tabs{display:flex;gap:5px;margin-bottom:14px;flex-wrap:wrap}
+.ttab{flex:1;min-width:65px;padding:8px 6px;border-radius:7px;border:1px solid #ddd;background:#fff;cursor:pointer;text-align:center;font-size:11px;font-weight:500;color:#666;transition:all .15s;line-height:1.3}
+.ttab.active{background:#0F1B2E;color:#C9A84C;border-color:#0F1B2E}
+.verdict{padding:16px 18px;background:#0F1B2E;border-radius:10px;margin-bottom:14px}
+.verdict-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px}
+.verdict-rev{font-size:34px;font-weight:600;color:#C9A84C;line-height:1}
+.verdict-label{font-size:10px;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px}
+.verdict-sub{font-size:11px;color:rgba(255,255,255,.55);margin-top:4px;max-width:420px;line-height:1.4}
+.verdict-stats{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.1)}
+.vstat .n{font-size:16px;font-weight:600;color:#fff;line-height:1}
+.vstat .l{font-size:9px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.07em;margin-top:3px}
+.vstat .desc{font-size:9px;color:rgba(255,255,255,.3);margin-top:2px;line-height:1.3;max-width:120px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:7px;margin-bottom:14px}
+.mcard{background:#fff;border:1px solid #e8e6e0;border-radius:7px;padding:9px 11px}
+.mcard .ml{font-size:10px;color:#888;margin-bottom:2px}
+.mcard .mv{font-size:16px;font-weight:600;color:#0F1B2E}
+.mcard .ms{font-size:9px;color:#aaa;margin-top:1px}
+.layers{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.layer-card{background:#fff;border-radius:9px;overflow:hidden;border:1px solid #e8e6e0}
+.layer-hdr{display:flex;align-items:flex-start;gap:9px;padding:10px 13px;border-bottom:1px solid #f0ede4}
+.layer-num{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0;margin-top:1px}
+.layer-hdr-text{flex:1}
+.layer-hdr-text .lt{font-size:12px;font-weight:600;color:#0F1B2E}
+.layer-hdr-text .ls{font-size:10px;color:#888;margin-top:2px;line-height:1.4}
+.layer-rev{font-size:15px;font-weight:600;color:#0F1B2E;white-space:nowrap;margin-top:1px}
+.layer-body{padding:10px 13px}
+.lever-row{display:flex;align-items:flex-start;gap:7px;margin-bottom:8px}
+.lever-label-wrap{min-width:200px}
+.lever-label-wrap label{font-size:11px;color:#333;font-weight:500;display:block;line-height:1.3}
+.lever-label-wrap .ldesc{font-size:10px;color:#999;margin-top:2px;line-height:1.3}
+.atag{font-size:9px;padding:1px 4px;border-radius:8px;margin-left:2px;font-weight:600;vertical-align:middle}
+.atag-c{background:#E1F5EE;color:#0F6E56}
+.atag-a{background:#FAEEDA;color:#854F0B}
+.atag-r{background:#FCEBEB;color:#A32D2D}
+.lever-row input[type=range]{flex:1;accent-color:#C9A84C;margin-top:4px}
+.lever-row .val{font-size:11px;font-weight:600;color:#0F1B2E;min-width:52px;text-align:right;margin-top:3px}
+.lever-impact{font-size:10px;color:#777;margin-top:6px;padding-top:6px;border-top:1px solid #f0ede4;line-height:1.5}
+.lever-impact strong{color:#0F1B2E}
+.ceiling-bar{margin-top:6px;padding:7px 9px;border-radius:5px;font-size:10px;line-height:1.5}
+.ceiling-warn{background:#FAEEDA;color:#633806}
+.ceiling-ok{background:#E1F5EE;color:#085041}
+.chart-wrap{background:#fff;border:1px solid #e8e6e0;border-radius:9px;padding:12px 14px;margin-bottom:10px}
+.chart-title{font-size:10px;font-weight:600;color:#888;margin-bottom:10px;letter-spacing:.06em;text-transform:uppercase}
+.bar-group{display:flex;flex-direction:column;gap:6px}
+.bar-row{display:flex;align-items:center;gap:7px}
+.bar-label{font-size:10px;color:#666;min-width:130px;text-align:right}
+.bar-track{flex:1;height:24px;background:#F5F4F0;border-radius:4px;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px;transition:width .35s ease;display:flex;align-items:center;justify-content:flex-end;padding-right:7px;min-width:4px}
+.bar-fill span{font-size:10px;font-weight:600;color:#fff;white-space:nowrap}
+.timeline-box{background:#fff;border:1px solid #e8e6e0;border-radius:9px;padding:12px 14px;margin-bottom:10px}
+.timeline-box h3{font-size:12px;font-weight:600;color:#0F1B2E;margin-bottom:8px}
+.trow{display:flex;justify-content:space-between;font-size:11px;padding:5px 0;border-bottom:1px solid #f0ede4;gap:12px}
+.trow:last-child{border-bottom:none}
+.trow .tl{color:#777;flex-shrink:0;min-width:150px;line-height:1.4}
+.trow .tv{font-weight:600;color:#0F1B2E;text-align:right;line-height:1.4}
+.milestone{display:flex;gap:9px;padding:6px 0;border-bottom:1px solid #f0ede4}
+.milestone:last-child{border-bottom:none}
+.ms-dot{width:8px;height:8px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.ms-text{font-size:11px;color:#666;line-height:1.4}
+.ms-text strong{color:#0F1B2E}
+.alert-box{border-radius:7px;padding:9px 11px;font-size:11px;margin-top:7px;line-height:1.5}
+.alert-warn{background:#FAEEDA;color:#633806}
+.alert-good{background:#E1F5EE;color:#085041}
+.alert-flag{background:#FCEBEB;color:#791F1F}
+.alert-info{background:#E6F1FB;color:#185FA5}
+.footer{margin-top:24px;text-align:center;font-size:10px;color:#aaa;letter-spacing:.04em}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="brand-bar">
+  <div class="co">Mountain View Window Washing</div>
+  <div class="doc">Revenue Simulator v5 · Alethia Team LLC · June 2026</div>
+</div>
+
+<div class="layer-intro">
+  <strong>How this model works.</strong> Three layers build on each other. Layer 1 is the crew ceiling — the hard physical limit of how much revenue the technicians can produce. Layer 2 is sales activation — what happens when Connor is freed from field work to focus on selling. Layer 3 is the revenue stack — adjacent services, partnerships, Christmas lights, and proximity that push past the crew ceiling without adding crew hours. The freedom rate slider controls how much of Connor's time goes to sales versus operations. As that number rises, so do the staffing costs required to replace him in those operational roles.
+  <div class="intro-grid">
+    <div class="intro-item">
+      <div class="ih">SDE — Seller's Discretionary Earnings</div>
+      <div class="ib">The total economic benefit the business produces for one owner-operator. Net profit plus owner salary plus personal expenses through the business. This is the number a buyer uses to value the company. At a 3–5x multiple it sets the exit price. Adding staff increases revenue but reduces SDE in the short term — the model shows that trade-off honestly.</div>
+    </div>
+    <div class="intro-item">
+      <div class="ih">Dynamic Customer Pool</div>
+      <div class="ib">Every year the one-time customer database grows from new job acquisitions and shrinks by plan conversions. The reactivation campaign works this pool. By Year 3 the pool is 600–700 customers — nearly three times today's base — making the reactivation lever more powerful every year, not less.</div>
+    </div>
+    <div class="intro-item">
+      <div class="ih">Connor's Freedom Rate</div>
+      <div class="ib">Currently Connor spends roughly 30% of his time on sales and 70% on field oversight, admin, and operations. As the freedom rate rises toward 100%, estimate volume grows proportionally. But each 10% of freedom requires staffing investment — field supervisor, admin coordinator — that comes out of SDE before revenue recovers it.</div>
+    </div>
+    <div class="intro-item">
+      <div class="ih">Crew Ceiling</div>
+      <div class="ib">One crew at full capacity generates roughly $220K in window cleaning revenue. Two crews generate roughly $440K. This ceiling does not move without stable technicians. Every other growth lever operates above this floor — plan members, adjacent services, partnerships, and Christmas lights are what push total revenue past what the crew can physically produce in a day.</div>
+    </div>
+  </div>
+</div>
+
+<div class="section-label">Select timeline</div>
+<div class="timeline-tabs">
+  <div class="ttab active" id="tt-now" onclick="setTimeline('now')">Current State</div>
+  <div class="ttab" id="tt-90" onclick="setTimeline('90')">90 Days</div>
+  <div class="ttab" id="tt-1" onclick="setTimeline('1')">Year 1</div>
+  <div class="ttab" id="tt-2" onclick="setTimeline('2')">Year 2</div>
+  <div class="ttab" id="tt-3" onclick="setTimeline('3')">Year 3</div>
+  <div class="ttab" id="tt-4" onclick="setTimeline('4')">Year 4</div>
+  <div class="ttab" id="tt-5" onclick="setTimeline('5')">Year 5</div>
+</div>
+
+<div class="verdict">
+  <div class="verdict-top">
+    <div>
+      <div class="verdict-label">Projected annual revenue</div>
+      <div class="verdict-rev" id="v-rev">—</div>
+      <div class="verdict-sub" id="v-sub">—</div>
+    </div>
+    <div style="text-align:right">
+      <div class="verdict-label">Crew ceiling</div>
+      <div style="font-size:19px;font-weight:600;color:#C9A84C" id="v-ceiling">—</div>
+      <div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:2px" id="v-ceiling-label">—</div>
+    </div>
+  </div>
+  <div class="verdict-stats">
+    <div class="vstat"><div class="n" id="v-gp">—</div><div class="l">Gross profit</div><div class="desc">Revenue minus direct costs of service delivery</div></div>
+    <div class="vstat"><div class="n" id="v-margin">—</div><div class="l">Margin %</div><div class="desc">Gross profit as a percentage of total revenue</div></div>
+    <div class="vstat"><div class="n" id="v-crews">—</div><div class="l">Crews</div><div class="desc">Operating technician crews in the field</div></div>
+    <div class="vstat"><div class="n" id="v-plans">—</div><div class="l">Plan members</div><div class="desc">Active recurring service plan subscribers</div></div>
+    <div class="vstat"><div class="n" id="v-pool">—</div><div class="l">Customer pool</div><div class="desc">One-time customers available for reactivation</div></div>
+    <div class="vstat"><div class="n" id="v-sde">—</div><div class="l">Est. SDE</div><div class="desc">Seller's Discretionary Earnings — what a buyer pays a multiple on</div></div>
+    <div class="vstat" style="flex-basis:100%;margin-top:8px;padding-top:8px;border-top:.5px solid rgba(255,255,255,.1)">
+      <div class="n" style="font-size:13px" id="v-exit">—</div>
+      <div class="l">Projected sell value (2x–4x SDE)</div>
+      <div class="desc" id="exit-breakdown">2x · 3x · 4x breakdown loads here</div>
+    </div>
+    <div class="vstat"><div class="n" id="v-exit-hidden" style="display:none">—</div><div class="l" style="display:none">Exit range</div<div class="desc">2–4x SDE multiple. 2x = owner-dependent. 3x = systems + stable crew. 4x = 200+ plan members + Connor out of field.</div></div>
+  </div>
+</div>
+
+<div class="cards">
+  <div class="mcard"><div class="ml">Layer 1 · Crew</div><div class="mv" id="c-crew">—</div><div class="ms">window cleaning</div></div>
+  <div class="mcard"><div class="ml">Layer 2 · Plans</div><div class="mv" id="c-plans">—</div><div class="ms">recurring base</div></div>
+  <div class="mcard"><div class="ml">Reactivation</div><div class="mv" id="c-react">—</div><div class="ms">past customers</div></div>
+  <div class="mcard"><div class="ml">Adjacent svcs</div><div class="mv" id="c-adj">—</div><div class="ms">upsells</div></div>
+  <div class="mcard"><div class="ml">Partnerships</div><div class="mv" id="c-partner">—</div><div class="ms">referrals</div></div>
+  <div class="mcard"><div class="ml">Christmas lights</div><div class="mv" id="c-xmas">—</div><div class="ms">seasonal</div></div>
+</div>
+
+<div class="section-label">Connor's freedom rate — the master lever</div>
+<div class="layers">
+  <div class="layer-card">
+    <div class="layer-hdr">
+      <div class="layer-num" style="background:#C9A84C">F</div>
+      <div class="layer-hdr-text">
+        <div class="lt">Connor's sales focus — freedom rate</div>
+        <div class="ls">Currently 30% of Connor's time goes to sales. 70% goes to field oversight, admin, and operations. As this rises, estimate volume and revenue grow — but staffing costs rise to replace him in those operational roles. The trade-off is real and the model shows it.</div>
+      </div>
+      <div class="layer-rev" id="lr-freedom">—</div>
+    </div>
+    <div class="layer-body">
+      <div class="lever-row">
+        <div class="lever-label-wrap">
+          <label>Connor's sales focus <span class="atag atag-c">now: 30%</span></label>
+          <div class="ldesc">30% = current state, field overhead consuming most of his time. 100% = Connor fully in CRO seat, no field time, no admin. Each 10% gain requires roughly $8K–$12K in annual staffing cost.</div>
+        </div>
+        <input type="range" min="30" max="100" step="5" id="l-freedom" value="30" oninput="calc()">
+        <div class="val" id="d-freedom">30%</div>
+      </div>
+      <div class="lever-impact" id="imp-freedom">—</div>
+    </div>
+  </div>
+</div>
+
+<div class="section-label">Layer 1 — Crew capacity</div>
+<div class="layers">
+  <div class="layer-card">
+    <div class="layer-hdr">
+      <div class="layer-num" style="background:#0F1B2E">1</div>
+      <div class="layer-hdr-text">
+        <div class="lt">Window cleaning core — crew ceiling</div>
+        <div class="ls">One crew max ~$220K/yr. Two crews max ~$440K/yr. This number does not move without stable, self-sufficient technicians. Technician instability is the single biggest risk in the current business.</div>
+      </div>
+      <div class="layer-rev" id="lr-crew">—</div>
+    </div>
+    <div class="layer-body">
+      <div class="lever-row">
+        <div class="lever-label-wrap">
+          <label>Operating crews <span class="atag atag-c">now: 1</span></label>
+          <div class="ldesc">Number of technician crews running jobs independently. Each crew requires a self-sufficient technician with a documented SOP sign-off before they count as operational.</div>
+        </div>
+        <input type="range" min="1" max="3" step="1" id="l-crews" value="1" oninput="calc()">
+        <div class="val" id="d-crews">1</div>
+      </div>
+      <div class="lever-row">
+        <div class="lever-label-wrap">
+          <label>Jobs per crew per week <span class="atag atag-c">now: 15</span></label>
+          <div class="ldesc">Current confirmed rate. Max sustainable for one crew is 15–18 depending on job mix and travel time in Cache Valley.</div>
+        </div>
+        <input type="range" min="10" max="20" step="1" id="l-jpw" value="15" oninput="calc()">
+        <div class="val" id="d-jpw">15</div>
+      </div>
+      <div class="lever-row">
+        <div class="lever-label-wrap">
+          <label>Avg job value — windows <span class="atag atag-c">implied: $317</span></label>
+          <div class="ldesc">$317 is implied by weekly revenue ÷ jobs. Connor states $350. Discrepancy likely from job mix. Confirm with Connor — this single number has a large impact on all projections.</div>
+        </div>
+        <input type="range" min="250" max="500" step="25" id="l-jobval" value="317" oninput="calc()">
+        <div class="val" id="d-jobval">$317</div>
+      </div>
+      <div class="lever-row">
+        <div class="lever-label-wrap">
+          <label>Operating weeks per year <span class="atag atag-c">est: 46</span></label>
+          <div class="ldesc">Cache Valley has a strong spring-fall season. Christmas lights partially bridge the winter gap. 46 weeks is a conservative estimate that accounts for weather, holidays, and slow periods.</div>
+        </div>
+        <input type="range" min="38" max="50" step="1" id="l-weeks" value="46" oninput="calc()">
+        <div class="val" id="d-weeks">46</div>
+      </div>
+      <div class="lever-impact" id="imp-crew">—</div>
+      <div id="ceiling-msg"></div>
+    </div>
+  </div>
+</div>
+
+<div class="section-label">Layer 2 — Sales activation</div>
+<div class="layers">
+  <div class="layer-card">
+    <div class="layer-hdr">
+      <div class="layer-num" style="background:#185FA5">2a</div>
+      <div class="layer-hdr-text">
+        <div class="lt">Dynamic customer pool and reactivation</div>
+        <div class="ls">The pool grows every year from new acquisitions and shrinks by plan conversions. By Year 3 you are reactivating from 600–700 customers, not 250. The lever gets more powerful every year.</div>
+      </div>
+      <div class="layer-rev" id="lr-react">—</div>
+    </div>
+    <div class="layer-body">
+      <div class="lever-row">
+        <div class="lever-label-wrap">
+          <label>Starting one-time customer pool <span class="atag atag-c">confirmed: 250</span></label>
+          <div class="ldesc">Current database of customers who have been serviced but are not on a plan. This grows annually as new jobs are closed and shrinks as customers convert to plans.</div>
+        </div>
+        <input type="range" min="0" max="300" step="10" id="l-dormant" value="250" oninput="calc()">
+        <div class="val" id="d-dormant">250</div>
+      </div>
+      <div class="lever-row">
+        <div class="lever-label-wrap">
+          <label>Annual new one-time customers added <span class="atag atag-a">modeled</span></label>
+          <div class="ldesc">Every job closed that does not convert to a plan adds to the reactivation pool. At 30 estimates/month and 73% close rate, roughly 200 new one-time customers enter the database each year. Grows as Connor's freedom rate increases.</div>
+        </div>
+        <input type="range" min="0" max="500" step="10" id="l-newcust" value="200" oninput="calc()">
+        <div class="val" id="d-newcust">200</div>
+      </div>
+      <div class="lever-row">
+        <div class="lever-label-wrap">
+          <label>Reactivation response rate <span class="atag atag-a">assumed</span></label>
+          <div class="ldesc">Percentage of the pool who respond to outreach and book a job. 15–20% is realistic for a warm local customer base in a small community. These are people who already said yes once.</div>
+        </div>
+        <input type="range" min="0" max="40" step="1" id="l-response" value="0" oninput="calc()">
+        <div class="val" id="d-response">0%</div>
+      </div>
+      <div class="lever-row">
+        <div class="lever-label-wrap">
+          <label>Plan conversion of responders <span class="atag atag-a">assumed</span></label>
+          <div class="ldesc">Of those who respond and book, what percentage convert to a service plan. Connor closes referrals at 100% — warm reactivation customers are similar. 30–40% is a conservative target.</div>
+        </div>
+        <input type="range" min="0" max="60" step="5" id="l-planconv" value="30" oninput="calc()">
+        <div class="val" id="d-planconv">30%</div>
+      </div>
+      <div class="lever-impact" id="imp-react">—</div>
+    </div>
+  </div>
+
+  <div class="layer-card">
+    <div class="layer-hdr">
+      <div class="layer-num" style="background:#185FA5">2b</div>
+      <div class="layer-hdr-text">
+        <div class="lt">Service plan recurring base</div>
+        <div class="ls">$875 weighted average calculated from actual tiers and member mix. Every subscriber reduces revenue volatility, increases predictability, and raises the exit multiple. A buyer pays more for recurring revenue than one-time jobs.</div>
+      </div>
+      <div class="layer-rev" id="lr-plans">—</div>
+    </div>
+    <div class="layer-body">
+      <div class="lever-row">
+        <div class="lever-label-wrap">
+          <label>Current plan members <span class="atag atag-c">confirmed: 65</span></label>
+          <div class="ldesc">Active subscribers across quarterly, triannual, and biannual tiers. 23 quarterly, 15 triannual, 27 biannual as of June 2026.</div>
+        </div>
+        <input type="range" min="0" max="500" step="5" id="l-plans" value="65" oninput="calc()">
+        <div class="val" id="d-plans">65</div>
+      </div>
+      <div class="lever-row">
+        <div class="lever-label-wrap">
+          <label>Weighted avg annual value <span class="atag atag-c">calculated: $875</span></label>
+          <div class="ldesc">Calculated from actual pricing tiers: triannual $675/yr, quarterly $800/yr, biannual $1,050/yr. Weighted by current member mix. This number rises as more customers move to higher-frequency plans.</div>
+        </div>
+        <input type="range" min="600" max="1400" step="25" id="l-planval" value="875" oninput="calc()">
+        <div class="val" id="d-planval">$875</div>
+      </div>
+      <div class="lever-row">
+        <div class="lever-label-wrap">
+          <label>New plan members per month <span class="atag atag-a">assumed</span></label>
+          <div class="ldesc">Net new plan members added each month through estimate conversion and reactivation. 3–4 per month is achievable once the plan offer is formalized in every estimate conversation.</div>
+        </div>
+        <input type="range" min="0" max="20" step="1" id="l-newplans" value="0" oninput="calc()">
+        <div class="val" id="d-newplans">0</div>
+      </div>
+      <div class="lever-impact" id="imp-plans">—</div>
+    </div>
+  </div>
+</div>
+
+<div class="section-label">Layer 3 — Revenue stack</div>
+<div class="layers">
+  <div class="layer-card">
+    <div class="layer-hdr">
+      <div class="layer-num" style="background:#1D9E75">3a</div>
+      <div class="layer-hdr-text">
+        <div class="lt">Adjacent services — same truck, same technician</div>
+        <div class="ls">Pressure washing, screen repair, gutter cleaning, solar panel cleaning. These services use the same truck, the same visit, and the same technician. No new crew required. Raises average job value from $317 toward $400–$450 over time.</div>
+      </div>
+      <div class="layer-rev" id="lr-adj">—</div>
+    </div>
+    <div class="layer-body">
+      <div class="lever-row">
+        <div class="lever-label-wrap">
+          <label>Upsell rate on window jobs <span class="atag atag-a">assumed</span></label>
+          <div class="ldesc">Percentage of window cleaning jobs where the technician or Connor successfully adds an adjacent service. Starts near zero — the upsell script and technician training must be built first.</div>
+        </div>
+        <input type="range" min="0" max="40" step="5" id="l-upsell" value="0" oninput="calc()">
+        <div class="val" id="d-upsell">0%</div>
+      </div>
+      <div class="lever-row">
+        <div class="lever-label-wrap">
+          <label>Avg upsell value per job <span class="atag atag-a">assumed</span></label>
+          <div class="ldesc">Average revenue added per job where an adjacent service is sold. Pressure washing alone in Cache Valley homes can run $300–$500. Screen repair is $50–$150. Blended average of $125 is conservative.</div>
+        </div>
+        <input type="range" min="50" max="400" step="25" id="l-upsellval" value="125" oninput="calc()">
+        <div class="val" id="d-upsellval">$125</div>
+      </div>
+      <div class="lever-impact" id="imp-adj">—</div>
+    </div>
+  </div>
+
+  <div class="layer-card">
+    <div class="layer-hdr">
+      <div class="layer-num" style="background:#1D9E75">3b</div>
+      <div class="layer-hdr-text">
+        <div class="lt">Strategic partnerships — Connor led</div>
+        <div class="ls">Realtors, property managers, lawn maintenance, housekeepers. One good realtor in Cache Valley produces 15–20 jobs per year at zero ad cost. Byron's relationship-first outreach motion is the right architecture for building this channel.</div>
+      </div>
+      <div class="layer-rev" id="lr-partner">—</div>
+    </div>
+    <div class="layer-body">
+      <div class="lever-row">
+        <div class="lever-label-wrap">
+          <label>Active referral partners <span class="atag atag-a">assumed</span></label>
+          <div class="ldesc">Number of active referral relationships producing consistent job flow. Zero today — the first realtor meeting is a 90-day target. Each partner takes 30–60 days to produce the first referral after the relationship is established.</div>
+        </div>
+        <input type="range" min="0" max="10" step="1" id="l-partners" value="0" oninput="calc()">
+        <div class="val" id="d-partners">0</div>
+      </div>
+      <div class="lever-row">
+        <div class="lever-label-wrap">
+          <label>Avg jobs per partner per year <span class="atag atag-a">assumed</span></label>
+          <div class="ldesc">Jobs referred annually per active partner. Realtors tend to refer at listing and settlement — 12–20 jobs per year for an active referrer in a growing market like Cache Valley.</div>
+        </div>
+        <input type="range" min="5" max="30" step="1" id="l-partjobs" value="15" oninput="calc()">
+        <div class="val" id="d-partjobs">15</div>
+      </div>
+      <div class="lever-impact" id="imp-partner">—</div>
+    </div>
+  </div>
+
+  <div class="layer-card">
+    <div class="layer-hdr">
+      <div class="layer-num" style="background:#534AB7">XL</div>
+      <div class="layer-hdr-text">
+        <div class="lt">Christmas lights — seasonal recurring</div>
+        <div class="ls">60% margin in year 1 because material must be purchased. 90% margin in year 2 and beyond because the material is already owned. $30K confirmed in 2025. This compounds annually with minimal incremental effort on renewals.</div>
+      </div>
+      <div class="layer-rev" id="lr-xmas">—</div>
+    </div>
+    <div class="layer-body">
+      <div class="lever-row">
+        <div class="lever-label-wrap">
+          <label>2025 base revenue <span class="atag atag-c">confirmed: $30K</span></label>
+          <div class="ldesc">Actual Christmas lights revenue from the 2025 season. All of this renews at 90% margin in 2026 and beyond — the material is already purchased and the customer relationship is established.</div>
+        </div>
+        <input type="range" min="0" max="120000" step="1000" id="l-xmasbase" value="30000" oninput="calc()">
+        <div class="val" id="d-xmasbase">$30K</div>
+      </div>
+      <div class="lever-row">
+        <div class="lever-label-wrap">
+          <label>New leases added this season <span class="atag atag-a">assumed</span></label>
+          <div class="ldesc">New Christmas lights contracts sold in the current season. Year 1 margin is 60% because new material must be purchased. Each new lease becomes a 90% margin renewal the following year.</div>
+        </div>
+        <input type="range" min="0" max="80" step="5" id="l-xmasnew" value="0" oninput="calc()">
+        <div class="val" id="d-xmasnew">0</div>
+      </div>
+      <div class="lever-row">
+        <div class="lever-label-wrap">
+          <label>Avg new lease value <span class="atag atag-a">assumed</span></label>
+          <div class="ldesc">Average contract value per new Christmas lights lease. Connor did not confirm the per-lease number — $30K divided by estimated lease count suggests $500–$700 per contract. Confirm with Connor.</div>
+        </div>
+        <input type="range" min="300" max="1000" step="50" id="l-xmasval" value="600" oninput="calc()">
+        <div class="val" id="d-xmasval">$600</div>
+      </div>
+      <div class="lever-impact" id="imp-xmas">—</div>
+    </div>
+  </div>
+
+  <div class="layer-card">
+    <div class="layer-hdr">
+      <div class="layer-num" style="background:#A32D2D">3c</div>
+      <div class="layer-hdr-text">
+        <div class="lt">Proximity marketing — upside only, not plan</div>
+        <div class="ls">Door hangers at every job site. Zero ad spend. The technician leaves hangers in the immediate neighborhood while on site. No confirmed conversion data exists — treat any revenue here as upside, not a number to plan around.</div>
+      </div>
+      <div class="layer-rev" id="lr-prox">—</div>
+    </div>
+    <div class="layer-body">
+      <div class="lever-row">
+        <div class="lever-label-wrap">
+          <label>Door hangers per job site <span class="atag atag-r">assumed</span></label>
+          <div class="ldesc">Number of door hangers left in the immediate neighborhood per job. Zero today — this requires adding hangers to Latrell's truck and making distribution part of the job checklist.</div>
+        </div>
+        <input type="range" min="0" max="20" step="1" id="l-hangers" value="0" oninput="calc()">
+        <div class="val" id="d-hangers">0</div>
+      </div>
+      <div class="lever-row">
+        <div class="lever-label-wrap">
+          <label>Estimated conversion rate <span class="atag atag-r">assumed</span></label>
+          <div class="ldesc">Percentage of door hangers that produce a booked job. Industry benchmarks for home services range from 1–3%. No local Cache Valley data exists. Keep this lever at 1–2% until actual data is collected.</div>
+        </div>
+        <input type="range" min="1" max="8" step="1" id="l-proxconv" value="2" oninput="calc()">
+        <div class="val" id="d-proxconv">2%</div>
+      </div>
+      <div class="lever-impact" id="imp-prox">—</div>
+    </div>
+  </div>
+</div>
+
+<div class="chart-wrap">
+  <div class="chart-title">Revenue by source</div>
+  <div class="bar-group" id="bar-group"></div>
+</div>
+
+<div class="timeline-box" id="timeline-detail">
+  <h3 id="tl-title">—</h3>
+  <div id="tl-rows"></div>
+</div>
+
+<div class="timeline-box">
+  <h3>Path milestones</h3>
+  <div id="milestones"></div>
+</div>
+
+<div id="warn-area"></div>
+<div class="footer">Alethia Team LLC · Mountain View Window Washing · Confidential · June 2026 · v5 — Dynamic Pool + Freedom Rate + SDE Model</div>
+</div>
+
+<script>
+let currentTimeline='now';
+
+const T={
+  now:{label:'Current State — June 2026',note:'$300K annualized. Connor spending 30% of his time on sales. 70% on field oversight, admin, and operations. Technician status uncertain. 250 one-time customers with no outreach running.',
+    freedom:30,crews:1,jpw:15,jobval:317,weeks:46,dormant:250,newcust:200,response:0,planconv:30,plans:65,planval:875,newplans:0,partners:0,partjobs:15,upsell:0,upsellval:125,hangers:0,proxconv:2,xmasbase:30000,xmasnew:0,xmasval:600,
+    rows:[['Revenue','~$300K (on track)'],['Connor sales focus','30% — field overhead consuming 70%'],['Crew','1 · Latrell (status uncertain)'],['Plan members','65 confirmed'],['One-time pool','250 — no reactivation running'],['Primary risk','Technician departure stalls revenue immediately'],['Primary opportunity','250 untouched customers + 65 plan members underconverting'],]},
+  '90':{label:'90 Days — Build the Foundation',note:'Not a revenue target. A foundation target. The five must-wins in these 90 days determine whether Year 1 is possible.',
+    freedom:35,crews:1,jpw:15,jobval:317,weeks:46,dormant:250,newcust:200,response:12,planconv:30,plans:65,planval:875,newplans:2,partners:0,partjobs:15,upsell:5,upsellval:100,hangers:5,proxconv:2,xmasbase:30000,xmasnew:0,xmasval:600,
+    rows:[['Revenue this quarter','$75K–$85K (current run rate)'],['Must-win 1','Technician SOP documented · Latrell signed off or replacement hired'],['Must-win 2','All 250 customers touched in reactivation campaign'],['Must-win 3','Plan offer formalized in every estimate'],['Must-win 4','Adjacent upsell script built · pressure wash + screen repair'],['Must-win 5','1 realtor identified · meeting requested'],['Must-win 6','Door hangers in truck · tracking in Housecall Pro'],['Plan members','65 → 80 minimum'],]},
+  '1':{label:'Year 1 — Stabilize One Crew',note:'Honest ceiling with one stable crew. No heroics. Foundation holds. Connor beginning to exit field oversight.',
+    freedom:55,crews:1,jpw:15,jobval:325,weeks:46,dormant:250,newcust:250,response:15,planconv:30,plans:65,planval:875,newplans:3,partners:1,partjobs:12,upsell:12,upsellval:110,hangers:6,proxconv:2,xmasbase:30000,xmasnew:12,xmasval:600,
+    rows:[['Revenue target','$370K–$420K'],['Connor sales focus','55% — partially freed from field'],['Crew','1 stable crew · technician self-sufficient'],['One-time pool end of year','~415 (250 start + 250 new − 45 plan converts)'],['Plan members','65 → 110'],['Adjacent services','12% upsell rate on window jobs'],['Christmas lights','$30K renewals + 12 new leases'],['Partnership','1 active realtor · 12 referral jobs'],['Key condition','No second tech hire until first has 5 clean sign-offs'],]},
+  '2':{label:'Year 2 — Add Second Crew (carefully)',note:'Second crew mid-year. Conservative inputs. The jump from Year 1 to Year 2 is the most execution-dependent in the model.',
+    freedom:70,crews:2,jpw:12,jobval:330,weeks:46,dormant:250,newcust:300,response:15,planconv:32,plans:111,planval:875,newplans:3,partners:1,partjobs:14,upsell:12,upsellval:120,hangers:8,proxconv:2,xmasbase:30000,xmasnew:15,xmasval:620,
+    rows:[['Revenue target','$550K–$620K'],['Connor sales focus','70% — mostly freed, field supervisor being evaluated'],['Crew','2 crews · second crew productive by mid-year'],['One-time pool end of year','~620 (growing faster than reactivation works it)'],['Plan members','110 → 165'],['Adjacent services','12% upsell rate · new crew still building rhythm'],['Christmas lights','Renewals + 15 new leases · renewal margin hitting 90%'],['Partnership','1 solid partner · second partner in development'],['Key risk','Fixed cost base rising · second crew must be profitable within 60 days'],]},
+  '3':{label:'Year 3 — Two Crews Optimized',note:'Two crews at near-capacity. Connor fully in CRO seat. Field supervisor managing crew performance.',
+    freedom:85,crews:2,jpw:15,jobval:340,weeks:46,dormant:250,newcust:350,response:18,planconv:35,plans:159,planval:900,newplans:4,partners:2,partjobs:15,upsell:18,upsellval:135,hangers:10,proxconv:2,xmasbase:30000,xmasnew:18,xmasval:640,
+    rows:[['Revenue target','$720K–$800K'],['Connor sales focus','85% — field supervisor owns crew performance'],['One-time pool end of year','~820 — reactivation lever 3x more powerful than today'],['Plan members','165 → 240'],['Adjacent services','18% upsell rate · adjacent menu normalized'],['Christmas lights','$30K renewals + 18 new leases compounding at 90%'],['Partnerships','2 active partners · property manager added'],['Decision point','Scale to 3rd crew? Or optimize lean path to exit?'],]},
+  '4':{label:'Year 4 — Lean Path Executing',note:'Optimization and scale consolidating. Recurring base doing heavy lifting. Exit value becoming meaningful.',
+    freedom:90,crews:2,jpw:17,jobval:355,weeks:46,dormant:250,newcust:380,response:20,planconv:38,plans:222,planval:920,newplans:4,partners:3,partjobs:17,upsell:22,upsellval:150,hangers:12,proxconv:3,xmasbase:30000,xmasnew:15,xmasval:660,
+    rows:[['Revenue target','$900K–$1.0M'],['Connor sales focus','90% — effectively full CRO'],['One-time pool end of year','~980 — massive reactivation asset'],['Plan members','240 → 300 — $276K pure recurring'],['Adjacent services','22% upsell rate · $150 avg'],['Christmas lights','Deep renewal base approaching $80K annually'],['Partnerships','3 active partners'],['SDE estimate','$220K–$280K'],['Exit value range','$660K–$1.4M at 3–5x'],]},
+  '5':{label:'Year 5 — Exit Ready',note:'High-margin operation with strong recurring base. Genuine exit optionality. The $1.6M revenue target is achievable on this path.',
+    freedom:95,crews:2,jpw:18,jobval:370,weeks:46,dormant:250,newcust:400,response:22,planconv:40,plans:288,planval:940,newplans:4,partners:4,partjobs:18,upsell:26,upsellval:165,hangers:12,proxconv:3,xmasbase:30000,xmasnew:12,xmasval:680,
+    rows:[['Revenue target','$1.1M–$1.3M'],['Connor sales focus','95% — pure CRO function'],['One-time pool end of year','~1,100 — a major asset in any exit conversation'],['Plan members','300 → 360 — $338K pure recurring revenue'],['Adjacent services','26% upsell rate normalized into every job'],['Christmas lights','$30K renewals + 12 new leases · nearly all at 90% margin'],['Partnerships','4 active partners · referrals a meaningful channel'],['SDE estimate','$280K–$370K'],['Exit value range','$840K–$1.85M at 3–5x'],['$100M path','Requires franchise or 8–10 locations · different conversation'],]},
+};
+
+function setTimeline(t){
+  currentTimeline=t;
+  ['now','90','1','2','3','4','5'].forEach(x=>document.getElementById('tt-'+x).classList.toggle('active',x===t));
+  const d=T[t];
+  const sets={'l-freedom':d.freedom,'l-crews':d.crews,'l-jpw':d.jpw,'l-jobval':d.jobval,'l-weeks':d.weeks,'l-dormant':d.dormant,'l-newcust':d.newcust,'l-response':d.response,'l-planconv':d.planconv,'l-plans':d.plans,'l-planval':d.planval,'l-newplans':d.newplans,'l-partners':d.partners,'l-partjobs':d.partjobs,'l-upsell':d.upsell,'l-upsellval':d.upsellval,'l-hangers':d.hangers,'l-proxconv':d.proxconv,'l-xmasbase':d.xmasbase,'l-xmasnew':d.xmasnew,'l-xmasval':d.xmasval};
+  Object.entries(sets).forEach(([id,val])=>{const el=document.getElementById(id);if(el)el.value=val;});
+  calc();
+}
+
+function fmt(n){return '$'+Math.round(n).toLocaleString('en-US')}
+function fmtK(n){return n>=1000000?'$'+(n/1000000).toFixed(1)+'M':n>=1000?'$'+(n/1000).toFixed(0)+'K':fmt(n)}
+function pct(n){return Math.round(n)+'%'}
+function v(id){return parseFloat(document.getElementById(id).value)||0}
+function dset(id,txt){const el=document.getElementById(id);if(el)el.textContent=txt}
+
+function calc(){
+  const freedom=v('l-freedom')/100;
+  const crews=v('l-crews'),jpw=v('l-jpw'),jobval=v('l-jobval'),weeks=v('l-weeks');
+  const dormant=v('l-dormant'),newCust=v('l-newcust'),responseRate=v('l-response')/100,planConvRate=v('l-planconv')/100;
+  const plans=v('l-plans'),planVal=v('l-planval'),newPlans=v('l-newplans');
+  const partners=v('l-partners'),partJobs=v('l-partjobs');
+  const upsellRate=v('l-upsell')/100,upsellVal=v('l-upsellval');
+  const hangers=v('l-hangers'),proxConv=v('l-proxconv')/100;
+  const xmasBase=v('l-xmasbase'),xmasNew=v('l-xmasnew'),xmasVal=v('l-xmasval');
+
+  dset('d-freedom',Math.round(v('l-freedom'))+'%');
+  dset('d-crews',Math.round(crews));dset('d-jpw',Math.round(jpw));dset('d-jobval','$'+Math.round(jobval));dset('d-weeks',Math.round(weeks));
+  dset('d-dormant',Math.round(dormant));dset('d-newcust',Math.round(newCust));dset('d-response',Math.round(v('l-response'))+'%');dset('d-planconv',Math.round(v('l-planconv'))+'%');
+  dset('d-plans',Math.round(plans));dset('d-planval','$'+Math.round(planVal));dset('d-newplans',Math.round(newPlans));
+  dset('d-partners',Math.round(partners));dset('d-partjobs',Math.round(partJobs));
+  dset('d-upsell',Math.round(v('l-upsell'))+'%');dset('d-upsellval','$'+Math.round(upsellVal));
+  dset('d-hangers',Math.round(hangers));dset('d-proxconv',Math.round(v('l-proxconv'))+'%');
+  dset('d-xmasbase','$'+Math.round(xmasBase/1000)+'K');dset('d-xmasnew',Math.round(xmasNew));dset('d-xmasval','$'+Math.round(xmasVal));
+
+  // Freedom rate drives estimate volume and staffing costs
+  const baseEstimates=30;
+  const maxEstimates=90;
+  const estimatesPerMonth=Math.round(baseEstimates+(freedom-0.30)/(0.70)*(maxEstimates-baseEstimates));
+  const freedomStaffCost=Math.round(((freedom-0.30)/0.70)*85000); // up to $85K in staffing to free Connor
+
+  // Layer 1
+  const totalJobsYr=crews*jpw*weeks;
+  const crewRev=totalJobsYr*jobval;
+  // CREW CEILING ASSUMPTION: Maximum sustainable jobs per crew per week is jpw
+  // as set by the slider. The ceiling represents full crew utilization at the
+  // current jobs-per-week rate. Above ceiling means crews are running above
+  // their current pace — only sustainable short-term without quality risk.
+  const crewCeiling=crews*jpw*weeks*jobval;
+
+  // Dynamic pool
+  const moMap={'now':0,'90':3,'1':12,'2':12,'3':12,'4':12,'5':12};
+  const yearMap={'now':0,'90':0.25,'1':1,'2':2,'3':3,'4':4,'5':5};
+  const years=yearMap[currentTimeline]||0;
+  const avgNewMos=moMap[currentTimeline]||0;
+  // Pool = starting base + new acquisitions over time - cumulative plan converts
+  // Cumulative converts estimated as newPlans * total months across all prior years
+  const priorYearMos={'now':0,'90':0,'1':0,'2':12,'3':24,'4':36,'5':48};
+  const cumPriorConverts=(priorYearMos[currentTimeline]||0)*newPlans;
+  const totalPool=Math.round(Math.max(dormant, dormant+(newCust*years)-cumPriorConverts-(newPlans*avgNewMos*0.5)));
+  const reactResponders=totalPool*responseRate;
+  const reactPlanNew=reactResponders*planConvRate;
+  const reactOneTime=reactResponders*(1-planConvRate);
+  const reactRev=reactOneTime*jobval+reactPlanNew*planVal;
+
+  // Layer 2
+  // plans slider is the source of truth for starting members at each timeline
+  // only add current year new members from estimate conversions
+  // reactivation plan converts are counted in reactivation revenue separately
+  const totalPlanMembers=plans+(newPlans*avgNewMos);
+  const planRev=totalPlanMembers*planVal;
+  const salesRev=reactRev+planRev;
+
+  // Layer 3
+  const partnerRev=partners*partJobs*jobval;
+  const adjRev=totalJobsYr*upsellRate*upsellVal;
+  // PROXIMITY CAP ASSUMPTION: Door hangers are a zero-cost channel but do not scale
+  // linearly with crew count. A two-crew operation in Cache Valley cannot realistically
+  // generate more than 40-50 booked jobs from door hangers annually regardless of
+  // hangers distributed. Cap set at $15K for 1 crew, $25K for 2+ crews.
+  // Industry benchmark: 1-3% conversion but volume is physically limited by
+  // neighborhood density and repeat exposure. Treat as upside, not plan.
+  const proxLeads=crews*jpw*weeks*hangers*proxConv;
+  const proxRevUncapped=proxLeads*jobval;
+  const proxCap=crews===1?15000:25000;
+  const proxRev=Math.min(proxRevUncapped, proxCap);
+  const xmasRenew=xmasBase*0.90;
+  const xmasNewRev=xmasNew*xmasVal*0.60;
+  const xmasRev=Math.round(xmasBase*0.10+xmasRenew+xmasNewRev);
+
+  const totalRev=Math.round(crewRev+salesRev+partnerRev+adjRev+proxRev+xmasRev);
+  const gp=Math.round(crewRev*0.78+planRev*0.78+reactRev*0.78+partnerRev*0.78+adjRev*0.82+xmasRev*0.72+proxRev*0.78);
+  const marginPct=totalRev>0?Math.round(gp/totalRev*100):0;
+  // SDE ASSUMPTIONS:
+  // Technician cost: $3,800/month per crew (confirmed from MVWW expense model)
+  // Field supervisor: $55,000/yr deducted when 2+ crews (hire trigger ~$700K revenue)
+  // Freedom staffing: $0 at 30% freedom scaling to $85K at 100% freedom
+  //   represents field supervisor + admin coordinator to free Connor from operations
+  // Owner draws NOT deducted here — a buyer adds them back in acquisition analysis
+  //   Connor and Hailey combined draws ~$80K-$100K reduce true owner SDE by that amount
+  // Exit multiple: 3-5x standard for home services; higher end (4-5x) justified by
+  //   plan member recurring base and Christmas lights compounding revenue
+  // Owner draws: Connor and Hailey combined ~$90K/yr
+  // Must be deducted from SDE for accurate exit valuation
+  // A buyer replacing them would need to pay a GM + ops manager ~$120-150K
+  // so the $90K deduction is actually conservative
+  const ownerDraws=90000;
+  const techCost=crews*3800*12;
+  const sde=Math.max(0,Math.round(gp-techCost-(crews>1?55000:0)-freedomStaffCost-ownerDraws));
+  // Exit multiples: 2x-4x realistic for home services
+  // 2x: owner-dependent, basic systems, no recurring base
+  // 3x: documented systems, stable crew, growing plan base
+  // 4x: 200+ plan members, recurring >30% of total, Connor out of field
+  const exitAt2x=Math.round(sde*2);
+  const exitAt3x=Math.round(sde*3);
+  const exitAt4x=Math.round(sde*4);
+  const exitLow=exitAt2x;
+  const exitHigh=exitAt4x;
+
+  dset('v-rev',fmtK(totalRev));
+  dset('v-gp',fmtK(gp));
+  dset('v-margin',pct(marginPct));
+  dset('v-crews',Math.round(crews)+' crew'+(crews>1?'s':''));
+  dset('v-plans',Math.round(totalPlanMembers));
+  dset('v-pool',Math.round(Math.max(0,totalPool)));
+  dset('v-sde',fmtK(Math.max(0,sde)));
+  dset('v-exit',sde>0?fmtK(exitLow)+'–'+fmtK(exitHigh):'—');
+  // Show multiple breakdown in impact area
+  const exitBreakdown=sde>0?'2x: '+fmtK(exitAt2x)+' · 3x: '+fmtK(exitAt3x)+' · 4x: '+fmtK(exitAt4x):'Build the recurring base to unlock higher multiples.';
+  const exitEl=document.getElementById('exit-breakdown');
+  if(exitEl) exitEl.textContent=exitBreakdown;
+  dset('v-sub',T[currentTimeline]?.note||'');
+  dset('v-ceiling',fmtK(crewCeiling));
+  dset('v-ceiling-label',Math.round(crews)+' crew'+(crews>1?'s':'')+' at capacity');
+
+  dset('lr-freedom','~'+Math.round(estimatesPerMonth)+' est/mo · $'+Math.round(freedomStaffCost/1000)+'K staffing cost');
+  dset('lr-crew',fmtK(crewRev));dset('lr-react',fmtK(reactRev));dset('lr-plans',fmtK(planRev));
+  dset('lr-partner',fmtK(partnerRev));dset('lr-adj',fmtK(adjRev));dset('lr-prox',fmtK(proxRev));dset('lr-xmas',fmtK(xmasRev));
+  dset('c-crew',fmtK(crewRev));dset('c-plans',fmtK(planRev));dset('c-react',fmtK(reactRev));
+  dset('c-adj',fmtK(adjRev));dset('c-partner',fmtK(partnerRev));dset('c-xmas',fmtK(xmasRev));
+
+  document.getElementById('imp-freedom').innerHTML='At '+Math.round(v('l-freedom'))+'% sales focus Connor can run <strong>~'+estimatesPerMonth+' estimates/month</strong>. Staffing cost to enable this freedom: <strong>$'+Math.round(freedomStaffCost/1000)+'K/yr</strong> (field supervisor, admin coordinator). This cost reduces SDE in the short term before revenue recovers it.';
+  document.getElementById('imp-crew').innerHTML=Math.round(totalJobsYr)+' jobs/yr at '+fmt(jobval)+' → <strong>'+fmtK(crewRev)+'</strong> · Hard ceiling at '+Math.round(crews)+' crew'+(crews>1?'s':'')+': <strong>'+fmtK(crewCeiling)+'</strong>';
+  document.getElementById('imp-react').innerHTML='Pool: <strong>'+Math.round(Math.max(0,totalPool))+' customers</strong> available · '+Math.round(reactResponders)+' respond · '+Math.round(reactPlanNew)+' convert to plans → <strong>'+fmtK(reactRev)+'</strong>'+(responseRate===0?' · No reactivation campaign running yet':'');
+  document.getElementById('imp-plans').innerHTML=Math.round(totalPlanMembers)+' total members at '+fmt(planVal)+' weighted avg → <strong>'+fmtK(planRev)+'</strong> · Pure recurring revenue that requires no new estimates to maintain';
+  document.getElementById('imp-partner').innerHTML=partners>0?Math.round(partners)+' partner'+(partners>1?'s':'')+' × '+Math.round(partJobs)+' jobs → <strong>'+fmtK(partnerRev)+'</strong> · Zero ad spend channel':'No active partners. First realtor meeting is the 90-day target. One good realtor = 12–20 jobs/yr.';
+  document.getElementById('imp-adj').innerHTML=upsellRate>0?'Adjacent upsells on '+Math.round(totalJobsYr*upsellRate)+' of '+Math.round(totalJobsYr)+' jobs → <strong>'+fmtK(adjRev)+'</strong> · Pressure wash, screen repair, solar, gutters — same truck, higher job value':'Upsell script not yet built. Add to 90-day foundation work.';
+  const proxCapped=proxRevUncapped>proxCap;
+  document.getElementById('imp-prox').innerHTML=hangers>0?Math.round(proxLeads)+' leads/yr (uncapped: '+fmtK(proxRevUncapped)+') → capped at <strong>'+fmtK(proxRev)+'</strong> · Cap: $15K for 1 crew, $25K for 2 crews — physical limit of door hanger channel in Cache Valley · <em>Upside only, not a planning number</em>':'Proximity not active. Add door hangers to technician job checklist.';
+  document.getElementById('imp-xmas').innerHTML='$30K base renewals at 90% margin + '+Math.round(xmasNew)+' new leases at 60% → <strong>'+fmtK(xmasRev)+'</strong> · Compounds annually with no new material cost on renewals';
+
+  const ceilDiff=totalRev-crewCeiling;
+  document.getElementById('ceiling-msg').innerHTML=ceilDiff>5000?'<div class="ceiling-bar ceiling-ok">Layer 2 and 3 adding <strong>'+fmtK(ceilDiff)+'</strong> above crew ceiling. This is the model working correctly — plans, adjacents, and partnerships pushing past what the crew alone can produce.</div>':'<div class="ceiling-bar ceiling-warn">Near or below crew ceiling. Activate Layer 2 and 3 to grow revenue without adding crew.</div>';
+
+  const sources=[{label:'Service plans',val:planRev,color:'#185FA5'},{label:'Core windows',val:crewRev,color:'#0F1B2E'},{label:'Adjacent svcs',val:adjRev,color:'#1D9E75'},{label:'Christmas lights',val:xmasRev,color:'#534AB7'},{label:'Reactivation',val:reactRev,color:'#2E9E6A'},{label:'Partnerships',val:partnerRev,color:'#C9A84C'},{label:'Proximity',val:proxRev,color:'#A32D2D'},].filter(s=>s.val>500).sort((a,b)=>b.val-a.val);
+  const maxVal=Math.max(...sources.map(s=>s.val),1);
+  document.getElementById('bar-group').innerHTML=sources.map(s=>{const w=Math.max(2,Math.round(s.val/maxVal*100));const p=totalRev>0?Math.round(s.val/totalRev*100):0;return`<div class="bar-row"><div class="bar-label">${s.label}</div><div class="bar-track"><div class="bar-fill" style="width:${w}%;background:${s.color}"><span>${fmtK(s.val)} · ${p}%</span></div></div></div>`;}).join('');
+
+  const tl=T[currentTimeline];
+  dset('tl-title',tl.label);
+  document.getElementById('tl-rows').innerHTML=tl.rows.map(([l,r])=>`<div class="trow"><div class="tl">${l}</div><div class="tv">${r}</div></div>`).join('');
+
+  document.getElementById('milestones').innerHTML=[
+    {dot:'#A32D2D',text:'<strong>Now:</strong> $300K. Connor 30% on sales. 250 untouched customers. Technician uncertain.'},
+    {dot:'#185FA5',text:'<strong>90 Days:</strong> SOP done. 250 customers touched. Plan offer in every estimate. Upsell script built.'},
+    {dot:'#1D9E75',text:'<strong>Year 1 · $370K–$420K:</strong> One stable crew. Connor 55% sales. Reactivation complete. First partner.'},
+    {dot:'#C9A84C',text:'<strong>Year 2 · $550K–$620K:</strong> Second crew mid-year. Connor 70% sales. 165 plan members.'},
+    {dot:'#0F1B2E',text:'<strong>Year 3 · $720K–$800K:</strong> Two crews optimized. Connor 85% CRO. Field supervisor in place.'},
+    {dot:'#534AB7',text:'<strong>Year 4 · $900K–$1.0M:</strong> 300 plan members. Exit value $660K–$1.4M. Path decision.'},
+    {dot:'#1D9E75',text:'<strong>Year 5 · $1.1M–$1.3M:</strong> Exit ready. SDE $280K–$370K. Exit value $840K–$1.85M.'},
+  ].map(m=>`<div class="milestone"><div class="ms-dot" style="background:${m.dot}"></div><div class="ms-text">${m.text}</div></div>`).join('');
+
+  const warns=[];
+  if(currentTimeline==='now') warns.push('<div class="alert-box alert-warn">Current state: technician uncertainty is the primary threat. If Latrell leaves before a replacement is trained, revenue stalls immediately. This is the first fix.</div>');
+  if(proxRev>totalRev*0.18) warns.push('<div class="alert-box alert-flag">Proximity carrying more than 18% of total revenue. No confirmed data. Treat as upside — not a planning number.</div>');
+  if(crews>1&&newPlans<3) warns.push('<div class="alert-box alert-warn">Two crews without growing plan base creates fixed cost risk. Plan conversion must be active before the second crew is hired.</div>');
+  if(sde<0) warns.push('<div class="alert-box alert-flag">Staffing costs are exceeding gross profit at these settings. Revenue must grow before adding this level of staff. Sequence matters.</div>');
+  if(totalRev>=1000000) warns.push('<div class="alert-box alert-good">$1M revenue reached on this model. SDE of '+fmtK(sde)+' puts exit value at '+fmtK(exitLow)+'–'+fmtK(exitHigh)+'. This is a real outcome.</div>');
+  document.getElementById('warn-area').innerHTML=warns.join('');
+}
+setTimeline('now');
+</script>
+</body>
+</html>
