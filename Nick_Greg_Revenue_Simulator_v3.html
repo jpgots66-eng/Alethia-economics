@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nick & Greg — Home Transformation Simulator · Alethia Team LLC</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#F5F4F0;color:#1A1A1A;padding:20px 16px 80px}
+.wrap{max-width:980px;margin:0 auto}
+.brand-bar{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:#0F1B2E;border-radius:10px;margin-bottom:14px}
+.brand-bar .co{font-size:14px;font-weight:600;color:#C9A84C;letter-spacing:.08em;text-transform:uppercase}
+.brand-bar .doc{font-size:11px;color:rgba(255,255,255,.4);letter-spacing:.06em;text-transform:uppercase}
+.insight{background:#0F1B2E;border-radius:8px;padding:16px 20px;margin-bottom:14px}
+.insight .i1{font-size:18px;font-weight:600;color:#C9A84C;line-height:1.4;margin-bottom:8px}
+.insight .i2{font-size:12px;color:rgba(255,255,255,.7);line-height:1.7}
+.insight .i2 strong{color:#fff}
+.icp-box{background:#fff;border:1px solid #e8e6e0;border-radius:8px;padding:12px 16px;margin-bottom:14px}
+.icp-box .ich{font-size:11px;font-weight:600;color:#0F1B2E;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px}
+.icp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px}
+.icp-item{background:#F5F4F0;border-radius:6px;padding:9px 12px;border-left:3px solid #C9A84C}
+.icp-item .ih{font-size:11px;font-weight:600;color:#0F1B2E;margin-bottom:3px}
+.icp-item .ib{font-size:10px;color:#666;line-height:1.4}
+.section-label{font-size:11px;font-weight:600;color:#888;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;margin-top:14px}
+.timeline-tabs{display:flex;gap:5px;margin-bottom:14px;flex-wrap:wrap}
+.ttab{flex:1;min-width:70px;padding:8px 6px;border-radius:7px;border:1px solid #ddd;background:#fff;cursor:pointer;text-align:center;font-size:11px;font-weight:500;color:#666;transition:all .15s;line-height:1.3}
+.ttab.active{background:#0F1B2E;color:#C9A84C;border-color:#0F1B2E}
+.verdict{padding:16px 18px;background:#0F1B2E;border-radius:10px;margin-bottom:14px}
+.verdict-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px}
+.verdict-rev{font-size:36px;font-weight:600;color:#C9A84C;line-height:1}
+.verdict-label{font-size:10px;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px}
+.verdict-sub{font-size:11px;color:rgba(255,255,255,.55);margin-top:4px;max-width:460px;line-height:1.4}
+.verdict-stats{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.1)}
+.vstat .n{font-size:16px;font-weight:600;color:#fff;line-height:1}
+.vstat .l{font-size:9px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.07em;margin-top:3px}
+.vstat .desc{font-size:9px;color:rgba(255,255,255,.3);margin-top:2px;line-height:1.3;max-width:110px}
+.vstat-wide{flex-basis:100%;margin-top:8px;padding-top:8px;border-top:.5px solid rgba(255,255,255,.1)}
+.vstat-wide .n{font-size:13px;font-weight:600;color:#C9A84C}
+.vstat-wide .l{font-size:9px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.07em;margin-top:3px}
+.vstat-wide .desc{font-size:9px;color:rgba(255,255,255,.3);margin-top:2px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(105px,1fr));gap:7px;margin-bottom:14px}
+.mcard{background:#fff;border:1px solid #e8e6e0;border-radius:7px;padding:9px 11px}
+.mcard .ml{font-size:10px;color:#888;margin-bottom:2px}
+.mcard .mv{font-size:16px;font-weight:600;color:#0F1B2E}
+.mcard .ms{font-size:9px;color:#aaa;margin-top:1px}
+.mcard.gold{border-color:#C9A84C;background:#FDFBF5}
+.layers{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.layer-card{background:#fff;border-radius:9px;overflow:hidden;border:1px solid #e8e6e0}
+.layer-hdr{display:flex;align-items:flex-start;gap:9px;padding:10px 13px;border-bottom:1px solid #f0ede4}
+.layer-num{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0;margin-top:1px}
+.layer-hdr-text{flex:1}
+.layer-hdr-text .lt{font-size:12px;font-weight:600;color:#0F1B2E}
+.layer-hdr-text .ls{font-size:10px;color:#888;margin-top:2px;line-height:1.4}
+.layer-rev{font-size:15px;font-weight:600;color:#0F1B2E;white-space:nowrap;margin-top:1px}
+.layer-body{padding:10px 13px}
+.lever-row{display:flex;align-items:flex-start;gap:7px;margin-bottom:8px}
+.lever-label-wrap{min-width:190px}
+.lever-label-wrap label{font-size:11px;color:#333;font-weight:500;display:block;line-height:1.3}
+.lever-label-wrap .ldesc{font-size:10px;color:#999;margin-top:2px;line-height:1.3}
+.atag{font-size:9px;padding:1px 4px;border-radius:8px;margin-left:2px;font-weight:600;vertical-align:middle}
+.atag-c{background:#E1F5EE;color:#0F6E56}
+.atag-a{background:#FAEEDA;color:#854F0B}
+.lever-row input[type=range]{flex:1;accent-color:#C9A84C;margin-top:4px}
+.lever-row .val{font-size:11px;font-weight:600;color:#0F1B2E;min-width:64px;text-align:right;margin-top:3px}
+.mix-display{background:#F5F4F0;border-radius:6px;padding:10px 12px;margin-bottom:8px}
+.mix-bars{display:flex;height:20px;border-radius:4px;overflow:hidden;margin:6px 0}
+.mix-gutter{background:#0F1B2E;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;color:#C9A84C;transition:width .3s}
+.mix-sm{background:#185FA5;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;color:#fff;transition:width .3s}
+.mix-stats{display:flex;justify-content:space-between;font-size:10px;color:#555;flex-wrap:wrap;gap:4px}
+.mix-stat strong{color:#0F1B2E}
+.lever-impact{font-size:10px;color:#777;margin-top:6px;padding-top:6px;border-top:1px solid #f0ede4;line-height:1.5}
+.lever-impact strong{color:#0F1B2E}
+.seq-bar{margin-top:6px;padding:7px 9px;border-radius:5px;font-size:10px;line-height:1.5}
+.seq-ready{background:#E1F5EE;color:#085041}
+.seq-next{background:#FAEEDA;color:#633806}
+.seq-wait{background:#F5F4F0;color:#888;border:1px solid #ddd}
+.baseline-box{background:#F5F4F0;border:1px solid #ddd;border-radius:8px;padding:12px 14px;margin-bottom:14px}
+.baseline-box .bh{font-size:11px;font-weight:600;color:#0F1B2E;margin-bottom:8px;letter-spacing:.04em;text-transform:uppercase}
+.baseline-row{display:flex;justify-content:space-between;font-size:11px;padding:4px 0;border-bottom:1px solid #e8e6e0}
+.baseline-row:last-child{border-bottom:none;font-weight:600;padding-top:6px}
+.baseline-row .bl{color:#666}
+.baseline-row .bv{font-weight:500;color:#0F1B2E}
+.chart-wrap{background:#fff;border:1px solid #e8e6e0;border-radius:9px;padding:12px 14px;margin-bottom:10px}
+.chart-title{font-size:10px;font-weight:600;color:#888;margin-bottom:10px;letter-spacing:.06em;text-transform:uppercase}
+.bar-group{display:flex;flex-direction:column;gap:6px}
+.bar-row{display:flex;align-items:center;gap:7px}
+.bar-label{font-size:10px;color:#666;min-width:150px;text-align:right}
+.bar-track{flex:1;height:24px;background:#F5F4F0;border-radius:4px;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px;transition:width .35s ease;display:flex;align-items:center;justify-content:flex-end;padding-right:7px;min-width:4px}
+.bar-fill span{font-size:10px;font-weight:600;color:#fff;white-space:nowrap}
+.timeline-box{background:#fff;border:1px solid #e8e6e0;border-radius:9px;padding:12px 14px;margin-bottom:10px}
+.timeline-box h3{font-size:12px;font-weight:600;color:#0F1B2E;margin-bottom:8px}
+.trow{display:flex;justify-content:space-between;font-size:11px;padding:5px 0;border-bottom:1px solid #f0ede4;gap:12px}
+.trow:last-child{border-bottom:none}
+.trow .tl{color:#777;flex-shrink:0;min-width:170px;line-height:1.4}
+.trow .tv{font-weight:600;color:#0F1B2E;text-align:right;line-height:1.4}
+.milestone{display:flex;gap:9px;padding:6px 0;border-bottom:1px solid #f0ede4}
+.milestone:last-child{border-bottom:none}
+.ms-dot{width:8px;height:8px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.ms-text{font-size:11px;color:#666;line-height:1.4}
+.ms-text strong{color:#0F1B2E}
+.alert-box{border-radius:7px;padding:9px 11px;font-size:11px;margin-top:7px;line-height:1.5}
+.alert-warn{background:#FAEEDA;color:#633806}
+.alert-good{background:#E1F5EE;color:#085041}
+.alert-flag{background:#FCEBEB;color:#791F1F}
+.alert-info{background:#E6F1FB;color:#185FA5}
+.footer{margin-top:24px;text-align:center;font-size:10px;color:#aaa;letter-spacing:.04em}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="brand-bar">
+  <div class="co">Nick &amp; Greg — Home Transformation</div>
+  <div class="doc">Revenue Simulator v3 · Alethia Team LLC · June 2026</div>
+</div>
+
+<div class="insight">
+  <div class="i1">Your trusted partner — from refi to renovation.</div>
+  <div class="i2">This is not a construction company. It is a <strong>premium home transformation ecosystem</strong> built around a specific client who almost no one is serving well. The 60-year-old affluent Calgary homeowner with $800K in equity, a dated kitchen, and no desire to move. They do not price shop. They do not want to manage trades. They want one trusted partner who handles everything — from the financing conversation to the final finish. <strong>The mortgage broker refers them. Greg and Nick transform the home. The broker refinances the equity. Everyone wins. The client gets the home they always wanted without moving.</strong></div>
+</div>
+
+<div class="icp-box">
+  <div class="ich">The ideal client — who you are actually selling to</div>
+  <div class="icp-grid">
+    <div class="icp-item">
+      <div class="ih">Who they are</div>
+      <div class="ib">60-plus affluent Calgary homeowner. Home worth $1.5M to $3M. Paid off or nearly. Kids gone. Thinking about the kitchen for five years. Has the equity. Has not found the right partner.</div>
+    </div>
+    <div class="icp-item">
+      <div class="ih">What they want</div>
+      <div class="ib">One call. One trusted team. Done right. They are not comparing three bids. They are asking their neighbor who they used and whether they showed up when they said they would.</div>
+    </div>
+    <div class="icp-item">
+      <div class="ih">How they find you</div>
+      <div class="ib">Mortgage broker referral. Neighbor word of mouth. Nick's signal detection finding upgrade-intent homeowners before anyone else is in the conversation. Not price comparison sites.</div>
+    </div>
+    <div class="icp-item">
+      <div class="ih">Why they choose you</div>
+      <div class="ib">Dean showed up. Did exceptional exterior work. Left the house better than he found it. Greg handed them a card and said we also do kitchens. The broker called the next week.</div>
+    </div>
+    <div class="icp-item">
+      <div class="ih">The competitor</div>
+      <div class="ib">East Indian labor underbidding on price. Not a threat in this market. The affluent 60-year-old is not calling the cheapest drywall crew. Quality and trust are the entire moat.</div>
+    </div>
+    <div class="icp-item">
+      <div class="ih">The loop</div>
+      <div class="ib">Gutters and exterior establish quality. Broker introduces equity conversation. Greg and Nick present the transformation. Broker refi closes the funding. Client refers three neighbors.</div>
+    </div>
+  </div>
+</div>
+
+<div class="section-label">Existing business baseline — locked</div>
+<div class="baseline-box">
+  <div class="bh">Current business — $516K annual · Before the transformation ecosystem activates</div>
+  <div class="baseline-row"><div class="bl">Division 1 — Small exterior jobs (3/month at ~$6K avg)</div><div class="bv">$216K / yr</div></div>
+  <div class="baseline-row"><div class="bl">Division 2 — Kitchen renovations (1/month at ~$25K avg)</div><div class="bv">$300K / yr</div></div>
+  <div class="baseline-row"><div class="bl">Blended gross margin</div><div class="bv">30%</div></div>
+  <div class="baseline-row"><div class="bl">Monthly net after Meninder PM and costs</div><div class="bv">$13K / month · $156K / yr</div></div>
+  <div class="baseline-row"><div class="bl">Gutter machine</div><div class="bv">$0 — idle · Dean confirmed · machine loaded</div></div>
+  <div class="baseline-row"><div class="bl">BASELINE ANNUAL REVENUE</div><div class="bv">$516,000</div></div>
+</div>
+
+<div class="section-label">Select timeline</div>
+<div class="timeline-tabs">
+  <div class="ttab active" id="tt-now" onclick="setTimeline('now')">Current State</div>
+  <div class="ttab" id="tt-90" onclick="setTimeline('90')">90 Days</div>
+  <div class="ttab" id="tt-1" onclick="setTimeline('1')">Year 1</div>
+  <div class="ttab" id="tt-2" onclick="setTimeline('2')">Year 2</div>
+  <div class="ttab" id="tt-3" onclick="setTimeline('3')">Year 3</div>
+  <div class="ttab" id="tt-4" onclick="setTimeline('4')">Year 4</div>
+  <div class="ttab" id="tt-5" onclick="setTimeline('5')">Year 5</div>
+</div>
+
+<div class="verdict">
+  <div class="verdict-top">
+    <div>
+      <div class="verdict-label">Total projected annual revenue</div>
+      <div class="verdict-rev" id="v-rev">—</div>
+      <div class="verdict-sub" id="v-sub">—</div>
+    </div>
+    <div style="text-align:right">
+      <div class="verdict-label">Above baseline</div>
+      <div style="font-size:22px;font-weight:600;color:#C9A84C" id="v-above">—</div>
+      <div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:2px">ecosystem adds on top of $516K</div>
+    </div>
+  </div>
+  <div class="verdict-stats">
+    <div class="vstat"><div class="n" id="v-gp">—</div><div class="l">Total GP</div><div class="desc">All sources combined</div></div>
+    <div class="vstat"><div class="n" id="v-margin">—</div><div class="l">Blended margin</div><div class="desc">Weighted all job types</div></div>
+    <div class="vstat"><div class="n" id="v-d1">—</div><div class="l">Exterior machine</div><div class="desc">Gutter and soft metals</div></div>
+    <div class="vstat"><div class="n" id="v-d2">—</div><div class="l">Affluent renos</div><div class="desc">Kitchen additions full floor</div></div>
+    <div class="vstat"><div class="n" id="v-sde">—</div><div class="l">Est. SDE</div><div class="desc">After wages and owner draws</div></div>
+    <div class="vstat-wide">
+      <div class="n" id="v-exit">—</div>
+      <div class="l">Projected sell value — 2x · 3x · 4x SDE</div>
+      <div class="desc" id="v-exit-bd">—</div>
+    </div>
+  </div>
+</div>
+
+<div class="cards">
+  <div class="mcard"><div class="ml">Baseline</div><div class="mv">$516K</div><div class="ms">existing</div></div>
+  <div class="mcard gold"><div class="ml">Exterior machine</div><div class="mv" id="c-machine">—</div><div class="ms">D1 additive</div></div>
+  <div class="mcard gold"><div class="ml">Affluent renos</div><div class="mv" id="c-reno">—</div><div class="ms">D2 growth</div></div>
+  <div class="mcard"><div class="ml">Broker referrals</div><div class="mv" id="c-broker">—</div><div class="ms">ecosystem</div></div>
+  <div class="mcard"><div class="ml">Scrap recovery</div><div class="mv" id="c-scrap">—</div><div class="ms">margin lift</div></div>
+</div>
+
+<div class="section-label">Division 1 — Exterior machine (gutter and soft metals mix)</div>
+<div class="layers">
+  <div class="layer-card">
+    <div class="layer-hdr">
+      <div class="layer-num" style="background:#0F1B2E">D1</div>
+      <div class="layer-hdr-text">
+        <div class="lt">Gutter machine — entry point, trust builder, referral trigger</div>
+        <div class="ls">Dean does exceptional exterior work. The home looks better. Greg hands them a card. The broker calls the next week. Division 1 is not the revenue engine. It is the trust engine that feeds Division 2.</div>
+      </div>
+      <div class="layer-rev" id="lr-d1">—</div>
+    </div>
+    <div class="layer-body">
+      <div class="lever-row">
+        <div class="lever-label-wrap">
+          <label>Soft metals % of Dean's days <span class="atag atag-a">decision</span></label>
+          <div class="ldesc">0% = pure gutter fast lane at 2.5 jobs per day. 100% = full soft metals at 1 job per day. 20% soft metals is the recommended start — one full day per week, rest gutter-only. Gutters win on revenue per day. Soft metals win on brand positioning and renovation pipeline seeding.</div>
+        </div>
+        <input type="range" min="0" max="100" step="5" id="l-smix" value="0" oninput="calc()">
+        <div class="val" id="d-smix">0%</div>
+      </div>
+      <div class="mix-display">
+        <div style="font-size:10px;color:#888;margin-bottom:4px">Dean's day mix</div>
+        <div class="mix-bars">
+          <div class="mix-gutter" id="mix-gutter-bar" style="width:100%">Gutters</div>
+          <div class="mix-sm" id="mix-sm-bar" style="width:0%"></div>
+        </div>
+        <div class="mix-stats">
+          <span>Gutter days: <strong id="mix-gdays">0</strong> · <strong id="mix-gjobs">0</strong> jobs · <strong id="mix-grev">$0</strong></span>
+          <span>Soft metals: <strong id="mix-sdays">0</strong> days · <strong id="mix-sjobs">0</strong> jobs · <strong id="mix-srev">$0</strong></span>
+        </div>
+      </div>
+      <div class="lever-row">
+        <div class="lever-label-wrap">
+          <label>Working days per year <span class="atag atag-c">modeled: 200</span></label>
+          <div class="ldesc">Calgary climate. 200 days conservative. 220 achievable with chinook winters. Model at 200, treat difference as upside.</div>
+        </div>
+        <input type="range" min="0" max="220" step="5" id="l-days" value="0" oninput="calc()">
+        <div class="val" id="d-days">0</div>
+      </div>
+      <div class="lever-row">
+        <div class="lever-label-wrap">
+          <label>Avg gutter job (gutters + downspouts) <span class="atag atag-c">$2,525</span></label>
+          <div class="ldesc">150 LF gutters at $12 plus 100 LF downspouts at $7.25. Total $2,525. Realistic average from Reliance unit economics.</div>
+        </div>
+        <input type="range" min="1500" max="4000" step="25" id="l-gavg" value="2525" oninput="calc()">
+        <div class="val" id="d-gavg">$2,525</div>
+      </div>
+      <div class="lever-row">
+        <div class="lever-label-wrap">
+          <label>Avg soft metals job (full 4 components) <span class="atag atag-c">$5,330</span></label>
+          <div class="ldesc">From Reliance estimator. Gutters + downspouts + fascia + soffit. One full day. 47% blended margin. Estate homes run significantly higher.</div>
+        </div>
+        <input type="range" min="3000" max="12000" step="250" id="l-smavg" value="5330" oninput="calc()">
+        <div class="val" id="d-smavg">$5,330</div>
+      </div>
+      <div id="d1-seq"></div>
+      <div class="lever-impact" id="imp-d1">—</div>
+    </div>
+  </div>
+</div>
+
+<div class="section-label">Division 2 — Affluent home transformation (the real revenue engine)</div>
+<div class="layers">
+  <div class="layer-card">
+    <div class="layer-hdr">
+      <div class="layer-num" style="background:#C9A84C">D2</div>
+      <div class="layer-hdr-text">
+        <div class="lt">Kitchen · Main floor · Additions — affluent non-price-shopping clients</div>
+        <div class="ls">The 60-year-old with $800K in equity who does not want to move. Does not price shop. Trusts the person their neighbor used. Average job $80K to $300K. This is where the business becomes extraordinary.</div>
+      </div>
+      <div class="layer-rev" id="lr-d2">—</div>
+    </div>
+    <div class="layer-body">
+      <div class="lever-row">
+        <div class="lever-label-wrap">
+          <label>Affluent renovation jobs per month <span class="atag atag-a">assumed</span></label>
+          <div class="ldesc">Kitchen renovations, main floor transformations, additions. Start at 1 per month from broker referrals. As word of mouth builds in target neighborhoods this grows to 4 to 6 per month by Year 3. Each job is $80K to $300K range.</div>
+        </div>
+        <input type="range" min="0" max="8" step="0.5" id="l-rjpm" value="0" oninput="calc()">
+        <div class="val" id="d-rjpm">0/mo</div>
+      </div>
+      <div class="lever-row">
+        <div class="lever-label-wrap">
+          <label>Avg affluent job value <span class="atag atag-a">assumed</span></label>
+          <div class="ldesc">Kitchen only: $80K to $150K. Main floor transformation: $150K to $300K. Addition: $300K to $600K. Blended average of $100K is conservative for the affluent Calgary market. Estate homes push this to $200K plus.</div>
+        </div>
+        <input type="range" min="25000" max="300000" step="5000" id="l-ravg" value="25000" oninput="calc()">
+        <div class="val" id="d-ravg">$25K</div>
+      </div>
+      <div class="lever-row">
+        <div class="lever-label-wrap">
+          <label>Renovation margin <span class="atag atag-a">assumed</span></label>
+          <div class="ldesc">Affluent non-price-shopping clients support 20% to 30% net margin. At $100K avg job 25% margin is $25K GP. This is where the business makes real money. Price shoppers get East Indian labor. Your clients get trusted partners.</div>
+        </div>
+        <input type="range" min="15" max="35" step="1" id="l-rmargin" value="20" oninput="calc()">
+        <div class="val" id="d-rmargin">20%</div>
+      </div>
+      <div class="lever-impact" id="imp-d2">—</div>
+    </div>
+  </div>
+</div>
+
+<div class="section-label">The ecosystem — broker referrals and scrap recovery</div>
+<div class="layers">
+  <div class="layer-card">
+    <div class="layer-hdr">
+      <div class="layer-num" style="background:#185FA5">MB</div>
+      <div class="layer-hdr-text">
+        <div class="lt">Mortgage broker — the equity unlock · activate after identity is locked</div>
+        <div class="ls">30 years of affluent homeowner client data. Ready to move. Not Year 2. Day 45 to 60. Identity before partnership. The broker refers clients who have equity and upgrade intent. Greg and Nick transform the home. Broker collects refi fees. Loop closes.</div>
+      </div>
+      <div class="layer-rev" id="lr-broker">—</div>
+    </div>
+    <div class="layer-body">
+      <div class="lever-row">
+        <div class="lever-label-wrap">
+          <label>Broker referral clients per month <span class="atag atag-a">assumed</span></label>
+          <div class="ldesc">Each referral client is a warm affluent homeowner who already trusts the broker. Start at 1 per month. As the relationship matures and the broker sees results this grows to 3 to 4 per month. These go directly into Division 2.</div>
+        </div>
+        <input type="range" min="0" max="6" step="0.5" id="l-brpm" value="0" oninput="calc()">
+        <div class="val" id="d-brpm">0/mo</div>
+      </div>
+      <div id="broker-seq"></div>
+      <div class="lever-impact" id="imp-broker">—</div>
+    </div>
+  </div>
+
+  <div class="layer-card">
+    <div class="layer-hdr">
+      <div class="layer-num" style="background:#534AB7">SC</div>
+      <div class="layer-hdr-text">
+        <div class="lt">Aluminum scrap recovery — near-pure margin on soft metals volume</div>
+        <div class="ls">Every soft metals day strips aluminum. Stockpiled and sold bi-annually. Grows proportionally with Division 1 soft metals volume. At full 200 soft metals jobs per year recapture is $59,850 annually.</div>
+      </div>
+      <div class="layer-rev" id="lr-scrap">—</div>
+    </div>
+    <div class="layer-body">
+      <div class="lever-row">
+        <div class="lever-label-wrap">
+          <label>Recovery trips per year <span class="atag atag-a">assumed</span></label>
+          <div class="ldesc">Start at 0 until soft metals days are in the mix. Base model is 2 trips per year. Grows as soft metals volume increases.</div>
+        </div>
+        <input type="range" min="0" max="4" step="1" id="l-scrtrips" value="0" oninput="calc()">
+        <div class="val" id="d-scrtrips">0</div>
+      </div>
+      <div class="lever-row">
+        <div class="lever-label-wrap">
+          <label>Avg value per trip <span class="atag atag-a">assumed</span></label>
+          <div class="ldesc">At full volume $29,925 per trip. At current soft metals volume $8K to $15K per trip. Validates bulk buying model at 500 plus soft metals jobs per year.</div>
+        </div>
+        <input type="range" min="0" max="30000" step="1000" id="l-scravg" value="10000" oninput="calc()">
+        <div class="val" id="d-scravg">$10K</div>
+      </div>
+      <div class="lever-impact" id="imp-scrap">—</div>
+    </div>
+  </div>
+</div>
+
+<div class="chart-wrap">
+  <div class="chart-title">Revenue by source — ecosystem additive to $516K baseline</div>
+  <div class="bar-group" id="bar-group"></div>
+</div>
+
+<div class="timeline-box">
+  <h3 id="tl-title">—</h3>
+  <div id="tl-rows"></div>
+</div>
+
+<div class="timeline-box">
+  <h3>Sequence milestones</h3>
+  <div id="milestones"></div>
+</div>
+
+<div id="warn-area"></div>
+<div class="footer">Alethia Team LLC · Nick &amp; Greg Home Transformation · Confidential · June 2026 · v3</div>
+</div>
+
+<script>
+let currentTimeline='now';
+const BASELINE=516000;
+const BASELINE_GP=156000;
+
+const T={
+  now:{label:'Current State — June 26, 2026',
+    note:'$516K existing business. Gutter machine idle. Division 2 at $25K avg kitchen. The ecosystem has not activated. This meeting changes that.',
+    smix:0,days:0,gavg:2525,smavg:5330,rjpm:0,ravg:25000,rmargin:20,brpm:0,scrtrips:0,scravg:10000,
+    rows:[['Existing business','$516K · D1 exterior $216K · D2 kitchen renos $300K'],['Gutter machine','Idle. Dean confirmed. First job not booked.'],['Division 2 avg job','$25K kitchen renovation · current market'],['Affluent market','Not yet penetrated. Broker relationship not yet activated.'],['Identity','One-sentence answer not locked. Must exist before broker approach.'],['Today the meeting exists to','Book the first gutter job. Scope the identity. Start the story.'],]},
+  '90':{label:'90 Days — Machine Running · Identity Locked · Broker Initiated',
+    note:'Lane 1 generating cash. Identity clean. Broker approached. First affluent referral client in conversation.',
+    smix:20,days:200,gavg:2525,smavg:5330,rjpm:1,ravg:40000,rmargin:22,brpm:0.5,scrtrips:0,scravg:10000,
+    rows:[['Gutter machine','Running. 20% soft metals mix. $1.1M annualized from D1 alone.'],['Division 2','1 affluent job per month at $40K avg. Broker referrals starting.'],['Identity','One sentence locked. Brand story written. Trusted partner positioning clear.'],['Broker','Initiated. First referral client in conversation.'],['Combined annualized','~$1.2M to $1.4M'],['Key signal','First affluent client referral confirms the loop is real.'],]},
+  '1':{label:'Year 1 — Ecosystem Activating · $1.8M to $2.2M',
+    note:'Machine running. Broker active. Affluent market entry confirmed. Division 2 average job value climbing as the right clients find you.',
+    smix:20,days:200,gavg:2525,smavg:5500,rjpm:2,ravg:80000,rmargin:23,brpm:1,scrtrips:1,scravg:10000,
+    rows:[['Gutter machine','200 days · 20% soft metals mix · $1.1M D1 revenue'],['Division 2 affluent renos','2 per month at $80K avg = $1.92M · broker referrals feeding pipeline'],['Broker','1 referral per month. Partnership active from Day 45 to 60.'],['Identity','The full offering is visible. Exterior clients know you do kitchens.'],['Combined revenue','$1.8M to $2.2M'],['The shift','Division 2 is now larger than Division 1. The ecosystem is working.'],]},
+  '2':{label:'Year 2 — Word of Mouth Building · $3.0M to $3.5M',
+    note:'Broker at full activation. Word of mouth spreading in target neighborhoods. Affluent clients not price shopping. Average job value climbing.',
+    smix:25,days:200,gavg:2600,smavg:5750,rjpm:3,ravg:120000,rmargin:25,brpm:2,scrtrips:2,scravg:15000,
+    rows:[['Gutter machine','200 days · 25% soft metals · seeding renovation pipeline in affluent neighborhoods'],['Division 2 affluent renos','3 per month at $120K avg = $4.3M annualized from renos alone'],['Broker','2 referrals per month. The equity loop is closing consistently.'],['Word of mouth','First neighborhood fully penetrated. Neighbors calling neighbors.'],['Average job value','$120K blended. Estate clients and main floor transformations in the mix.'],['Combined revenue','$3.0M to $3.5M'],]},
+  '3':{label:'Year 3 — Referral Loop Self-Sustaining · $4.5M to $5.5M',
+    note:'The loop closes itself. Every exterior job seeds a renovation conversation. Every renovation client refers three neighbors. The broker is closing refi deals monthly.',
+    smix:30,days:200,gavg:2650,smavg:6000,rjpm:4,ravg:150000,rmargin:27,brpm:3,scrtrips:2,scravg:22000,
+    rows:[['Gutter machine','30% soft metals. Estate soft metals jobs at $8K to $12K avg climbing.'],['Division 2 affluent renos','4 per month at $150K avg = $7.2M annualized · additions entering the mix'],['Broker','3 referrals per month. Self-sustaining. Broker seeing strong refi fees monthly.'],['The loop','Exterior job → renovation conversation → refi → neighbor referral → repeat.'],['Nick GTM','Signal detection finding next neighborhood before current one is saturated.'],['Combined revenue','$4.5M to $5.5M'],]},
+  '4':{label:'Year 4 — Scale · $6M to $7M',
+    note:'Second project manager hired. Greg fully in business development. Nick\'s system finding upgrade-intent homeowners before any competitor is in the conversation.',
+    smix:30,days:200,gavg:2700,smavg:6250,rjpm:5,ravg:175000,rmargin:28,brpm:4,scrtrips:2,scravg:26000,
+    rows:[['Gutter machine','Steady. Trust builder. Neighborhood entry point. Still the door opener.'],['Division 2 affluent renos','5 per month at $175K avg = $10.5M annualized · full home transformations routine'],['Broker','4 referrals per month. Multiple neighborhoods active simultaneously.'],['Second PM','Hired to manage project execution. Greg freed for BD and relationships.'],['Combined revenue','$6M to $7M'],['SDE','$1.2M to $1.6M. Exit value $2.4M to $6.4M at 2x to 4x.'],]},
+  '5':{label:'Year 5 — Exit Ready or Continue Building · $8M to $10M',
+    note:'The company Greg described in the June 23 call is the operating reality. Every client who gets gutters knows they can get a full home transformation and a refi. That is the business.',
+    smix:35,days:200,gavg:2800,smavg:6500,rjpm:6,ravg:200000,rmargin:30,brpm:5,scrtrips:2,scravg:29925,
+    rows:[['Gutter machine','35% soft metals. Estate homes. High-value exterior clients becoming renovation clients.'],['Division 2 affluent renos','6 per month at $200K avg = $14.4M annualized · additions, full floors, full homes'],['Broker','5 referrals per month. The equity ecosystem is fully operational.'],['Nick GTM','Dominant signal detection in affluent Calgary neighborhoods. No competitor can replicate.'],['Combined revenue','$8M to $10M'],['SDE','$1.8M to $2.5M. Exit value $3.6M to $10M at 2x to 4x. Life-changing number.'],['The story','Your trusted partner from refi to renovation — is the operating reality.'],]},
+};
+
+function setTimeline(t){
+  currentTimeline=t;
+  ['now','90','1','2','3','4','5'].forEach(x=>document.getElementById('tt-'+x).classList.toggle('active',x===t));
+  const d=T[t];
+  const sets={'l-smix':d.smix,'l-days':d.days,'l-gavg':d.gavg,'l-smavg':d.smavg,'l-rjpm':d.rjpm,'l-ravg':d.ravg,'l-rmargin':d.rmargin,'l-brpm':d.brpm,'l-scrtrips':d.scrtrips,'l-scravg':d.scravg};
+  Object.entries(sets).forEach(([id,val])=>{const el=document.getElementById(id);if(el)el.value=val;});
+  calc();
+}
+
+function fmt(n){return '$'+Math.round(n).toLocaleString('en-US')}
+function fmtK(n){return n>=1000000?'$'+(n/1000000).toFixed(1)+'M':n>=1000?'$'+(n/1000).toFixed(0)+'K':fmt(n)}
+function pct(n){return Math.round(n)+'%'}
+function v(id){return parseFloat(document.getElementById(id).value)||0}
+function dset(id,txt){const el=document.getElementById(id);if(el)el.textContent=txt}
+
+function calc(){
+  const smix=v('l-smix')/100;
+  const days=v('l-days');
+  const gavg=v('l-gavg');
+  const smavg=v('l-smavg');
+  const rjpm=v('l-rjpm');
+  const ravg=v('l-ravg');
+  const rmargin=v('l-rmargin')/100;
+  const brpm=v('l-brpm');
+  const scrtrips=v('l-scrtrips');
+  const scravg=v('l-scravg');
+
+  dset('d-smix',Math.round(smix*100)+'%');
+  dset('d-days',Math.round(days));
+  dset('d-gavg','$'+Math.round(gavg).toLocaleString());
+  dset('d-smavg','$'+Math.round(smavg).toLocaleString());
+  dset('d-rjpm',rjpm+'/mo');
+  dset('d-ravg','$'+Math.round(ravg/1000)+'K');
+  dset('d-rmargin',Math.round(v('l-rmargin'))+'%');
+  dset('d-brpm',brpm+'/mo');
+  dset('d-scrtrips',Math.round(scrtrips));
+  dset('d-scravg','$'+Math.round(scravg/1000)+'K');
+
+  // D1 machine
+  const gutterDays=Math.round(days*(1-smix));
+  const smDays=Math.round(days*smix);
+  const gutterJobs=gutterDays*2.5;
+  const smJobs=smDays;
+  const gutterRev=gutterJobs*gavg;
+  const smRev=smJobs*smavg;
+  const machineRev=gutterRev+smRev;
+  const machineGP=gutterRev*0.50+smRev*0.47;
+
+  // Mix display
+  const gPct=Math.round((1-smix)*100);
+  const sPct=Math.round(smix*100);
+  const gBar=document.getElementById('mix-gutter-bar');
+  const sBar=document.getElementById('mix-sm-bar');
+  if(gBar){gBar.style.width=gPct+'%';gBar.textContent=gPct>15?'Gutters '+gPct+'%':'';}
+  if(sBar){sBar.style.width=sPct+'%';sBar.textContent=sPct>15?'Soft metals '+sPct+'%':'';}
+  dset('mix-gdays',gutterDays);dset('mix-gjobs',Math.round(gutterJobs));dset('mix-grev',fmtK(gutterRev));
+  dset('mix-sdays',smDays);dset('mix-sjobs',Math.round(smJobs));dset('mix-srev',fmtK(smRev));
+
+  // D2 affluent renos — broker referrals feed directly into D2
+  const renoJobs=rjpm*12;
+  const brokerJobs=brpm*12;
+  const totalD2Jobs=renoJobs+brokerJobs;
+  const renoRev=renoJobs*ravg;
+  const brokerD2Rev=brokerJobs*ravg*1.2; // broker clients tend to be higher value
+  const totalD2Rev=renoRev+brokerD2Rev;
+  const d2GP=totalD2Rev*rmargin;
+
+  // Scrap
+  const scrapRev=scrtrips*scravg;
+  const scrapGP=scrapRev*0.95;
+
+  // Totals
+  const ecosystemRev=machineRev+totalD2Rev+scrapRev;
+  const totalRev=Math.round(BASELINE+ecosystemRev);
+  const totalGP=Math.round(BASELINE_GP+machineGP+d2GP+scrapGP);
+  const blendedMargin=totalRev>0?Math.round(totalGP/totalRev*100):0;
+
+  // SDE
+  const deanWages=days>0?75000:0;
+  const pmCost=totalD2Rev>0?totalD2Rev*0.18*0.5:0; // Meninder PM on new D2 work
+  const ownerDraws=120000; // Greg and Nick combined draws higher at scale
+  const sde=Math.max(0,Math.round(totalGP-deanWages-pmCost-ownerDraws));
+  const exit2x=sde*2,exit3x=sde*3,exit4x=sde*4;
+
+  dset('v-rev',fmtK(totalRev));
+  dset('v-above',fmtK(ecosystemRev));
+  dset('v-gp',fmtK(totalGP));
+  dset('v-margin',pct(blendedMargin));
+  dset('v-d1',fmtK(machineRev));
+  dset('v-d2',fmtK(totalD2Rev));
+  dset('v-sde',fmtK(Math.max(0,sde)));
+  dset('v-exit',sde>0?fmtK(exit2x)+' – '+fmtK(exit4x):'Activate the ecosystem first');
+  dset('v-exit-bd',sde>0?'2x: '+fmtK(exit2x)+' · 3x: '+fmtK(exit3x)+' · 4x: '+fmtK(exit4x):'');
+  dset('v-sub',T[currentTimeline]?.note||'');
+
+  dset('lr-d1',fmtK(machineRev));
+  dset('lr-d2',fmtK(totalD2Rev));
+  dset('lr-broker',fmtK(brokerD2Rev));
+  dset('lr-scrap',fmtK(scrapRev));
+  dset('c-machine',fmtK(machineRev));
+  dset('c-reno',fmtK(totalD2Rev));
+  dset('c-broker',fmtK(brokerD2Rev));
+  dset('c-scrap',fmtK(scrapRev));
+
+  const gpPerGDay=2.5*gavg*0.50;
+  const gpPerSMDay=smavg*0.47;
+  document.getElementById('imp-d1').innerHTML=
+    Math.round(gutterJobs)+' gutter jobs → '+fmtK(gutterRev)+' · '+
+    Math.round(smJobs)+' soft metals jobs → '+fmtK(smRev)+' · '+
+    'Machine total: <strong>'+fmtK(machineRev)+'</strong> · '+
+    'GP per gutter day: '+fmt(gpPerGDay)+' · GP per soft metals day: '+fmt(gpPerSMDay)+' · '+
+    (gpPerSMDay>gpPerGDay?'Soft metals win on GP per day':'Gutters win on GP per day');
+
+  document.getElementById('imp-d2').innerHTML=
+    Math.round(renoJobs)+' renovation jobs + '+Math.round(brokerJobs)+' broker referral jobs · Avg '+fmt(ravg)+' at '+pct(Math.round(rmargin*100))+' margin → <strong>'+fmtK(totalD2Rev)+'</strong> · GP: '+fmtK(d2GP)+' · This is where the business becomes extraordinary.';
+
+  document.getElementById('imp-broker').innerHTML=brpm>0?
+    Math.round(brokerJobs)+' broker referral clients/yr · each going into D2 at premium value → <strong>'+fmtK(brokerD2Rev)+'</strong> · The equity loop is operational.':
+    'Broker not yet activated. Identity must be locked first. One sentence. Then approach. Day 45 to 60.';
+
+  document.getElementById('imp-scrap').innerHTML=Math.round(scrtrips)+' recovery trips × '+fmt(scravg)+' → <strong>'+fmtK(scrapRev)+'</strong> · Near-pure margin. Grows as soft metals volume increases.';
+
+  const d1SeqEl=document.getElementById('d1-seq');
+  if(days===0) d1SeqEl.innerHTML='<div class="seq-bar seq-next">Machine not running. This is the only priority today. Book a job before leaving this meeting.</div>';
+  else d1SeqEl.innerHTML='<div class="seq-bar seq-ready">Machine running. Trust building in the market. Division 2 pipeline seeding.</div>';
+
+  const brokerSeqEl=document.getElementById('broker-seq');
+  if(brpm===0) brokerSeqEl.innerHTML='<div class="seq-bar seq-wait">Broker not yet activated. Identity must be locked first. Day 45 to 60 is the target.</div>';
+  else brokerSeqEl.innerHTML='<div class="seq-bar seq-ready">Broker active. The equity loop is closing. Affluent clients are entering the pipeline.</div>';
+
+  const sources=[
+    {label:'Baseline business',val:BASELINE,color:'#888'},
+    {label:'D2 affluent renos',val:renoRev,color:'#C9A84C'},
+    {label:'D1 gutter machine',val:gutterRev,color:'#0F1B2E'},
+    {label:'D1 soft metals',val:smRev,color:'#185FA5'},
+    {label:'Broker referral renos',val:brokerD2Rev,color:'#1D9E75'},
+    {label:'Scrap recovery',val:scrapRev,color:'#534AB7'},
+  ].filter(s=>s.val>1000).sort((a,b)=>b.val-a.val);
+  const maxVal=Math.max(...sources.map(s=>s.val),1);
+  document.getElementById('bar-group').innerHTML=sources.map(s=>{
+    const w=Math.max(2,Math.round(s.val/maxVal*100));
+    const p=totalRev>0?Math.round(s.val/totalRev*100):0;
+    return`<div class="bar-row"><div class="bar-label">${s.label}</div><div class="bar-track"><div class="bar-fill" style="width:${w}%;background:${s.color}"><span>${fmtK(s.val)} · ${p}%</span></div></div></div>`;
+  }).join('');
+
+  const tl=T[currentTimeline];
+  dset('tl-title',tl.label);
+  document.getElementById('tl-rows').innerHTML=tl.rows.map(([l,r])=>`<div class="trow"><div class="tl">${l}</div><div class="tv">${r}</div></div>`).join('');
+
+  document.getElementById('milestones').innerHTML=[
+    {dot:'#A32D2D',text:'<strong>Today:</strong> First gutter job booked. Identity work scoped. One-sentence answer process started.'},
+    {dot:'#C9A84C',text:'<strong>Day 30:</strong> Identity locked. Nick and Greg Construction becomes the trusted full-service home transformation partner. Brand story agreed.'},
+    {dot:'#185FA5',text:'<strong>Day 45 to 60:</strong> Mortgage broker approached with clean identity. Partnership initiated. First affluent referral client in conversation.'},
+    {dot:'#1D9E75',text:'<strong>Year 1 · $1.8M to $2.2M:</strong> Machine running. Broker active. 2 affluent renos per month at $80K avg. D2 now larger than D1.'},
+    {dot:'#C9A84C',text:'<strong>Year 2 · $3.0M to $3.5M:</strong> Word of mouth spreading. 3 renos per month at $120K avg. First neighborhood fully penetrated.'},
+    {dot:'#0F1B2E',text:'<strong>Year 3 · $4.5M to $5.5M:</strong> Referral loop self-sustaining. 4 renos per month at $150K. Additions entering the mix.'},
+    {dot:'#185FA5',text:'<strong>Year 4 · $6M to $7M:</strong> Second PM hired. Greg in BD full time. Nick\'s signal detection dominating affluent neighborhoods.'},
+    {dot:'#1D9E75',text:'<strong>Year 5 · $8M to $10M:</strong> Exit value $3.6M to $10M at 2x to 4x SDE. Or build to $15M. Genuine choice with full data.'},
+  ].map(m=>`<div class="milestone"><div class="ms-dot" style="background:${m.dot}"></div><div class="ms-text">${m.text}</div></div>`).join('');
+
+  const warns=[];
+  if(days===0) warns.push('<div class="alert-box alert-flag">Gutter machine is idle. The trust-building engine has not started. Book the first job today.</div>');
+  if(rjpm>0&&brpm===0&&currentTimeline!=='now') warns.push('<div class="alert-box alert-info">Division 2 renovations are modeled without broker referrals. Activate the broker to accelerate D2 pipeline growth significantly.</div>');
+  if(totalRev>=2000000) warns.push('<div class="alert-box alert-good">$2M revenue. Division 2 affluent renos are the primary engine. SDE of '+fmtK(sde)+' puts exit value at '+fmtK(exit2x)+' to '+fmtK(exit4x)+'.</div>');
+  if(totalRev>=5000000) warns.push('<div class="alert-box alert-good">$5M revenue. The ecosystem is fully operational. Exit value at 3x SDE is '+fmtK(exit3x)+'. The company Greg described on the June 23 call is the operating reality.</div>');
+  if(totalRev>=8000000) warns.push('<div class="alert-box alert-good">$8M to $10M. This is a transformational outcome. Exit at 3x to 4x SDE is a life-changing number for Greg and Nick and their families.</div>');
+  document.getElementById('warn-area').innerHTML=warns.join('');
+}
+setTimeline('now');
+</script>
+</body>
+</html>
