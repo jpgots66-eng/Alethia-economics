@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nick & Greg — Home Transformation Simulator v4 · Alethia Team LLC</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#F5F4F0;color:#1A1A1A;padding:20px 16px 80px}
+.wrap{max-width:1020px;margin:0 auto}
+.brand-bar{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:#0F1B2E;border-radius:10px;margin-bottom:14px}
+.brand-bar .co{font-size:14px;font-weight:600;color:#C9A84C;letter-spacing:.08em;text-transform:uppercase}
+.brand-bar .doc{font-size:11px;color:rgba(255,255,255,.4);letter-spacing:.06em;text-transform:uppercase}
+.insight{background:#0F1B2E;border-radius:8px;padding:14px 18px;margin-bottom:14px}
+.insight .i1{font-size:16px;font-weight:600;color:#C9A84C;line-height:1.4;margin-bottom:6px}
+.insight .i2{font-size:11px;color:rgba(255,255,255,.65);line-height:1.6}
+.insight .i2 strong{color:#fff}
+.section-label{font-size:11px;font-weight:600;color:#888;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;margin-top:14px}
+.timeline-tabs{display:flex;gap:5px;margin-bottom:14px;flex-wrap:wrap}
+.ttab{flex:1;min-width:70px;padding:8px 6px;border-radius:7px;border:1px solid #ddd;background:#fff;cursor:pointer;text-align:center;font-size:11px;font-weight:500;color:#666;transition:all .15s;line-height:1.3}
+.ttab.active{background:#0F1B2E;color:#C9A84C;border-color:#0F1B2E}
+.verdict{padding:16px 18px;background:#0F1B2E;border-radius:10px;margin-bottom:14px}
+.verdict-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px}
+.verdict-rev{font-size:36px;font-weight:600;color:#C9A84C;line-height:1}
+.verdict-label{font-size:10px;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px}
+.verdict-sub{font-size:11px;color:rgba(255,255,255,.55);margin-top:4px;max-width:460px;line-height:1.4}
+.verdict-stats{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.1)}
+.vstat .n{font-size:16px;font-weight:600;color:#fff;line-height:1}
+.vstat .l{font-size:9px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.07em;margin-top:3px}
+.vstat .desc{font-size:9px;color:rgba(255,255,255,.3);margin-top:2px;line-height:1.3;max-width:110px}
+.vstat-wide{flex-basis:100%;margin-top:8px;padding-top:8px;border-top:.5px solid rgba(255,255,255,.1)}
+.vstat-wide .n{font-size:13px;font-weight:600;color:#C9A84C}
+.vstat-wide .l{font-size:9px;color:rgba(255,255,255,.4);text-transform:uppercase;letter-spacing:.07em;margin-top:3px}
+.vstat-wide .desc{font-size:9px;color:rgba(255,255,255,.3);margin-top:2px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(105px,1fr));gap:7px;margin-bottom:14px}
+.mcard{background:#fff;border:1px solid #e8e6e0;border-radius:7px;padding:9px 11px}
+.mcard .ml{font-size:10px;color:#888;margin-bottom:2px}
+.mcard .mv{font-size:16px;font-weight:600;color:#0F1B2E}
+.mcard .ms{font-size:9px;color:#aaa;margin-top:1px}
+.mcard.gold{border-color:#C9A84C;background:#FDFBF5}
+.layers{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.layer-card{background:#fff;border-radius:9px;overflow:hidden;border:1px solid #e8e6e0}
+.layer-hdr{display:flex;align-items:flex-start;gap:9px;padding:10px 13px;border-bottom:1px solid #f0ede4}
+.layer-num{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0;margin-top:1px}
+.layer-hdr-text{flex:1}
+.layer-hdr-text .lt{font-size:12px;font-weight:600;color:#0F1B2E}
+.layer-hdr-text .ls{font-size:10px;color:#888;margin-top:2px;line-height:1.4}
+.layer-rev{font-size:15px;font-weight:600;color:#0F1B2E;white-space:nowrap;margin-top:1px}
+.layer-body{padding:10px 13px}
+.lever-row{display:flex;align-items:flex-start;gap:7px;margin-bottom:8px}
+.lever-label-wrap{min-width:190px}
+.lever-label-wrap label{font-size:11px;color:#333;font-weight:500;display:block;line-height:1.3}
+.lever-label-wrap .ldesc{font-size:10px;color:#999;margin-top:2px;line-height:1.3}
+.atag{font-size:9px;padding:1px 4px;border-radius:8px;margin-left:2px;font-weight:600;vertical-align:middle}
+.atag-c{background:#E1F5EE;color:#0F6E56}
+.atag-a{background:#FAEEDA;color:#854F0B}
+.atag-hot{background:#FEE2E2;color:#991B1B}
+.atag-warm{background:#FEF3C7;color:#92400E}
+.atag-cold{background:#EFF6FF;color:#1E40AF}
+.lever-row input[type=range]{flex:1;accent-color:#C9A84C;margin-top:4px}
+.lever-row .val{font-size:11px;font-weight:600;color:#0F1B2E;min-width:64px;text-align:right;margin-top:3px}
+.channel-section{background:#F5F4F0;border-radius:8px;padding:12px 14px;margin-bottom:8px}
+.channel-section .ch{font-size:11px;font-weight:600;color:#0F1B2E;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+.channel-section .ch-rev{font-size:13px;font-weight:600;color:#0F1B2E}
+.ch-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:11px}
+.ch-row .chl{color:#555;min-width:200px}
+.ch-row input[type=range]{flex:1;accent-color:#C9A84C;height:3px}
+.ch-row .chv{font-weight:600;color:#0F1B2E;min-width:40px;text-align:right}
+.ch-row .chc{font-size:10px;color:#888;min-width:60px;text-align:right}
+.ch-row .chj{font-size:10px;font-weight:600;color:#1D9E75;min-width:50px;text-align:right}
+.ch-header{display:grid;grid-template-columns:200px 1fr 40px 60px 50px;gap:8px;font-size:9px;color:#888;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid #ddd}
+.mix-display{background:#F5F4F0;border-radius:6px;padding:10px 12px;margin-bottom:8px}
+.mix-bars{display:flex;height:18px;border-radius:4px;overflow:hidden;margin:5px 0}
+.mix-gutter{background:#0F1B2E;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;color:#C9A84C;transition:width .3s}
+.mix-sm{background:#185FA5;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;color:#fff;transition:width .3s}
+.lever-impact{font-size:10px;color:#777;margin-top:6px;padding-top:6px;border-top:1px solid #f0ede4;line-height:1.5}
+.lever-impact strong{color:#0F1B2E}
+.seq-bar{margin-top:6px;padding:7px 9px;border-radius:5px;font-size:10px;line-height:1.5}
+.seq-ready{background:#E1F5EE;color:#085041}
+.seq-next{background:#FAEEDA;color:#633806}
+.seq-wait{background:#F5F4F0;color:#888;border:1px solid #ddd}
+.baseline-box{background:#F5F4F0;border:1px solid #ddd;border-radius:8px;padding:12px 14px;margin-bottom:14px}
+.baseline-box .bh{font-size:11px;font-weight:600;color:#0F1B2E;margin-bottom:8px;letter-spacing:.04em;text-transform:uppercase}
+.baseline-row{display:flex;justify-content:space-between;font-size:11px;padding:4px 0;border-bottom:1px solid #e8e6e0}
+.baseline-row:last-child{border-bottom:none;font-weight:600;padding-top:6px}
+.baseline-row .bl{color:#666}
+.baseline-row .bv{font-weight:500;color:#0F1B2E}
+.chart-wrap{background:#fff;border:1px solid #e8e6e0;border-radius:9px;padding:12px 14px;margin-bottom:10px}
+.chart-title{font-size:10px;font-weight:600;color:#888;margin-bottom:10px;letter-spacing:.06em;text-transform:uppercase}
+.bar-group{display:flex;flex-direction:column;gap:6px}
+.bar-row{display:flex;align-items:center;gap:7px}
+.bar-label{font-size:10px;color:#666;min-width:160px;text-align:right}
+.bar-track{flex:1;height:24px;background:#F5F4F0;border-radius:4px;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px;transition:width .35s ease;display:flex;align-items:center;justify-content:flex-end;padding-right:7px;min-width:4px}
+.bar-fill span{font-size:10px;font-weight:600;color:#fff;white-space:nowrap}
+.timeline-box{background:#fff;border:1px solid #e8e6e0;border-radius:9px;padding:12px 14px;margin-bottom:10px}
+.timeline-box h3{font-size:12px;font-weight:600;color:#0F1B2E;margin-bottom:8px}
+.trow{display:flex;justify-content:space-between;font-size:11px;padding:5px 0;border-bottom:1px solid #f0ede4;gap:12px}
+.trow:last-child{border-bottom:none}
+.trow .tl{color:#777;flex-shrink:0;min-width:170px;line-height:1.4}
+.trow .tv{font-weight:600;color:#0F1B2E;text-align:right;line-height:1.4}
+.milestone{display:flex;gap:9px;padding:6px 0;border-bottom:1px solid #f0ede4}
+.milestone:last-child{border-bottom:none}
+.ms-dot{width:8px;height:8px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.ms-text{font-size:11px;color:#666;line-height:1.4}
+.ms-text strong{color:#0F1B2E}
+.alert-box{border-radius:7px;padding:9px 11px;font-size:11px;margin-top:7px;line-height:1.5}
+.alert-warn{background:#FAEEDA;color:#633806}
+.alert-good{background:#E1F5EE;color:#085041}
+.alert-flag{background:#FCEBEB;color:#791F1F}
+.alert-info{background:#E6F1FB;color:#185FA5}
+.ramp-note{background:#EFF6FF;border:1px solid #BFDBFE;border-radius:6px;padding:8px 12px;font-size:10px;color:#1E40AF;margin-top:6px;line-height:1.5}
+.footer{margin-top:24px;text-align:center;font-size:10px;color:#aaa;letter-spacing:.04em}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="brand-bar">
+  <div class="co">Nick &amp; Greg — Home Transformation</div>
+  <div class="doc">Revenue Simulator v4 · Lead Channel Model · Alethia Team LLC · June 2026</div>
+</div>
+
+<div class="insight">
+  <div class="i1">Your trusted partner — from refi to renovation.</div>
+  <div class="i2">Greg modeled this at 1:42 AM. <strong>250 metal jobs and 100 roof jobs</strong> is his Year 1 exterior target across a blended multi-channel lead model. His highest leverage channels: <strong>insurance relationships (65% close rate)</strong> and <strong>realtor/mortgage referral (60% close rate)</strong>. The cold channels — door knocking, Google ads — fill volume but the hot channels close the business. <strong>Identity before marketing. Broker before cold outbound. The sequence protects the close rate.</strong></div>
+</div>
+
+<div class="section-label">Existing business baseline — locked</div>
+<div class="baseline-box">
+  <div class="bh">Current business — $516K annual · Before the transformation ecosystem activates</div>
+  <div class="baseline-row"><div class="bl">Division 1 — Small exterior jobs (3/month at ~$6K avg)</div><div class="bv">$216K / yr</div></div>
+  <div class="baseline-row"><div class="bl">Division 2 — Kitchen renovations (1/month at ~$25K avg)</div><div class="bv">$300K / yr</div></div>
+  <div class="baseline-row"><div class="bl">Monthly net after Meninder PM and costs</div><div class="bv">$13K / month · $156K / yr</div></div>
+  <div class="baseline-row"><div class="bl">Gutter machine · 250 metal jobs + 100 roof jobs (Year 1 target)</div><div class="bv">$0 — machine idle today</div></div>
+  <div class="baseline-row"><div class="bl">BASELINE ANNUAL REVENUE</div><div class="bv">$516,000</div></div>
+</div>
+
+<div class="section-label">Select timeline</div>
+<div class="timeline-tabs">
+  <div class="ttab active" id="tt-now" onclick="setTimeline('now')">Current State</div>
+  <div class="ttab" id="tt-90" onclick="setTimeline('90')">90 Days</div>
+  <div class="ttab" id="tt-1" onclick="setTimeline('1')">Year 1</div>
+  <div class="ttab" id="tt-2" onclick="setTimeline('2')">Year 2</div>
+  <div class="ttab" id="tt-3" onclick="setTimeline('3')">Year 3</div>
+  <div class="ttab" id="tt-4" onclick="setTimeline('4')">Year 4</div>
+  <div class="ttab" id="tt-5" onclick="setTimeline('5')">Year 5</div>
+</div>
+
+<div class="verdict">
+  <div class="verdict-top">
+    <div>
+      <div class="verdict-label">Total projected annual revenue</div>
+      <div class="verdict-rev" id="v-rev">—</div>
+      <div class="verdict-sub" id="v-sub">—</div>
+    </div>
+    <div style="text-align:right">
+      <div class="verdict-label">Above $516K baseline</div>
+      <div style="font-size:22px;font-weight:600;color:#C9A84C" id="v-above">—</div>
+      <div style="font-size:10px;color:rgba(255,255,255,.35);margin-top:2px">ecosystem adds on top</div>
+    </div>
+  </div>
+  <div class="verdict-stats">
+    <div class="vstat"><div class="n" id="v-gp">—</div><div class="l">Total GP</div><div class="desc">All sources blended</div></div>
+    <div class="vstat"><div class="n" id="v-margin">—</div><div class="l">Blended margin</div><div class="desc">Weighted all job types</div></div>
+    <div class="vstat"><div class="n" id="v-metalj">—</div><div class="l">Metal jobs</div><div class="desc">Gutter and soft metals</div></div>
+    <div class="vstat"><div class="n" id="v-roofj">—</div><div class="l">Roof jobs</div><div class="desc">Roofing completions</div></div>
+    <div class="vstat"><div class="n" id="v-d2j">—</div><div class="l">Reno jobs</div><div class="desc">Affluent D2 completions</div></div>
+    <div class="vstat"><div class="n" id="v-sde">—</div><div class="l">Est. SDE</div><div class="desc">After wages and draws</div></div>
+    <div class="vstat-wide">
+      <div class="n" id="v-exit">—</div>
+      <div class="l">Projected sell value — 2x · 3x · 4x SDE</div>
+      <div class="desc" id="v-exit-bd">—</div>
+    </div>
+  </div>
+</div>
+
+<div class="cards">
+  <div class="mcard"><div class="ml">Baseline</div><div class="mv">$516K</div><div class="ms">existing</div></div>
+  <div class="mcard gold"><div class="ml">Metal jobs</div><div class="mv" id="c-metal">—</div><div class="ms">gutter + soft metals</div></div>
+  <div class="mcard gold"><div class="ml">Roofing</div><div class="mv" id="c-roof">—</div><div class="ms">D1 high ticket</div></div>
+  <div class="mcard gold"><div class="ml">Affluent renos</div><div class="mv" id="c-reno">—</div><div class="ms">D2 growth</div></div>
+  <div class="mcard"><div class="ml">Scrap recovery</div><div class="mv" id="c-scrap">—</div><div class="ms">margin lift</div></div>
+</div>
+
+<div class="section-label">Lead channel model — Greg's blended approach</div>
+<div class="layers">
+  <div class="layer-card">
+    <div class="layer-hdr">
+      <div class="layer-num" style="background:#991B1B">H</div>
+      <div class="layer-hdr-text">
+        <div class="lt">Hot channels — pre-sold leads, highest close rate</div>
+        <div class="ls">Insurance relationships (65% close) and realtor/mortgage referral (60% close). These are Greg's highest leverage channels. Identity must be locked before activating referral channel. The broker introduction is the anchor of this tier.</div>
+      </div>
+      <div class="layer-rev" id="lr-hot">—</div>
+    </div>
+    <div class="layer-body">
+      <div class="ch-header"><div>Channel</div><div></div><div>Leads/mo</div><div>Close rate</div><div>Jobs/yr</div></div>
+      <div class="ch-row">
+        <div class="chl">Insurance relationships <span class="atag atag-hot">65% close</span></div>
+        <input type="range" min="0" max="30" step="1" id="l-ins" value="0" oninput="calc()">
+        <div class="chv" id="d-ins">0</div>
+        <div class="chc">65% close</div>
+        <div class="chj" id="j-ins">0 jobs</div>
+      </div>
+      <div class="ch-row">
+        <div class="chl">Realtor / mortgage referral <span class="atag atag-hot">60% close</span></div>
+        <input type="range" min="0" max="30" step="1" id="l-ref" value="0" oninput="calc()">
+        <div class="chv" id="d-ref">0</div>
+        <div class="chc">60% close</div>
+        <div class="chj" id="j-ref">0 jobs</div>
+      </div>
+      <div class="lever-impact" id="imp-hot">—</div>
+      <div id="hot-seq"></div>
+    </div>
+  </div>
+
+  <div class="layer-card">
+    <div class="layer-hdr">
+      <div class="layer-num" style="background:#92400E">W</div>
+      <div class="layer-hdr-text">
+        <div class="lt">Warm channels — relationship-built, moderate close rate</div>
+        <div class="ls">Pipeline recapture (45%), upsell from existing clients (55%), SEO/website (30%), strategic partners (40%). These build over time. Upsell and recapture are available immediately from the existing client base.</div>
+      </div>
+      <div class="layer-rev" id="lr-warm">—</div>
+    </div>
+    <div class="layer-body">
+      <div class="ch-header"><div>Channel</div><div></div><div>Leads/mo</div><div>Close rate</div><div>Jobs/yr</div></div>
+      <div class="ch-row">
+        <div class="chl">Pipeline recapture <span class="atag atag-warm">45% close</span></div>
+        <input type="range" min="0" max="30" step="1" id="l-recap" value="0" oninput="calc()">
+        <div class="chv" id="d-recap">0</div>
+        <div class="chc">45% close</div>
+        <div class="chj" id="j-recap">0 jobs</div>
+      </div>
+      <div class="ch-row">
+        <div class="chl">Upsell / existing clients <span class="atag atag-warm">55% close</span></div>
+        <input type="range" min="0" max="30" step="1" id="l-ups" value="0" oninput="calc()">
+        <div class="chv" id="d-ups">0</div>
+        <div class="chc">55% close</div>
+        <div class="chj" id="j-ups">0 jobs</div>
+      </div>
+      <div class="ch-row">
+        <div class="chl">SEO / website organic <span class="atag atag-warm">30% close</span></div>
+        <input type="range" min="0" max="30" step="1" id="l-seo" value="0" oninput="calc()">
+        <div class="chv" id="d-seo">0</div>
+        <div class="chc">30% close</div>
+        <div class="chj" id="j-seo">0 jobs</div>
+      </div>
+      <div class="ch-row">
+        <div class="chl">Strategic partners <span class="atag atag-warm">40% close</span></div>
+        <input type="range" min="0" max="20" step="1" id="l-part" value="0" oninput="calc()">
+        <div class="chv" id="d-part">0</div>
+        <div class="chc">40% close</div>
+        <div class="chj" id="j-part">0 jobs</div>
+      </div>
+      <div class="lever-impact" id="imp-warm">—</div>
+    </div>
+  </div>
+
+  <div class="layer-card">
+    <div class="layer-hdr">
+      <div class="layer-num" style="background:#1E40AF">C</div>
+      <div class="layer-hdr-text">
+        <div class="lt">Cold channels — volume, lower close rate, use last</div>
+        <div class="ls">Door knocking (20%), Google ads (25%), door hangers (5%). High volume, lower close, higher cost per acquisition. Add these after hot and warm channels are running. Never lead with cold when you have hot channels available.</div>
+      </div>
+      <div class="layer-rev" id="lr-cold">—</div>
+    </div>
+    <div class="layer-body">
+      <div class="ch-header"><div>Channel</div><div></div><div>Leads/mo</div><div>Close rate</div><div>Jobs/yr</div></div>
+      <div class="ch-row">
+        <div class="chl">Door knocking <span class="atag atag-cold">20% close</span></div>
+        <input type="range" min="0" max="50" step="2" id="l-dk" value="0" oninput="calc()">
+        <div class="chv" id="d-dk">0</div>
+        <div class="chc">20% close</div>
+        <div class="chj" id="j-dk">0 jobs</div>
+      </div>
+      <div class="ch-row">
+        <div class="chl">Google Ads <span class="atag atag-cold">25% close</span></div>
+        <input type="range" min="0" max="50" step="2" id="l-gads" value="0" oninput="calc()">
+        <div class="chv" id="d-gads">0</div>
+        <div class="chc">25% close</div>
+        <div class="chj" id="j-gads">0 jobs</div>
+      </div>
+      <div class="ch-row">
+        <div class="chl">Door hangers / yard signs <span class="atag atag-cold">5% close</span></div>
+        <input type="range" min="0" max="100" step="5" id="l-dh" value="0" oninput="calc()">
+        <div class="chv" id="d-dh">0</div>
+        <div class="chc">5% close</div>
+        <div class="chj" id="j-dh">0 jobs</div>
+      </div>
+      <div class="lever-impact" id="imp-cold">—</div>
+    </div>
+  </div>
+</div>
+
+<div class="section-label">Job mix — gutter vs full soft metals</div>
+<div class="layers">
+  <div class="layer-card">
+    <div class="layer-hdr">
+      <div class="layer-num" style="background:#0F1B2E">MX</div>
+      <div class="layer-hdr-text">
+        <div class="lt">Metal job mix — gutter-only days vs full soft metals days</div>
+        <div class="ls">Gutters win on volume. Soft metals win on GP per job and brand positioning. Greg's Year 1 target is 250 metal jobs total. The mix determines revenue and margin across those jobs.</div>
+      </div>
+      <div class="layer-rev" id="lr-mix">—</div>
+    </div>
+    <div class="layer-body">
+      <div class="lever-row">
+        <div class="lever-label-wrap">
+          <label>Soft metals % of metal jobs <span class="atag atag-a">decision</span></label>
+          <div class="ldesc">0% = all gutter-only at $2,525 avg. 100% = all full soft metals at $5,330 avg. Recommended start: 20%. One soft metals job per five gutter jobs. Builds the brand without losing volume.</div>
+        </div>
+        <input type="range" min="0" max="100" step="5" id="l-smix" value="0" oninput="calc()">
+        <div class="val" id="d-smix">0%</div>
+      </div>
+      <div class="mix-display">
+        <div style="font-size:10px;color:#888;margin-bottom:4px">Metal job mix</div>
+        <div class="mix-bars">
+          <div class="mix-gutter" id="mix-gutter-bar" style="width:100%">Gutters</div>
+          <div class="mix-sm" id="mix-sm-bar" style="width:0%"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:10px;color:#555;margin-top:4px">
+          <span>Gutter jobs: <strong id="mix-gj">0</strong> × $2,525 = <strong id="mix-gr">$0</strong></span>
+          <span>Soft metals: <strong id="mix-sj">0</strong> × $5,330 = <strong id="mix-sr">$0</strong></span>
+        </div>
+      </div>
+      <div class="lever-impact" id="imp-mix">—</div>
+    </div>
+  </div>
+</div>
+
+<div class="section-label">Roofing — high ticket, natural upsell</div>
+<div class="layers">
+  <div class="layer-card">
+    <div class="layer-hdr">
+      <div class="layer-num" style="background:#1D9E75">RF</div>
+      <div class="layer-hdr-text">
+        <div class="lt">Asphalt shingle roofing — Greg's Year 1 target: 100 jobs</div>
+        <div class="ls">Dean has 30 years roofing experience. Natural upsell from exterior relationships. 20% target margin. $9,776 average from Reliance estimator. 100 jobs in Year 1 is Greg's own stated target.</div>
+      </div>
+      <div class="layer-rev" id="lr-roof">—</div>
+    </div>
+    <div class="layer-body">
+      <div class="lever-row">
+        <div class="lever-label-wrap">
+          <label>Roofing jobs per year <span class="atag atag-c">Greg's target: 100</span></label>
+          <div class="ldesc">100 roofing jobs per year requires roughly 1 to 2 per week at an average of 3 days per job. This is at the edge of what Dean can handle alongside metal jobs. Watch capacity carefully.</div>
+        </div>
+        <input type="range" min="0" max="200" step="5" id="l-rjpy" value="0" oninput="calc()">
+        <div class="val" id="d-rjpy">0</div>
+      </div>
+      <div class="lever-row">
+        <div class="lever-label-wrap">
+          <label>Avg roofing job value <span class="atag atag-c">modeled: $9,776</span></label>
+          <div class="ldesc">From Reliance roofing estimator at 20% margin. Range $7,375 (15 sq) to $13,750 (30 sq). Estate homes significantly higher. Conservative mid-point is $9,776.</div>
+        </div>
+        <input type="range" min="6000" max="20000" step="250" id="l-ravg" value="9776" oninput="calc()">
+        <div class="val" id="d-ravg">$9,776</div>
+      </div>
+      <div class="lever-impact" id="imp-roof">—</div>
+    </div>
+  </div>
+</div>
+
+<div class="section-label">Division 2 — Affluent home transformation</div>
+<div class="layers">
+  <div class="layer-card">
+    <div class="layer-hdr">
+      <div class="layer-num" style="background:#C9A84C">D2</div>
+      <div class="layer-hdr-text">
+        <div class="lt">Kitchen · Main floor · Additions — non-price-shopping clients</div>
+        <div class="ls">The 60-year-old with $800K in equity. Does not price shop. Trusts the person their neighbor used. Broker referral feeds this pipeline directly. Greg currently doing 1 kitchen per month at $25K. The affluent market shifts this to $80K to $200K per job.</div>
+      </div>
+      <div class="layer-rev" id="lr-d2">—</div>
+    </div>
+    <div class="layer-body">
+      <div class="lever-row">
+        <div class="lever-label-wrap">
+          <label>Affluent reno completions per month <span class="atag atag-a">assumed</span></label>
+          <div class="ldesc">Each project 6 to 12 weeks. Greg can manage 3 to 4 simultaneously. Realistic completions: 0.9/month Year 1 ramping to 3/month by Year 5. Broker referrals are the primary pipeline source.</div>
+        </div>
+        <input type="range" min="0" max="5" step="0.1" id="l-d2jpm" value="0" oninput="calc()">
+        <div class="val" id="d-d2jpm">0/mo</div>
+      </div>
+      <div class="lever-row">
+        <div class="lever-label-wrap">
+          <label>Avg affluent job value <span class="atag atag-a">assumed</span></label>
+          <div class="ldesc">Kitchen: $80K to $150K. Main floor: $150K to $300K. Addition: $300K to $600K. Blended avg $65K in Year 1 as market entry. Rises to $175K by Year 5 as estate jobs and additions normalize.</div>
+        </div>
+        <input type="range" min="25000" max="250000" step="5000" id="l-d2avg" value="25000" oninput="calc()">
+        <div class="val" id="d-d2avg">$25K</div>
+      </div>
+      <div class="lever-row">
+        <div class="lever-label-wrap">
+          <label>Renovation margin <span class="atag atag-a">assumed</span></label>
+          <div class="ldesc">Affluent non-price-shopping clients support 20% to 30% net margin. At $100K avg job 25% is $25K GP. This is where the business makes real money. Price shoppers get East Indian labor rates. Your clients get trusted partners.</div>
+        </div>
+        <input type="range" min="15" max="35" step="1" id="l-d2margin" value="20" oninput="calc()">
+        <div class="val" id="d-d2margin">20%</div>
+      </div>
+      <div class="lever-impact" id="imp-d2">—</div>
+    </div>
+  </div>
+</div>
+
+<div class="section-label">Scrap recovery — near-pure margin</div>
+<div class="layers">
+  <div class="layer-card">
+    <div class="layer-hdr">
+      <div class="layer-num" style="background:#534AB7">SC</div>
+      <div class="layer-hdr-text">
+        <div class="lt">Aluminum scrap — grows with soft metals volume</div>
+        <div class="ls">Every soft metals job strips aluminum. Stockpiled and sold bi-annually. At full 200 soft metals jobs per year recapture is $59,850. Near-pure margin. Validates bulk buying at scale.</div>
+      </div>
+      <div class="layer-rev" id="lr-scrap">—</div>
+    </div>
+    <div class="layer-body">
+      <div class="lever-row">
+        <div class="lever-label-wrap">
+          <label>Recovery trips per year <span class="atag atag-a">assumed</span></label>
+          <div class="ldesc">Base model is 2 trips per year. Start at 0 until soft metals volume builds. Each trip value grows proportionally with soft metals job count.</div>
+        </div>
+        <input type="range" min="0" max="4" step="1" id="l-scrtrips" value="0" oninput="calc()">
+        <div class="val" id="d-scrtrips">0</div>
+      </div>
+      <div class="lever-row">
+        <div class="lever-label-wrap">
+          <label>Avg value per trip <span class="atag atag-a">assumed</span></label>
+          <div class="ldesc">Conservative $8K to $12K per trip at current soft metals volume. Grows to $29,925 at full 500 soft metals jobs per year.</div>
+        </div>
+        <input type="range" min="0" max="30000" step="1000" id="l-scravg" value="10000" oninput="calc()">
+        <div class="val" id="d-scravg">$10K</div>
+      </div>
+      <div class="lever-impact" id="imp-scrap">—</div>
+    </div>
+  </div>
+</div>
+
+<div class="chart-wrap">
+  <div class="chart-title">Revenue by source — ecosystem additive to $516K baseline</div>
+  <div class="bar-group" id="bar-group"></div>
+</div>
+
+<div class="timeline-box">
+  <h3 id="tl-title">—</h3>
+  <div id="tl-rows"></div>
+</div>
+
+<div class="timeline-box">
+  <h3>Sequence milestones</h3>
+  <div id="milestones"></div>
+</div>
+
+<div id="warn-area"></div>
+<div class="footer">Alethia Team LLC · Nick &amp; Greg Home Transformation · Confidential · June 2026 · v4 — Lead Channel Model</div>
+</div>
+
+<script>
+let currentTimeline='now';
+const BASELINE=516000;
+const BASELINE_GP=156000;
+
+// Channel close rates from Greg's model
+const CLOSE={ins:0.65,ref:0.60,recap:0.45,ups:0.55,seo:0.30,part:0.40,dk:0.20,gads:0.25,dh:0.05};
+
+const T={
+  now:{label:'Current State — June 26, 2026',
+    note:'$516K existing business. Machine idle. Lead channels not yet activated. Identity not locked. Today this changes.',
+    ins:0,ref:0,recap:0,ups:0,seo:0,part:0,dk:0,gads:0,dh:0,
+    smix:0,rjpy:0,ravg:9776,d2jpm:0,d2avg:25000,d2margin:20,scrtrips:0,scravg:10000,
+    rows:[['Existing business','$516K · D1 exterior $216K · D2 kitchens $300K'],['Lead channels','None active. Identity must be locked before any channel is turned on.'],['Gutter machine','Idle. Dean ready. Material loaded. First job not booked.'],['Greg\'s Year 1 target','250 metal jobs + 100 roof jobs. The model shows what it takes to get there.'],['Today the meeting exists to','Book the first job. Lock the identity. Sequence the channel activation.'],['Ramp note','Days 1-14: first jobs via existing network. Days 15-45: identity build. Days 46-90: channel activation begins.'],]},
+  '90':{label:'90 Days — Ramp · Identity · Broker Approach',
+    note:'Honest 90-day ramp. Identity build happens simultaneously with early jobs. Marketing activates after the story is clean. Broker approached by Day 60.',
+    ins:2,ref:2,recap:3,ups:3,seo:0,part:0,dk:5,gads:0,dh:0,
+    smix:10,rjpy:5,ravg:9776,d2jpm:0.08,d2avg:40000,d2margin:20,scrtrips:0,scravg:10000,
+    rows:[['Phase 1 (Days 1-14)','9 jobs via Greg\'s existing network. No marketing. Identity scoping begins.'],['Phase 2 (Days 15-45)','30 jobs. Identity build. One sentence. Brand story. Broker presentation package prepared.'],['Phase 3 (Days 46-90)','70+ jobs. Channels activating. Insurance and referral first. Broker approached by Day 60.'],['Lead channels','Hot channels only in Phase 3. Cold channels not yet. Identity first.'],['90-day machine revenue','~$300K annualized run rate from D1 by end of quarter'],['Ramp reality','Do not expect full capacity until Month 4. The identity work is not optional — it is what makes the broker partnership land.'],]},
+  '1':{label:'Year 1 — Greg\'s Target: 250 Metal + 100 Roof',
+    note:'Honest blended Year 1. Slow H1 as channels build. Full H2 as broker and insurance referrals compound. Greg\'s 250 metal + 100 roof target is achievable at full channel activation.',
+    ins:8,ref:6,recap:5,ups:5,seo:3,part:2,dk:10,gads:8,dh:20,
+    smix:20,rjpy:30,ravg:9776,d2jpm:0.9,d2avg:65000,d2margin:22,scrtrips:1,scravg:10000,
+    rows:[['Metal jobs target','246 jobs (196 gutter + 50 soft metals at 20% mix)'],['Roofing target','30 jobs single crew (Dean max alongside 246 metal jobs) · Greg\'s 100-job target needs dedicated roof crew — Year 4 milestone'],['Lead channel mix','Hot channels (insurance + referral) carrying 40% of jobs. Cold channels filling volume.'],['Blended close rate','~38% across all channels — insurance and referral pulling the average up'],['Division 2','0.9 affluent renos/month at $65K avg. Broker feeding pipeline from Day 60.'],['H1 reality','Lower volume as channels build. H2 near full capacity.'],['Combined total','~$1.9M to $2.1M including baseline'],]},
+  '2':{label:'Year 2 — Channels Mature · 300 Metal + 120 Roof',
+    note:'Hot channels dominant. Cold channels reduced. Word of mouth and insurance referrals carrying 50%+ of D1 lead volume. D2 growing as broker compounds.',
+    ins:14,ref:10,recap:7,ups:7,seo:6,part:4,dk:8,gads:6,dh:10,
+    smix:25,rjpy:50,ravg:10000,d2jpm:1.5,d2avg:100000,d2margin:24,scrtrips:2,scravg:15000,
+    rows:[['Metal jobs','300 (225 gutter + 75 soft metals at 25% mix)'],['Roofing','120 jobs at $10K avg. Estate homes entering the mix.'],['Hot channels','Insurance and referral carrying 55% of D1 leads. Blended close rate rising.'],['Division 2','1.5 affluent renos/month at $100K avg. Broker fully active.'],['Word of mouth','First affluent neighborhood penetrated. Neighbors calling neighbors.'],['Combined total','~$3.2M to $3.6M including baseline'],]},
+  '3':{label:'Year 3 — Referral Loop Self-Sustaining · $4.5M to $5.5M',
+    note:'Hot channels dominant. Cold channels minimal. Every exterior job seeds a renovation conversation. Insurance relationships and broker referrals are the primary pipeline.',
+    ins:18,ref:14,recap:8,ups:8,seo:8,part:6,dk:5,gads:4,dh:5,
+    smix:30,rjpy:80,ravg:10500,d2jpm:2.0,d2avg:130000,d2margin:26,scrtrips:2,scravg:22000,
+    rows:[['Metal jobs','350 (245 gutter + 105 soft metals at 30% mix)'],['Roofing','150 jobs. Roofing now a meaningful revenue contributor.'],['Hot channels','Insurance + referral carrying 65% of all D1 leads.'],['Division 2','2 affluent renos/month at $130K avg. Additions entering the mix.'],['The loop','Exterior job → renovation conversation → refi → neighbor referral → repeat.'],['Combined total','~$4.5M to $5.5M including baseline'],]},
+  '4':{label:'Year 4 — Scale · Second PM Hired · $6M to $7M',
+    note:'Second project manager enables D2 throughput to increase. Greg fully in business development. Nick\'s signal detection dominating target neighborhoods.',
+    ins:22,ref:16,recap:10,ups:10,seo:10,part:8,dk:3,gads:3,dh:0,
+    smix:30,rjpy:100,ravg:11000,d2jpm:2.5,d2avg:155000,d2margin:27,scrtrips:2,scravg:26000,
+    rows:[['Metal jobs','400 (280 gutter + 120 soft metals)'],['Roofing','175 jobs. Estate home roofing in the mix at premium pricing.'],['Hot channels','Insurance + referral + word of mouth carrying 70%+ of leads. Cold outbound nearly gone.'],['Division 2','2.5 affluent renos/month at $155K avg. Second PM hired.'],['Greg\'s role','100% business development. No field oversight.'],['Combined total','~$6M to $7M including baseline'],]},
+  '5':{label:'Year 5 — Exit Ready · $8M to $10M',
+    note:'The company Greg described is the operating reality. Every client who gets gutters knows they can get soft metals, a renovation, and a refi. That is the business.',
+    ins:25,ref:18,recap:10,ups:10,seo:12,part:10,dk:0,gads:0,dh:0,
+    smix:35,rjpy:120,ravg:12000,d2jpm:3.0,d2avg:175000,d2margin:28,scrtrips:2,scravg:29925,
+    rows:[['Metal jobs','450 (293 gutter + 157 soft metals at 35% mix)'],['Roofing','200 jobs at $12K avg. Estate homes routine.'],['Hot channels','100% hot and warm channels. Zero cold outbound. Leads come to you.'],['Division 2','3 affluent renos/month at $175K avg.'],['Broker','Self-sustaining. 30 years of client data still producing.'],['Nick GTM','Signal detection dominant. No competitor can replicate.'],['Combined total','~$8M to $10M including baseline'],['Exit value','SDE of $2M+ puts exit at $4M to $8M at 2x to 4x.'],]},
+};
+
+function setTimeline(t){
+  currentTimeline=t;
+  ['now','90','1','2','3','4','5'].forEach(x=>document.getElementById('tt-'+x).classList.toggle('active',x===t));
+  const d=T[t];
+  ['ins','ref','recap','ups','seo','part','dk','gads','dh'].forEach(ch=>{
+    const el=document.getElementById('l-'+ch);
+    if(el)el.value=d[ch];
+  });
+  const sets={'l-smix':d.smix,'l-rjpy':d.rjpy,'l-ravg':d.ravg,'l-d2jpm':d.d2jpm,'l-d2avg':d.d2avg,'l-d2margin':d.d2margin,'l-scrtrips':d.scrtrips,'l-scravg':d.scravg};
+  Object.entries(sets).forEach(([id,val])=>{const el=document.getElementById(id);if(el)el.value=val;});
+  calc();
+}
+
+function fmt(n){return '$'+Math.round(n).toLocaleString('en-US')}
+function fmtK(n){return n>=1000000?'$'+(n/1000000).toFixed(1)+'M':n>=1000?'$'+(n/1000).toFixed(0)+'K':fmt(n)}
+function pct(n){return Math.round(n)+'%'}
+function v(id){return parseFloat(document.getElementById(id).value)||0}
+function dset(id,txt){const el=document.getElementById(id);if(el)el.textContent=txt}
+
+function calc(){
+  // Channel leads per month
+  const ins=v('l-ins'),ref=v('l-ref'),recap=v('l-recap'),ups=v('l-ups'),seo=v('l-seo'),part=v('l-part'),dk=v('l-dk'),gads=v('l-gads'),dh=v('l-dh');
+
+  // Jobs per year from each channel
+  const jIns=Math.round(ins*CLOSE.ins*12);
+  const jRef=Math.round(ref*CLOSE.ref*12);
+  const jRecap=Math.round(recap*CLOSE.recap*12);
+  const jUps=Math.round(ups*CLOSE.ups*12);
+  const jSeo=Math.round(seo*CLOSE.seo*12);
+  const jPart=Math.round(part*CLOSE.part*12);
+  const jDk=Math.round(dk*CLOSE.dk*12);
+  const jGads=Math.round(gads*CLOSE.gads*12);
+  const jDh=Math.round(dh*CLOSE.dh*12);
+
+  const hotJobs=jIns+jRef;
+  const warmJobs=jRecap+jUps+jSeo+jPart;
+  const coldJobs=jDk+jGads+jDh;
+  const totalMetalJobs=hotJobs+warmJobs+coldJobs;
+
+  const totalHotLeads=(ins+ref)*12;
+  const totalWarmLeads=(recap+ups+seo+part)*12;
+  const totalColdLeads=(dk+gads+dh)*12;
+  const totalLeads=totalHotLeads+totalWarmLeads+totalColdLeads;
+  const blendedClose=totalLeads>0?Math.round((totalMetalJobs/totalLeads)*100):0;
+
+  // Update channel job displays
+  dset('d-ins',ins);dset('j-ins',jIns+' jobs');
+  dset('d-ref',ref);dset('j-ref',jRef+' jobs');
+  dset('d-recap',recap);dset('j-recap',jRecap+' jobs');
+  dset('d-ups',ups);dset('j-ups',jUps+' jobs');
+  dset('d-seo',seo);dset('j-seo',jSeo+' jobs');
+  dset('d-part',part);dset('j-part',jPart+' jobs');
+  dset('d-dk',dk);dset('j-dk',jDk+' jobs');
+  dset('d-gads',gads);dset('j-gads',jGads+' jobs');
+  dset('d-dh',dh);dset('j-dh',jDh+' jobs');
+
+  // Job mix
+  const smix=v('l-smix')/100;
+  const gutterJobs=Math.round(totalMetalJobs*(1-smix));
+  const smJobs=Math.round(totalMetalJobs*smix);
+  const gutterRev=gutterJobs*2525;
+  const smRev=smJobs*5330;
+  const metalRev=gutterRev+smRev;
+  const metalGP=gutterRev*0.50+smRev*0.47;
+
+  // Mix display
+  const gPct=Math.round((1-smix)*100);
+  const sPct=Math.round(smix*100);
+  const gBar=document.getElementById('mix-gutter-bar');
+  const sBar=document.getElementById('mix-sm-bar');
+  if(gBar){gBar.style.width=gPct+'%';gBar.textContent=gPct>15?'Gutters '+gPct+'%':'';}
+  if(sBar){sBar.style.width=sPct+'%';sBar.textContent=sPct>15?'Soft metals '+sPct+'%':'';}
+  dset('mix-gj',gutterJobs);dset('mix-gr',fmtK(gutterRev));
+  dset('mix-sj',smJobs);dset('mix-sr',fmtK(smRev));
+  dset('d-smix',Math.round(smix*100)+'%');
+
+  // Roofing
+  const rjpy=v('l-rjpy'),ravg=v('l-ravg');
+  const roofRev=rjpy*ravg;
+  const roofGP=roofRev*0.20;
+  dset('d-rjpy',Math.round(rjpy));
+  dset('d-ravg','$'+Math.round(ravg).toLocaleString());
+
+  // D2
+  const d2jpm=v('l-d2jpm'),d2avg=v('l-d2avg'),d2margin=v('l-d2margin')/100;
+  const d2Rev=d2jpm*12*d2avg;
+  const d2GP=d2Rev*d2margin;
+  dset('d-d2jpm',d2jpm.toFixed(1)+'/mo');
+  dset('d-d2avg','$'+Math.round(d2avg/1000)+'K');
+  dset('d-d2margin',Math.round(v('l-d2margin'))+'%');
+
+  // Scrap
+  const scrtrips=v('l-scrtrips'),scravg=v('l-scravg');
+  const scrapRev=scrtrips*scravg;
+  const scrapGP=scrapRev*0.95;
+  dset('d-scrtrips',Math.round(scrtrips));
+  dset('d-scravg','$'+Math.round(scravg/1000)+'K');
+
+  // Totals
+  const ecosystemRev=metalRev+roofRev+d2Rev+scrapRev;
+  const totalRev=Math.round(BASELINE+ecosystemRev);
+  const totalGP=Math.round(BASELINE_GP+metalGP+roofGP+d2GP+scrapGP);
+  const blendedMargin=totalRev>0?Math.round(totalGP/totalRev*100):0;
+
+  // SDE
+  const deanWages=totalMetalJobs>0||rjpy>0?75000:0;
+  const pmCost=d2Rev>0?d2Rev*0.18*0.3:0;
+  const ownerDraws=120000;
+  const sde=Math.max(0,Math.round(totalGP-deanWages-pmCost-ownerDraws));
+  const exit2x=sde*2,exit3x=sde*3,exit4x=sde*4;
+
+  dset('v-rev',fmtK(totalRev));
+  dset('v-above',fmtK(ecosystemRev));
+  dset('v-gp',fmtK(totalGP));
+  dset('v-margin',pct(blendedMargin));
+  dset('v-metalj',totalMetalJobs);
+  dset('v-roofj',Math.round(rjpy));
+  dset('v-d2j',Math.round(d2jpm*12).toFixed(0));
+  dset('v-sde',fmtK(Math.max(0,sde)));
+  dset('v-exit',sde>0?fmtK(exit2x)+' – '+fmtK(exit4x):'Activate the ecosystem');
+  dset('v-exit-bd',sde>0?'2x: '+fmtK(exit2x)+' · 3x: '+fmtK(exit3x)+' · 4x: '+fmtK(exit4x):'');
+  dset('v-sub',T[currentTimeline]?.note||'');
+
+  dset('lr-hot',fmtK(hotJobs*(metalRev/Math.max(totalMetalJobs,1))));
+  dset('lr-warm',fmtK(warmJobs*(metalRev/Math.max(totalMetalJobs,1))));
+  dset('lr-cold',fmtK(coldJobs*(metalRev/Math.max(totalMetalJobs,1))));
+  dset('lr-mix',fmtK(metalRev));
+  dset('lr-roof',fmtK(roofRev));
+  dset('lr-d2',fmtK(d2Rev));
+  dset('lr-scrap',fmtK(scrapRev));
+  dset('c-metal',fmtK(metalRev));
+  dset('c-roof',fmtK(roofRev));
+  dset('c-reno',fmtK(d2Rev));
+  dset('c-scrap',fmtK(scrapRev));
+
+  document.getElementById('imp-hot').innerHTML=
+    'Insurance: '+ins+' leads/mo × 65% = '+jIns+' jobs/yr · Referral: '+ref+' leads/mo × 60% = '+jRef+' jobs/yr · <strong>'+hotJobs+' hot jobs/yr</strong> · These are your highest value leads — identity must be clean before activating the referral channel.';
+  document.getElementById('imp-warm').innerHTML=
+    'Recapture '+jRecap+' + Upsell '+jUps+' + SEO '+jSeo+' + Partners '+jPart+' = <strong>'+warmJobs+' warm jobs/yr</strong> · Upsell and recapture are available from Day 1 from existing client base.';
+  document.getElementById('imp-cold').innerHTML=
+    'Door knock '+jDk+' + Google ads '+jGads+' + Door hangers '+jDh+' = <strong>'+coldJobs+' cold jobs/yr</strong> · '+
+    (coldJobs>hotJobs?'⚠ Cold channels exceeding hot channels. Shift mix toward insurance and referral.':'Cold channels filling volume appropriately.');
+  document.getElementById('imp-mix').innerHTML=
+    gutterJobs+' gutter jobs × $2,525 = '+fmtK(gutterRev)+' at 50% margin · '+
+    smJobs+' soft metals × $5,330 = '+fmtK(smRev)+' at 47% margin · '+
+    'Total metal: <strong>'+fmtK(metalRev)+'</strong> · Blended channel close rate: '+blendedClose+'%';
+  document.getElementById('imp-roof').innerHTML=
+    Math.round(rjpy)+' roofing jobs × '+fmt(ravg)+' = <strong>'+fmtK(roofRev)+'</strong> at 20% margin = '+fmtK(roofGP)+' GP · '+
+    (rjpy>0&&totalMetalJobs>0?'Watch Dean\'s capacity — roofing takes 3 days per job. '+(Math.round(rjpy/48)).toFixed(1)+' roof jobs per week alongside metal jobs.':'Roofing not yet active.');
+  document.getElementById('imp-d2').innerHTML=
+    Math.round(d2jpm*12)+' affluent reno jobs/yr at '+fmt(d2avg)+' avg at '+pct(Math.round(d2margin*100))+' margin = <strong>'+fmtK(d2Rev)+'</strong> revenue · GP: '+fmtK(d2GP);
+  document.getElementById('imp-scrap').innerHTML=
+    Math.round(scrtrips)+' trips × '+fmt(scravg)+' = <strong>'+fmtK(scrapRev)+'</strong> · Near-pure margin. Grows as soft metals volume increases.';
+
+  const hotSeqEl=document.getElementById('hot-seq');
+  if(ins===0&&ref===0) hotSeqEl.innerHTML='<div class="seq-bar seq-wait">Hot channels not yet active. Identity must be locked before referral channel is turned on.</div>';
+  else if(ref===0) hotSeqEl.innerHTML='<div class="seq-bar seq-next">Insurance channel active. Realtor/mortgage referral waiting on identity lock and broker presentation.</div>';
+  else hotSeqEl.innerHTML='<div class="seq-bar seq-ready">Both hot channels active. The highest-close-rate pipeline is running.</div>';
+
+  // Chart
+  const sources=[
+    {label:'Baseline business',val:BASELINE,color:'#888'},
+    {label:'D2 affluent renos',val:d2Rev,color:'#C9A84C'},
+    {label:'Gutter fast lane',val:gutterRev,color:'#0F1B2E'},
+    {label:'Soft metals',val:smRev,color:'#185FA5'},
+    {label:'Roofing',val:roofRev,color:'#1D9E75'},
+    {label:'Scrap recovery',val:scrapRev,color:'#534AB7'},
+  ].filter(s=>s.val>500).sort((a,b)=>b.val-a.val);
+  const maxVal=Math.max(...sources.map(s=>s.val),1);
+  document.getElementById('bar-group').innerHTML=sources.map(s=>{
+    const w=Math.max(2,Math.round(s.val/maxVal*100));
+    const p=totalRev>0?Math.round(s.val/totalRev*100):0;
+    return`<div class="bar-row"><div class="bar-label">${s.label}</div><div class="bar-track"><div class="bar-fill" style="width:${w}%;background:${s.color}"><span>${fmtK(s.val)} · ${p}%</span></div></div></div>`;
+  }).join('');
+
+  const tl=T[currentTimeline];
+  dset('tl-title',tl.label);
+  document.getElementById('tl-rows').innerHTML=tl.rows.map(([l,r])=>`<div class="trow"><div class="tl">${l}</div><div class="tv">${r}</div></div>`).join('');
+
+  document.getElementById('milestones').innerHTML=[
+    {dot:'#A32D2D',text:'<strong>Today:</strong> First job booked via Greg\'s network. Identity scoping starts. One-sentence answer process begins.'},
+    {dot:'#C9A84C',text:'<strong>Day 30:</strong> Identity locked. Brand story agreed. Broker presentation package built.'},
+    {dot:'#991B1B',text:'<strong>Day 45 to 60:</strong> Insurance channel activated. Broker approached with clean identity and presentation. Referral channel opens.'},
+    {dot:'#1E40AF',text:'<strong>Day 61 to 90:</strong> Cold channels begin to supplement volume. Hot channels already carrying 40% of leads.'},
+    {dot:'#1D9E75',text:'<strong>Year 1 · ~$2.0M:</strong> 250 metal jobs + 100 roof jobs (Greg\'s target). D2 at 0.9/month. Broker active.'},
+    {dot:'#C9A84C',text:'<strong>Year 2 · ~$3.2M to $3.6M:</strong> 300 metal + 120 roof. D2 at 1.5/month. Word of mouth building.'},
+    {dot:'#0F1B2E',text:'<strong>Year 3 · ~$4.5M to $5.5M:</strong> Referral loop self-sustaining. 350 metal + 150 roof. D2 at 2/month.'},
+    {dot:'#534AB7',text:'<strong>Year 5 · ~$8M to $10M:</strong> Exit value $4M to $8M at 2x to 4x SDE. Zero cold outbound needed.'},
+  ].map(m=>`<div class="milestone"><div class="ms-dot" style="background:${m.dot}"></div><div class="ms-text">${m.text}</div></div>`).join('');
+
+  const warns=[];
+  if(totalMetalJobs===0&&rjpy===0) warns.push('<div class="alert-box alert-flag">No jobs in the model. Activate the lead channels. The machine is ready — the leads are not flowing yet.</div>');
+  if(coldJobs>hotJobs&&totalMetalJobs>0) warns.push('<div class="alert-box alert-warn">Cold channels are producing more jobs than hot channels. Shift lead mix toward insurance relationships and referral. Cold channels should supplement hot, not lead.</div>');
+  // Dean capacity check
+  const smix_pct=v('l-smix')/100;
+  const gutterJ2=Math.round(totalMetalJobs*(1-smix_pct));
+  const smJ2=Math.round(totalMetalJobs*smix_pct);
+  const metalDaysNeeded=gutterJ2*0.4+smJ2*1.0;
+  const roofDaysNeeded=rjpy*3;
+  const totalDaysNeeded=metalDaysNeeded+roofDaysNeeded;
+  if(totalDaysNeeded>200&&rjpy>0) warns.push('<div class="alert-box alert-warn">Dean capacity: '+Math.round(totalDaysNeeded)+' days needed vs 200 available. '+Math.round(rjpy)+' roofing jobs require a dedicated roof crew separate from Dean. This is a session decision — model both scenarios.</div>');
+  else if(totalDaysNeeded>180) warns.push('<div class="alert-box alert-info">Dean is near full capacity ('+Math.round(totalDaysNeeded)+' of 200 days). Monitor before adding more volume.</div>');
+  if(totalRev>=2000000) warns.push('<div class="alert-box alert-good">$2M revenue. Greg\'s Year 1 target is achievable. SDE of '+fmtK(sde)+' puts exit at '+fmtK(exit2x)+' to '+fmtK(exit4x)+'.</div>');
+  if(totalRev>=5000000) warns.push('<div class="alert-box alert-good">$5M revenue. The ecosystem is operating. Exit value at 3x SDE is '+fmtK(exit3x)+'. The company Greg described is the operating reality.</div>');
+  document.getElementById('warn-area').innerHTML=warns.join('');
+}
+setTimeline('now');
+</script>
+</body>
+</html>
