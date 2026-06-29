@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Journey Bound Publishing — Revenue Simulator</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f2f2f2; color: #333; }
+
+  .header { background: #0F1B2E; padding: 32px 40px 28px; }
+  .header-eyebrow { color: #C9A84C; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 8px; }
+  .header h1 { font-size: 26px; font-weight: 700; color: white; margin-bottom: 6px; }
+  .header p { font-size: 13px; color: #999; }
+  .gold-bar { height: 4px; background: #C9A84C; }
+
+  .container { max-width: 980px; margin: 0 auto; padding: 28px 20px 48px; }
+
+  /* Results banner */
+  .results-banner {
+    background: #0F1B2E;
+    border-radius: 8px;
+    padding: 28px 32px;
+    margin-bottom: 24px;
+  }
+  .rb-label { color: #C9A84C; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 14px; }
+  .rb-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  @media(max-width:600px){ .rb-grid { grid-template-columns: 1fr 1fr; } }
+  .rb-item .rb-name { font-size: 11px; color: #888; margin-bottom: 4px; }
+  .rb-item .rb-val { font-size: 28px; font-weight: 700; color: white; }
+  .rb-item .rb-val.gold { color: #C9A84C; }
+  .rb-divider { height: 1px; background: #1e2e44; margin: 18px 0; }
+
+  /* Cards */
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+  @media(max-width:620px){ .grid2 { grid-template-columns: 1fr; } }
+
+  .card { background: white; border-radius: 8px; padding: 22px 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); border-top: 3px solid #0F1B2E; }
+  .card.gold-accent { border-top-color: #C9A84C; }
+  .card-eye { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #C9A84C; font-weight: 700; margin-bottom: 4px; }
+  .card h2 { font-size: 15px; color: #0F1B2E; font-weight: 700; margin-bottom: 18px; }
+
+  .lever { margin-bottom: 18px; }
+  .lever-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
+  .lever-name { font-size: 12px; font-weight: 600; color: #0F1B2E; }
+  .lever-val { font-size: 14px; font-weight: 700; color: #C9A84C; }
+  .lever-desc { font-size: 11px; color: #999; margin-bottom: 7px; line-height: 1.5; }
+  input[type=range] { width: 100%; -webkit-appearance: none; height: 5px; border-radius: 3px; background: #e8e8e8; outline: none; cursor: pointer; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: #0F1B2E; border: 2px solid #C9A84C; cursor: pointer; }
+  input[type=range]::-moz-range-thumb { width: 16px; height: 16px; border-radius: 50%; background: #0F1B2E; border: 2px solid #C9A84C; cursor: pointer; }
+
+  /* Opp cost */
+  .opp-card { background: #FDFAF3; border: 1px solid #C9A84C; border-radius: 8px; padding: 20px 22px; }
+  .opp-card h3 { font-size: 12px; font-weight: 700; color: #0F1B2E; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+  .opp-row { display: flex; justify-content: space-between; font-size: 12px; padding: 5px 0; border-bottom: 1px solid #f0e4c0; }
+  .opp-row:last-child { border-bottom: none; padding-top: 10px; font-weight: 700; font-size: 13px; }
+  .opp-lbl { color: #777; }
+  .opp-val { color: #0F1B2E; font-weight: 600; }
+  .opp-val.gold { color: #C9A84C; }
+
+  /* Milestones */
+  .milestones-card { background: white; border-radius: 8px; padding: 22px 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); margin-bottom: 20px; }
+  .milestones-card .card-eye { margin-bottom: 4px; }
+  .milestones-card h2 { font-size: 15px; color: #0F1B2E; font-weight: 700; margin-bottom: 20px; }
+  .milestone { margin-bottom: 18px; }
+  .ms-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+  .ms-title { font-size: 12px; font-weight: 700; color: #0F1B2E; }
+  .ms-rev { font-size: 15px; font-weight: 700; color: #C9A84C; }
+  .ms-bar-bg { height: 7px; background: #eee; border-radius: 4px; overflow: hidden; margin-bottom: 4px; }
+  .ms-bar-fill { height: 100%; border-radius: 4px; transition: width 0.35s ease; }
+  .ms-bar-fill.phase0 { background: #ccc; }
+  .ms-bar-fill.phase1 { background: linear-gradient(90deg, #C9A84C 0%, #e8c870 100%); }
+  .ms-bar-fill.phase2 { background: linear-gradient(90deg, #C9A84C 0%, #0F1B2E 100%); }
+  .ms-bar-fill.vision { background: #0F1B2E; }
+  .ms-sub { font-size: 11px; color: #aaa; }
+
+  /* Beyond 2M */
+  .beyond-card { background: #0F1B2E; border-radius: 8px; padding: 24px 28px; margin-bottom: 20px; }
+  .beyond-card .bc-eye { color: #C9A84C; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 10px; }
+  .beyond-card h2 { font-size: 18px; color: white; font-weight: 700; margin-bottom: 14px; }
+  .beyond-card p { font-size: 13px; color: #bbb; line-height: 1.75; margin-bottom: 10px; }
+  .beyond-card p:last-child { margin-bottom: 0; color: #C9A84C; font-style: italic; font-size: 13px; }
+
+  /* Insights */
+  .insight { background: white; border-left: 4px solid #C9A84C; border-radius: 0 8px 8px 0; padding: 16px 20px; margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+  .insight h3 { font-size: 12px; font-weight: 700; color: #0F1B2E; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .insight .ins-val { font-size: 20px; font-weight: 700; color: #C9A84C; margin-bottom: 4px; }
+  .insight p { font-size: 12px; color: #666; line-height: 1.6; }
+
+  .footer { text-align: center; font-size: 11px; color: #bbb; padding: 20px; margin-top: 8px; line-height: 1.8; }
+  .footer strong { color: #C9A84C; }
+
+  /* Full width card */
+  .full-card { background: white; border-radius: 8px; padding: 22px 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); border-top: 3px solid #0F1B2E; margin-bottom: 20px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-eyebrow">Alethia Team LLC &mdash; Confidential</div>
+  <h1>Journey Bound Publishing &mdash; Revenue Architecture Simulator</h1>
+  <p>Pull the levers. See what becomes possible when the architecture changes.</p>
+</div>
+<div class="gold-bar"></div>
+
+<div class="container">
+
+  <!-- RESULTS BANNER -->
+  <div class="results-banner">
+    <div class="rb-label">Projected Annual Revenue</div>
+    <div class="rb-grid">
+      <div class="rb-item">
+        <div class="rb-name">Today (Baseline)</div>
+        <div class="rb-val">$245K</div>
+      </div>
+      <div class="rb-item">
+        <div class="rb-name">With Architecture</div>
+        <div class="rb-val gold" id="proj-rev">$245K</div>
+      </div>
+      <div class="rb-item">
+        <div class="rb-name">Revenue Added</div>
+        <div class="rb-val gold" id="proj-added">$0</div>
+      </div>
+      <div class="rb-item">
+        <div class="rb-name">Est. Net (30%)</div>
+        <div class="rb-val" id="proj-net">$74K</div>
+      </div>
+    </div>
+    <div class="rb-divider"></div>
+    <div class="rb-grid">
+      <div class="rb-item">
+        <div class="rb-name">Strategy Sessions / Mo</div>
+        <div class="rb-val" id="proj-sessions">4</div>
+      </div>
+      <div class="rb-item">
+        <div class="rb-name">New Clients / Year</div>
+        <div class="rb-val" id="proj-clients">29</div>
+      </div>
+      <div class="rb-item">
+        <div class="rb-name">Hours Reclaimed / Wk</div>
+        <div class="rb-val" id="proj-hrs">0</div>
+      </div>
+      <div class="rb-item">
+        <div class="rb-name">Opp Cost of Not Delegating</div>
+        <div class="rb-val gold" id="proj-opp">$0</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEVER 1 + LEVER 2 -->
+  <div class="grid2">
+    <div class="card">
+      <div class="card-eye">Lever 1</div>
+      <h2>Strategy Session Capacity</h2>
+      <div class="lever">
+        <div class="lever-row"><span class="lever-name">Sessions per Month</span><span class="lever-val" id="v-sessions">4</span></div>
+        <div class="lever-desc">Today Veronica holds ~4 strategy sessions per month. Each is the gateway to a publishing or marketing engagement.</div>
+        <input type="range" min="4" max="24" value="4" step="1" oninput="set('sessions',+this.value,'v-sessions',v=>v)">
+      </div>
+      <div class="lever">
+        <div class="lever-row"><span class="lever-name">Close Rate</span><span class="lever-val" id="v-close">60%</span></div>
+        <div class="lever-desc">Current estimated close rate from discovery call to signed contract.</div>
+        <input type="range" min="40" max="90" value="60" step="5" oninput="set('close',+this.value,'v-close',v=>v+'%')">
+      </div>
+      <div class="lever">
+        <div class="lever-row"><span class="lever-name">Avg Contract Value</span><span class="lever-val" id="v-pkg">$3,500</span></div>
+        <div class="lever-desc">Average publishing package value per new client.</div>
+        <input type="range" min="2000" max="8000" value="3500" step="250" oninput="set('pkg',+this.value,'v-pkg',v=>'$'+v.toLocaleString())">
+      </div>
+    </div>
+
+    <div class="card gold-accent">
+      <div class="card-eye">Lever 2</div>
+      <h2>Adjacent Revenue</h2>
+      <div class="lever">
+        <div class="lever-row"><span class="lever-name">Video Trailers / Month</span><span class="lever-val" id="v-trailers">0</span></div>
+        <div class="lever-desc">~$750 margin per trailer. Already proven. Not yet systematically offered.</div>
+        <input type="range" min="0" max="15" value="0" step="1" oninput="set('trailers',+this.value,'v-trailers',v=>v)">
+      </div>
+      <div class="lever">
+        <div class="lever-row"><span class="lever-name">PR Referrals / Month</span><span class="lever-val" id="v-pr">0</span></div>
+        <div class="lever-desc">~$300 referral margin per client. Zero fulfillment cost to Journey Bound.</div>
+        <input type="range" min="0" max="12" value="0" step="1" oninput="set('pr',+this.value,'v-pr',v=>v)">
+      </div>
+      <div class="lever">
+        <div class="lever-row"><span class="lever-name">Marketing Retainers</span><span class="lever-val" id="v-retainers">0</span></div>
+        <div class="lever-desc">Monthly author marketing retainers managed by Quiana. ~$500/month per client.</div>
+        <input type="range" min="0" max="20" value="0" step="1" oninput="set('retainers',+this.value,'v-retainers',v=>v)">
+      </div>
+    </div>
+  </div>
+
+  <!-- LEVER 3: TIME + OPP COST -->
+  <div class="full-card">
+    <div class="card-eye">Lever 3</div>
+    <h2>Founder Time Recovery</h2>
+    <div class="grid2" style="margin-bottom:0;">
+      <div>
+        <div class="lever">
+          <div class="lever-row"><span class="lever-name">Hours Saved on Email / Week</span><span class="lever-val" id="v-email">0 hrs</span></div>
+          <div class="lever-desc">SaneBox ($7/mo) routes to Kathleen. Veronica touches only what requires her judgment. Live in 48 hours.</div>
+          <input type="range" min="0" max="8" value="0" step="0.5" oninput="set('email',+this.value,'v-email',v=>v+' hrs')">
+        </div>
+        <div class="lever">
+          <div class="lever-row"><span class="lever-name">Hours Saved on QC / Week</span><span class="lever-val" id="v-qc">0 hrs</span></div>
+          <div class="lever-desc">Training Valentina and designers to hold Veronica's standard without requiring her review on every project.</div>
+          <input type="range" min="0" max="10" value="0" step="0.5" oninput="set('qc',+this.value,'v-qc',v=>v+' hrs')">
+        </div>
+      </div>
+      <div class="opp-card">
+        <h3>Opportunity Cost of Founder Time</h3>
+        <div class="opp-row"><span class="opp-lbl">Veronica's time value at $2M target</span><span class="opp-val">$175/hr</span></div>
+        <div class="opp-row"><span class="opp-lbl">Hours reclaimed per week</span><span class="opp-val" id="opp-hrs">0 hrs</span></div>
+        <div class="opp-row"><span class="opp-lbl">Cost to delegate (SaneBox + training)</span><span class="opp-val">~$84/mo</span></div>
+        <div class="opp-row"><span class="opp-lbl">Annual cost of NOT delegating</span><span class="opp-val gold" id="opp-annual">$0</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MILESTONES -->
+  <div class="milestones-card">
+    <div class="card-eye">The Path</div>
+    <h2>Revenue Milestones</h2>
+
+    <div class="milestone">
+      <div class="ms-header"><span class="ms-title">Today &mdash; Baseline</span><span class="ms-rev">$245K</span></div>
+      <div class="ms-bar-bg"><div class="ms-bar-fill phase0" style="width:12.25%"></div></div>
+      <div class="ms-sub">Word of mouth only. Veronica in every role.</div>
+    </div>
+
+    <div class="milestone">
+      <div class="ms-header"><span class="ms-title">Phase 1 &mdash; Lever Activation</span><span class="ms-rev" id="ms1-rev">$245K</span></div>
+      <div class="ms-bar-bg"><div class="ms-bar-fill phase1" id="ms1-bar" style="width:12.25%"></div></div>
+      <div class="ms-sub">Growth engine live. Adjacent revenue packaged. Email off Veronica's plate. PREP complete.</div>
+    </div>
+
+    <div class="milestone">
+      <div class="ms-header"><span class="ms-title">Founder Liberation Milestone</span><span class="ms-rev">$2M</span></div>
+      <div class="ms-bar-bg"><div class="ms-bar-fill phase2" style="width:100%"></div></div>
+      <div class="ms-sub">Valentina fully empowered. Veronica focused on strategy only. Pipeline predictable. Architecture holding.</div>
+    </div>
+  </div>
+
+  <!-- BEYOND 2M -->
+  <div class="beyond-card">
+    <div class="bc-eye">What Comes Next</div>
+    <h2>Beyond $2M &mdash; The Conversation for a Different Day</h2>
+    <p>Getting Journey Bound to two million dollars requires no new ideas. It requires activating what already exists and building the structure that lets Veronica stop being the ceiling. That is the work in front of us now.</p>
+    <p>What comes after two million depends on things we cannot fully see from here. It may be a second senior strategist who can deliver client sessions at 90 percent of Veronica's level, which is the unlock that breaks the capacity ceiling. It may be a premium full-service tier at significantly higher price points. It may be a licensing or training model for other publishing service providers. It may be a combination of all three.</p>
+    <p>The paths to five million become visible once the architecture is installed and running. That is when we have a different conversation. For now the work is clear and the levers are identified. We start here.</p>
+    <p>The best view of the summit comes from the first base camp, not the parking lot.</p>
+  </div>
+
+  <!-- DYNAMIC INSIGHTS -->
+  <div id="insights"></div>
+
+  <div class="footer">
+    Built by <strong>Alethia Team LLC</strong> &mdash; Confidential &mdash; Journey Bound Publishing &mdash; June 2026<br>
+    These projections are directional. They are built to show what becomes possible when the architecture changes, not to guarantee specific outcomes.
+  </div>
+
+</div>
+
+<script>
+const BASELINE = 245000;
+const TRAILER_MARGIN = 750;
+const PR_MARGIN = 300;
+const RETAINER_VAL = 500;
+const HOURLY = 175;
+const BASE_SESSIONS = 4;
+const BASE_CLOSE = 0.60;
+const BASE_PKG = 3500;
+
+const s = { sessions:4, close:60, pkg:3500, trailers:0, pr:0, retainers:0, email:0, qc:0 };
+
+function fmt(n) {
+  if(n>=1000000) return '$'+(n/1000000).toFixed(2)+'M';
+  if(n>=1000) return '$'+Math.round(n/1000)+'K';
+  return '$'+Math.round(n);
+}
+function fmtFull(n){ return '$'+Math.round(n).toLocaleString(); }
+
+function set(key, val, elId, fmt) {
+  s[key] = val;
+  document.getElementById(elId).textContent = fmt(val);
+  calc();
+}
+
+function calc() {
+  const newClients = s.sessions * (s.close/100) * 12;
+  const baseClients = BASE_SESSIONS * BASE_CLOSE * 12;
+  const sessionRev = Math.max(0, newClients - baseClients) * s.pkg;
+  const adjRev = (s.trailers*TRAILER_MARGIN + s.pr*PR_MARGIN + s.retainers*RETAINER_VAL) * 12;
+  const total = BASELINE + sessionRev + adjRev;
+  const added = total - BASELINE;
+  const net = total * 0.30;
+  const hrsWk = s.email + s.qc;
+  const oppAnnual = hrsWk * 52 * HOURLY;
+
+  document.getElementById('proj-rev').textContent = fmt(total);
+  document.getElementById('proj-added').textContent = fmt(added);
+  document.getElementById('proj-net').textContent = fmt(net);
+  document.getElementById('proj-sessions').textContent = s.sessions;
+  document.getElementById('proj-clients').textContent = Math.round(newClients);
+  document.getElementById('proj-hrs').textContent = hrsWk.toFixed(1);
+  document.getElementById('proj-opp').textContent = fmtFull(oppAnnual);
+  document.getElementById('opp-hrs').textContent = hrsWk.toFixed(1)+' hrs';
+  document.getElementById('opp-annual').textContent = fmtFull(oppAnnual);
+
+  const pct1 = Math.min(100, (total/2000000)*100);
+  document.getElementById('ms1-rev').textContent = fmt(total);
+  document.getElementById('ms1-bar').style.width = Math.max(12.25, pct1)+'%';
+
+  renderInsights(added, hrsWk, oppAnnual, newClients, adjRev);
+}
+
+function renderInsights(added, hrsWk, oppAnnual, newClients, adjRev) {
+  let html = '';
+
+  if(hrsWk > 0) {
+    html += `<div class="insight">
+      <h3>What Veronica Gets Back</h3>
+      <div class="ins-val">${hrsWk.toFixed(1)} hours per week &mdash; ${Math.round(hrsWk*52)} hours per year</div>
+      <p>At a $2M company Veronica's time is worth $175 an hour. Every hour spent on email and cover reviews costs the business <strong>${fmtFull(oppAnnual)} per year</strong> in lost strategy session capacity. SaneBox and Valentina training cost less than $85 a month combined. That is not a trade-off. It is an obvious decision once the number is visible.</p>
+    </div>`;
+  }
+
+  if(adjRev > 0) {
+    html += `<div class="insight">
+      <h3>Adjacent Revenue That Already Exists in the Business</h3>
+      <div class="ins-val">${fmt(adjRev)} per year</div>
+      <p>Video trailers and PR referrals are not new ideas for Journey Bound. Veronica has already done both. Packaging them as defined offerings with clear pricing turns occasional revenue into reliable revenue with zero new overhead and no additional founder time required.</p>
+    </div>`;
+  }
+
+  if(added > 60000) {
+    const toMilestone = Math.max(0, 2000000 - (BASELINE + added));
+    html += `<div class="insight">
+      <h3>The Architecture Gap in Dollar Terms</h3>
+      <div class="ins-val">${fmt(added)} per year sitting in identified levers</div>
+      <p>This is the difference between where Journey Bound is today and where it goes when the architecture changes. The $2M Founder Liberation milestone is <strong>${fmt(toMilestone)} away</strong> from the current lever projection. The gap closes through team architecture, a functioning inbound pipeline, and Veronica spending her time on the work only she can do.</p>
+    </div>`;
+  }
+
+  document.getElementById('insights').innerHTML = html;
+}
+
+calc();
+</script>
+</body>
+</html>
