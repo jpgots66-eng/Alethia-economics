@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MVWW Technician Hiring Filter</title>
+<style>
+  :root {
+    --navy: #0F1B2E;
+    --navy-mid: #1a2d47;
+    --gold: #C9A84C;
+    --gold-light: #E8C96A;
+    --white: #FFFFFF;
+    --off-white: #F9F7F2;
+    --green: #1A4D3A;
+    --green-light: #E8F5EE;
+    --amber: #6B4A00;
+    --amber-light: #FEF3C7;
+    --red-dark: #6B0000;
+    --red-light: #FEE2E2;
+    --gray: #888;
+    --border: #ddd;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: var(--off-white);
+    color: var(--navy);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--navy);
+    padding: 20px 24px 16px;
+    border-bottom: 3px solid var(--gold);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .brand { color: var(--gold); font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
+  .header h1 { color: var(--white); font-size: 18px; font-weight: 700; margin-top: 2px; }
+  .header-sub { color: rgba(255,255,255,0.5); font-size: 12px; margin-top: 2px; }
+  .score-badge {
+    background: var(--gold);
+    color: var(--navy);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-weight: 800;
+    font-size: 15px;
+    white-space: nowrap;
+    min-width: 80px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .score-label { font-size: 9px; font-weight: 600; letter-spacing: 1px; display: block; text-transform: uppercase; opacity: 0.7; }
+
+  /* PROGRESS */
+  .progress-bar {
+    margin-top: 12px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 4px;
+    height: 4px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--gold);
+    border-radius: 4px;
+    transition: width 0.4s ease;
+  }
+
+  /* STAGE TABS */
+  .stage-tabs {
+    display: flex;
+    background: var(--navy-mid);
+    border-bottom: 2px solid var(--gold);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .stage-tab {
+    flex: 1;
+    min-width: 0;
+    padding: 10px 8px;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.45);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    text-align: center;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+  }
+  .stage-tab.active {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+    background: rgba(201,168,76,0.08);
+  }
+  .stage-tab.completed { color: rgba(255,255,255,0.65); }
+  .stage-tab.locked { opacity: 0.35; cursor: not-allowed; }
+
+  /* MAIN */
+  main { max-width: 680px; margin: 0 auto; padding: 16px; }
+
+  /* CANDIDATE INFO */
+  .candidate-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--gold);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  .candidate-card label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 6px;
+  }
+  .candidate-card input {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-size: 16px;
+    font-family: inherit;
+    color: var(--navy);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .candidate-card input:focus { border-color: var(--gold); }
+  .candidate-card input::placeholder { color: #bbb; }
+
+  /* SECTION HEADERS */
+  .section-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0 12px;
+  }
+  .section-num {
+    background: var(--navy);
+    color: var(--gold);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+  .section-title { font-size: 14px; font-weight: 700; color: var(--navy); letter-spacing: 0.3px; }
+  .section-sub { font-size: 12px; color: var(--gray); margin-top: 2px; }
+
+  /* RESUME DIMENSION */
+  .resume-dim {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+  .resume-dim-head {
+    padding: 12px 14px;
+    background: var(--navy);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+  }
+  .resume-dim-head h3 { color: var(--white); font-size: 13px; font-weight: 700; }
+  .resume-dim-head .current-score { font-size: 18px; font-weight: 800; }
+  .score-g { color: #4ade80; }
+  .score-a { color: #fbbf24; }
+  .score-r { color: #f87171; }
+  .score-none { color: rgba(255,255,255,0.3); }
+  .resume-dim-body { padding: 0; }
+  .score-opts { display: grid; grid-template-columns: 1fr 1fr 1fr; }
+  .score-opt {
+    padding: 12px 8px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    text-align: center;
+    transition: all 0.15s;
+    border-top: 1px solid var(--border);
+    font-family: inherit;
+  }
+  .score-opt:not(:last-child) { border-right: 1px solid var(--border); }
+  .score-opt .opt-label { font-size: 11px; font-weight: 700; letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
+  .score-opt .opt-desc { font-size: 11px; color: var(--gray); line-height: 1.3; }
+  .score-opt.selected-g { background: var(--green-light); }
+  .score-opt.selected-a { background: var(--amber-light); }
+  .score-opt.selected-r { background: var(--red-light); }
+
+  /* QUESTION CARD */
+  .q-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 14px;
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+  }
+  .q-card:focus-within { box-shadow: 0 0 0 2px var(--gold); }
+  .q-head {
+    background: var(--navy);
+    padding: 14px 16px;
+  }
+  .q-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .q-num { color: var(--gold); font-size: 11px; font-weight: 800; letter-spacing: 1px; }
+  .q-trait {
+    background: rgba(201,168,76,0.2);
+    color: var(--gold);
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .q-nonnego {
+    background: rgba(239,68,68,0.2);
+    color: #fca5a5;
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+  .q-text { color: var(--white); font-size: 14px; line-height: 1.5; font-style: italic; }
+  .q-score-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    border-top: 1px solid var(--border);
+  }
+  .q-score-btn {
+    padding: 14px 8px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    transition: all 0.15s;
+    font-family: inherit;
+    border-right: 1px solid var(--border);
+    text-align: center;
+  }
+  .q-score-btn:last-child { border-right: none; }
+  .q-score-label { font-size: 12px; font-weight: 700; display: block; margin-bottom: 3px; }
+  .q-score-pts { font-size: 10px; color: var(--gray); display: block; margin-bottom: 5px; }
+  .q-score-desc { font-size: 11px; color: #555; line-height: 1.3; }
+  .q-score-btn.sel-g { background: var(--green-light); }
+  .q-score-btn.sel-a { background: var(--amber-light); }
+  .q-score-btn.sel-r { background: var(--red-light); }
+  .q-why {
+    background: #FDFBF3;
+    border-top: 1px solid #f0e8cc;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: #666;
+    line-height: 1.5;
+  }
+  .q-why strong { color: var(--navy); }
+  .q-example {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border-top: 1px solid var(--border);
+  }
+  .q-ex-g {
+    background: #f0fdf4;
+    padding: 8px 12px;
+    font-size: 11px;
+    color: #166534;
+    line-height: 1.4;
+    border-right: 1px solid var(--border);
+  }
+  .q-ex-r {
+    background: #fff5f5;
+    padding: 8px 12px;
+    font-size: 11px;
+    color: #991b1b;
+    line-height: 1.4;
+  }
+  .q-ex-label { font-weight: 700; display: block; margin-bottom: 2px; font-size: 10px; letter-spacing: 0.5px; text-transform: uppercase; }
+
+  /* WORKING INTERVIEW */
+  .wi-check {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+  .wi-check-head {
+    padding: 12px 14px;
+    background: var(--navy);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .wi-check-head h3 { color: var(--white); font-size: 13px; font-weight: 700; }
+  .wi-check-desc { padding: 10px 14px; font-size: 13px; color: #555; line-height: 1.5; }
+  .wi-buttons { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--border); }
+  .wi-btn {
+    padding: 12px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    transition: all 0.15s;
+    text-align: center;
+  }
+  .wi-btn:first-child { border-right: 1px solid var(--border); }
+  .wi-btn.pass { color: var(--green); }
+  .wi-btn.fail { color: var(--red-dark); }
+  .wi-btn.sel-pass { background: var(--green-light); }
+  .wi-btn.sel-fail { background: var(--red-light); }
+
+  /* VERDICT CARDS */
+  .verdict-card {
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  .verdict-card.strong { background: var(--green-light); border: 2px solid var(--green); }
+  .verdict-card.conditional { background: var(--amber-light); border: 2px solid var(--amber); }
+  .verdict-card.borderline { background: var(--amber-light); border: 2px solid var(--amber); }
+  .verdict-card.notfit { background: var(--red-light); border: 2px solid var(--red-dark); }
+  .verdict-card.blocked { background: var(--red-light); border: 2px solid var(--red-dark); }
+  .verdict-title { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+  .verdict-card.strong .verdict-title { color: var(--green); }
+  .verdict-card.conditional .verdict-title,
+  .verdict-card.borderline .verdict-title { color: var(--amber); }
+  .verdict-card.notfit .verdict-title,
+  .verdict-card.blocked .verdict-title { color: var(--red-dark); }
+  .verdict-sub { font-size: 14px; color: #555; line-height: 1.5; }
+  .verdict-action {
+    margin-top: 12px;
+    display: inline-block;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .verdict-card.strong .verdict-action { background: var(--green); color: white; }
+  .verdict-card.conditional .verdict-action,
+  .verdict-card.borderline .verdict-action { background: var(--amber); color: white; }
+  .verdict-card.notfit .verdict-action,
+  .verdict-card.blocked .verdict-action { background: var(--red-dark); color: white; }
+
+  /* SCORE SUMMARY */
+  .score-row {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    margin-bottom: 10px;
+  }
+  .score-row-title { font-size: 12px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+  .score-item { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; font-size: 13px; border-bottom: 1px solid #f5f5f5; }
+  .score-item:last-child { border-bottom: none; }
+  .score-item-label { color: #444; }
+  .score-item-val { font-weight: 700; }
+  .score-item-val.g { color: var(--green); }
+  .score-item-val.a { color: #d97706; }
+  .score-item-val.r { color: #dc2626; }
+  .score-total { display: flex; justify-content: space-between; align-items: center; padding: 10px 0 0; font-size: 16px; font-weight: 800; border-top: 2px solid var(--border); margin-top: 6px; }
+
+  /* ALERT BOX */
+  .alert {
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 14px;
+    font-size: 13px;
+    line-height: 1.5;
+    font-weight: 600;
+  }
+  .alert.red { background: var(--red-light); color: var(--red-dark); border-left: 4px solid var(--red-dark); }
+  .alert.green { background: var(--green-light); color: var(--green); border-left: 4px solid var(--green); }
+  .alert.gold { background: var(--amber-light); color: var(--amber); border-left: 4px solid var(--gold); }
+
+  /* BUTTONS */
+  .btn-primary {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    background: var(--navy);
+    color: var(--gold);
+    border: none;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 16px;
+    text-transform: uppercase;
+  }
+  .btn-primary:hover { background: var(--navy-mid); }
+  .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-secondary {
+    display: block;
+    width: 100%;
+    padding: 13px;
+    background: var(--white);
+    color: var(--navy);
+    border: 2px solid var(--navy);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: all 0.2s;
+  }
+  .btn-secondary:hover { background: var(--off-white); }
+
+  /* STAGE PANELS */
+  .stage-panel { display: none; }
+  .stage-panel.active { display: block; }
+
+  /* FINAL REPORT */
+  .report-section {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .report-section h3 { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+  .flag-item { display: flex; gap: 8px; align-items: flex-start; padding: 6px 0; font-size: 13px; border-bottom: 1px solid #f5f5f5; }
+  .flag-item:last-child { border-bottom: none; }
+  .flag-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+  .flag-dot.red { background: #dc2626; }
+  .flag-dot.amber { background: #d97706; }
+  .flag-dot.green { background: #16a34a; }
+
+  .date-line { font-size: 12px; color: var(--gray); margin-top: 4px; }
+
+  /* INTRO SCREEN */
+  .intro-card {
+    background: var(--navy);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 16px;
+    color: var(--white);
+  }
+  .intro-card h2 { color: var(--gold); font-size: 18px; margin-bottom: 8px; }
+  .intro-card p { font-size: 13px; line-height: 1.6; color: rgba(255,255,255,0.8); }
+  .intro-stat { display: flex; gap: 12px; margin-top: 14px; flex-wrap: wrap; }
+  .intro-stat-item { background: rgba(201,168,76,0.15); border: 1px solid rgba(201,168,76,0.3); border-radius: 6px; padding: 8px 12px; text-align: center; flex: 1; min-width: 80px; }
+  .intro-stat-item .num { color: var(--gold); font-size: 20px; font-weight: 800; display: block; }
+  .intro-stat-item .lbl { color: rgba(255,255,255,0.6); font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  .nonneg-warning {
+    background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.3);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 14px;
+    font-size: 12px;
+    color: #fca5a5;
+    line-height: 1.5;
+  }
+  .nonneg-warning strong { color: #f87171; }
+
+  @media (max-width: 400px) {
+    .q-example { grid-template-columns: 1fr; }
+    .q-ex-g { border-right: none; border-bottom: 1px solid var(--border); }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div>
+      <div class="brand">Alethia Team LLC</div>
+      <h1>Technician Hiring Filter</h1>
+      <div class="header-sub">Mountain View Window Washing</div>
+    </div>
+    <div class="score-badge">
+      <span class="score-label">Score</span>
+      <span id="headerScore">—</span>
+    </div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+</div>
+
+<div class="stage-tabs">
+  <button class="stage-tab active" id="tab0" onclick="goTab(0)">Resume</button>
+  <button class="stage-tab locked" id="tab1" onclick="goTab(1)">Questions</button>
+  <button class="stage-tab locked" id="tab2" onclick="goTab(2)">Interview</button>
+  <button class="stage-tab locked" id="tab3" onclick="goTab(3)">Report</button>
+</div>
+
+<main>
+
+<!-- STAGE 0: INTRO + CANDIDATE INFO -->
+<div class="stage-panel active" id="panel0">
+  <div class="intro-card">
+    <h2>The Red Velvet Rope — Operationalized</h2>
+    <p>Built from Connor's actual hire data. Latrell is the green benchmark. Cove is the red benchmark. Every rubric in this tool is calibrated against people who worked at Mountain View Window Washing.</p>
+    <div class="intro-stat">
+      <div class="intro-stat-item"><span class="num">3</span><span class="lbl">Stages</span></div>
+      <div class="intro-stat-item"><span class="num">5</span><span class="lbl">Resume Dims</span></div>
+      <div class="intro-stat-item"><span class="num">7</span><span class="lbl">Questions</span></div>
+      <div class="intro-stat-item"><span class="num">21</span><span class="lbl">Max Score</span></div>
+    </div>
+  </div>
+
+  <div class="candidate-card">
+    <label>Candidate Name</label>
+    <input type="text" id="candidateName" placeholder="Enter candidate name" oninput="updateName()">
+    <div class="date-line" id="dateLine"></div>
+  </div>
+
+  <div class="section-head">
+    <div class="section-num">1</div>
+    <div>
+      <div class="section-title">Resume & Application Screen</div>
+      <div class="section-sub">Score each dimension. Two or more RED = stop. Do not advance to questions.</div>
+    </div>
+  </div>
+
+  <div id="resumeDims"></div>
+
+  <div id="resumeVerdict"></div>
+
+  <button class="btn-primary" id="btn0" onclick="goTab(1)" disabled>Continue to Questions →</button>
+</div>
+
+<!-- STAGE 1: QUESTIONS -->
+<div class="stage-panel" id="panel1">
+  <div class="nonneg-warning">
+    <strong>Non-negotiable flags:</strong> Q4 (Customer Representation) and Q7 (Cultural Fit). Any RED answer on either ends the process immediately regardless of total score. Character cannot be trained.
+  </div>
+  <div id="questions"></div>
+  <div id="qVerdict"></div>
+  <button class="btn-primary" id="btn1" onclick="goTab(2)" disabled>Continue to Working Interview →</button>
+  <button class="btn-secondary" onclick="goTab(0)">← Back to Resume</button>
+</div>
+
+<!-- STAGE 2: WORKING INTERVIEW -->
+<div class="stage-panel" id="panel2">
+  <div class="alert gold">Candidate is on a real job. Score each checkpoint as you observe. Six of eight passes required to hire.</div>
+  <div id="wiChecks"></div>
+  <div id="wiVerdict"></div>
+  <button class="btn-primary" id="btn2" onclick="goTab(3)" disabled>View Full Report →</button>
+  <button class="btn-secondary" onclick="goTab(1)">← Back to Questions</button>
+</div>
+
+<!-- STAGE 3: FINAL REPORT -->
+<div class="stage-panel" id="panel3">
+  <div id="finalReport"></div>
+  <button class="btn-secondary" onclick="resetAll()">Start New Candidate</button>
+</div>
+
+</main>
+
+<script>
+const NAVY = '#0F1B2E';
+const GOLD = '#C9A84C';
+
+// DATA
+const resumeDimData = [
+  {
+    id: 'tenure',
+    name: 'Tenure & Consistency',
+    green: '6+ month average across last 3 jobs. Latrell: tree crew, cell tower, construction — sustained commitment in demanding roles.',
+    amber: '3–6 month average. One short stint with a clear reason.',
+    red: 'Under 3 months average, repeated exits, or unexplained gaps.'
+  },
+  {
+    id: 'firstcontact',
+    name: 'First Contact / Application',
+    green: 'Direct, specific, confident. Latrell wrote one paragraph naming his background, situation, and asked for a meeting. That directness previews how he communicates on the job.',
+    amber: 'Generic but responsive. Shows interest without specificity.',
+    red: 'Vague, no initiative. Cove\'s responses were technically correct and completely flat.'
+  },
+  {
+    id: 'physical',
+    name: 'Physical / Outdoor Work',
+    green: 'Outdoor physically demanding history: tree service, construction, farm, cell tower, warehouse. Latrell and Eaben both had this.',
+    amber: 'Mix of physical and sedentary. Some outdoor exposure.',
+    red: 'Entirely indoor or sedentary. No comfort with physical demands, heights, or weather.'
+  },
+  {
+    id: 'service',
+    name: 'Service History',
+    green: 'Customer-facing role where reading the room mattered. Hayden\'s real estate photography — inside people\'s homes, managing expectations — is the best proxy for this job.',
+    amber: 'Some customer contact but task-primary.',
+    red: 'No customer-facing experience. Or customer contact where the customer came to them.'
+  },
+  {
+    id: 'reliability',
+    name: 'Reliability Signals',
+    green: 'References mentioned or available. Consistent tenure. Proactive communication style evident in the application itself.',
+    amber: 'Minor gaps explained. One or two short stints with context.',
+    red: 'Repeated short stints, no references offered, gaps not addressed.'
+  }
+];
+
+const questionData = [
+  {
+    id: 'q1', num: 'Q1', trait: 'Service Orientation', nonnego: false,
+    question: 'You finish a window cleaning job and notice the customer seems uncertain about whether everything looks right. They have not said anything. What do you do?',
+    green: 'Asks the customer directly. Checks in. Offers to show them the work. Does not leave until satisfied.',
+    amber: 'Waits to see if the customer says something. Polite but passive.',
+    red: 'Packs up and leaves. The job is done.',
+    why: 'Latrell reads the room to determine if customers want frictionless service or friendly conversation. This separates people-oriented workers from task-oriented workers.',
+    exGreen: 'Hayden: went back to a dissatisfied client, asked what he missed, got more training, re-delivered.',
+    exRed: 'Cove: difficult customer example was a language barrier over a tomato box at a grocery store. Technically responsive. Completely flat.'
+  },
+  {
+    id: 'q2', num: 'Q2', trait: 'Pace & Self-Direction', nonnego: false,
+    question: 'You are running the day on your own. You hit unexpected traffic and will be late to your next job. What do you do?',
+    green: 'Contacts the customer immediately with an updated arrival time. Notifies Connor. Adjusts the rest of the schedule.',
+    amber: 'Arrives late. Apologizes. Tells Connor at end of day.',
+    red: 'Shows up late. Does not communicate. Hopes it is fine.',
+    why: 'Eaben needed directions repeated and seemed disengaged. A technician who does not proactively manage their schedule costs Connor time he does not have. Latrell is self-managing — that is why Connor can trust him alone in the field.',
+    exGreen: 'Latrell proactively stepped up as a leader and sought opportunities to improve without being asked.',
+    exRed: 'Eaben needed to be told what to do too often and seemed disengaged.'
+  },
+  {
+    id: 'q3', num: 'Q3', trait: 'SOP Adherence', nonnego: false,
+    question: 'You think there is a faster way to clean a particular type of window than the method you were trained on. What do you do?',
+    green: 'Does it the trained way on the job. Mentions the idea to Connor afterward and asks if they can compare approaches.',
+    amber: 'Tries the new approach quietly on a simpler job to test it.',
+    red: 'Just does it their way. They know what works.',
+    why: 'Cove reverted to slower methods he was comfortable with rather than mastering what Connor taught. The SOP is the quality standard and brand protection. Rogue process creates callbacks Connor has to fix.',
+    exGreen: null,
+    exRed: 'Cove reverted to easier slower methods instead of mastering the more effective technique Connor trained him on.'
+  },
+  {
+    id: 'q4', num: 'Q4', trait: 'Customer Representation', nonnego: true,
+    question: 'A customer opens the door and starts telling you about a frustrating experience they had with a different company. They are clearly venting. You have three more jobs today. What do you do?',
+    green: 'Listens briefly and empathetically. Acknowledges their frustration. Redirects gently to the job. Does not dismiss them.',
+    amber: 'Listens but visibly impatient. Gets through it but makes them feel rushed.',
+    red: 'Cuts them off or gives a one-word response and gets to work.',
+    why: '75% of MVWW revenue comes from referrals and repeat customers. The technician IS the brand in the customer\'s home. One dismissive interaction loses the customer and every referral they would have sent.',
+    exGreen: null,
+    exRed: null
+  },
+  {
+    id: 'q5', num: 'Q5', trait: 'Initiative & Lead Capture', nonnego: false,
+    question: 'While cleaning windows you notice the gutters are overflowing and clearly backed up. What do you do?',
+    green: 'Mentions it to the customer. Says something like: I noticed your gutters while I was up there — you may want to get those looked at. Takes a photo and texts Connor.',
+    amber: 'Notices it but says nothing. Not their service to offer.',
+    red: 'Does not notice or does not care.',
+    why: 'Connor has a VA starting commercial outreach. The technician who notices and communicates creates upsell and referral opportunities without being a salesperson. Every job is a proximity opportunity.',
+    exGreen: 'Latrell proactively sought opportunities and stepped up without being asked.',
+    exRed: null
+  },
+  {
+    id: 'q6', num: 'Q6', trait: 'Reliability', nonnego: false,
+    question: 'You finish a job and realize you missed a section of windows on the second floor. Connor is not on site. What do you do?',
+    green: 'Goes back and fixes it immediately. Texts Connor to let him know what happened and that it is resolved. Does not wait to be asked.',
+    amber: 'Finishes the job and tells Connor at end of day.',
+    red: 'Hopes the customer does not notice. Does not say anything.',
+    why: 'Eaben was satisfied with okay results. A technician who self-corrects without being watched is the foundation of the quality standard Connor has built. Most issues with Latrell required clearer expectations from Connor — not performance correction.',
+    exGreen: null,
+    exRed: 'Cove was satisfied with okay results and needed to be told what to do.'
+  },
+  {
+    id: 'q7', num: 'Q7', trait: 'Cultural Fit — Lift Lighten Brighten', nonnego: true,
+    question: 'Tell me about a time you did something for someone at work that was not technically your job. What happened and why?',
+    green: 'Gives a specific, genuine example. The reason is intrinsic — they just wanted to help. Not looking for credit.',
+    amber: 'Has an example but it is vague or motivated by recognition.',
+    red: 'Cannot think of an example. Or the example is about doing the minimum.',
+    why: 'Connor and Hailey built this company on lifting people. Windows for Widows is not a marketing program — it is who they are. The technician who cannot recall a single unprompted act of service is not a cultural fit.',
+    exGreen: 'Latrell is genuinely interested in customers\' lives. Asks them questions about themselves. That is not trained — it is character.',
+    exRed: 'Cove\'s feedback example was being told how to stack produce and then stacking it correctly. That is the floor of teachability, not evidence of initiative.'
+  }
+];
+
+const wiData = [
+  { id: 'w1', check: 'Arrives on time', desc: 'Were they early, on time, or late? Self-direction starts before the first window.' },
+  { id: 'w2', check: 'Equipment care', desc: 'Do they treat the tools with respect or are they careless with Connor\'s gear?' },
+  { id: 'w3', check: 'Customer greeting', desc: 'How do they introduce themselves? Warm, confident, and professional without being coached?' },
+  { id: 'w4', check: 'Works without prompting', desc: 'Do they follow the SOP independently or need to be told each step? Eaben needed directions repeated.' },
+  { id: 'w5', check: 'Reads the room', desc: 'Do they adjust to what each customer needs without being told? This is Latrell\'s defining trait.' },
+  { id: 'w6', check: 'Quality of work', desc: 'Does the output meet the standard? Would Connor leave a review card?' },
+  { id: 'w7', check: 'End of job behavior', desc: 'Do they ask if everything looks right before leaving? Do they leave the area clean?' },
+  { id: 'w8', check: 'Communication with Connor', desc: 'Do they report anything notable from the job without being asked?' }
+];
+
+// STATE
+let resumeScores = {};
+let qScores = {};
+let wiScores = {};
+let currentTab = 0;
+
+function updateName() {
+  const name = document.getElementById('candidateName').value;
+  document.title = name ? `${name} — MVWW Hiring Filter` : 'MVWW Technician Hiring Filter';
+}
+
+function init() {
+  document.getElementById('dateLine').textContent = 'Date: ' + new Date().toLocaleDateString('en-US', {month:'long',day:'numeric',year:'numeric'});
+  buildResume();
+  buildQuestions();
+  buildWI();
+}
+
+function buildResume() {
+  const el = document.getElementById('resumeDims');
+  el.innerHTML = resumeDimData.map(d => `
+    <div class="resume-dim">
+      <div class="resume-dim-head">
+        <h3>${d.name}</h3>
+        <span class="current-score score-none" id="rs-${d.id}">—</span>
+      </div>
+      <div class="resume-dim-body">
+        <div class="score-opts">
+          <button class="score-opt" onclick="setResume('${d.id}',3,this)">
+            <span class="opt-label" style="color:#16a34a">GREEN</span>
+            <span class="opt-desc">${d.green}</span>
+          </button>
+          <button class="score-opt" onclick="setResume('${d.id}',2,this)">
+            <span class="opt-label" style="color:#d97706">AMBER</span>
+            <span class="opt-desc">${d.amber}</span>
+          </button>
+          <button class="score-opt" onclick="setResume('${d.id}',1,this)">
+            <span class="opt-label" style="color:#dc2626">RED</span>
+            <span class="opt-desc">${d.red}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function setResume(id, score, btn) {
+  resumeScores[id] = score;
+  const dim = btn.closest('.resume-dim');
+  dim.querySelectorAll('.score-opt').forEach(b => { b.classList.remove('selected-g','selected-a','selected-r'); });
+  btn.classList.add(score===3?'selected-g':score===2?'selected-a':'selected-r');
+  const badge = dim.querySelector('.current-score');
+  badge.textContent = score===3?'G':score===2?'A':'R';
+  badge.className = 'current-score ' + (score===3?'score-g':score===2?'score-a':'score-r');
+  checkResumeComplete();
+}
+
+function checkResumeComplete() {
+  if (Object.keys(resumeScores).length < resumeDimData.length) return;
+  const reds = Object.values(resumeScores).filter(s=>s===1).length;
+  const verdict = document.getElementById('resumeVerdict');
+  const btn = document.getElementById('btn0');
+  if (reds >= 2) {
+    verdict.innerHTML = `<div class="alert red">⛔ ${reds} RED scores — Stop here. Do not advance to questions. The pattern does not fit the Mountain View Window Washing standard. Thank the candidate for their time.</div>`;
+    btn.disabled = true;
+  } else if (reds === 1) {
+    verdict.innerHTML = `<div class="alert gold">1 RED score noted. Advance to questions but watch closely. The amber or red question scores will tell you whether this is a genuine concern or circumstance.</div>`;
+    btn.disabled = false;
+  } else {
+    verdict.innerHTML = `<div class="alert green">✓ Resume clears the screen. Advance to behavioral questions.</div>`;
+    btn.disabled = false;
+  }
+  updateProgress();
+}
+
+function buildQuestions() {
+  const el = document.getElementById('questions');
+  el.innerHTML = questionData.map(q => `
+    <div class="q-card" id="qcard-${q.id}">
+      <div class="q-head">
+        <div class="q-meta">
+          <span class="q-num">${q.num}</span>
+          <span class="q-trait">${q.trait}</span>
+          ${q.nonnego ? '<span class="q-nonnego">⚠ NON-NEGOTIABLE</span>' : ''}
+        </div>
+        <div class="q-text">${q.question}</div>
+      </div>
+      <div class="q-score-row">
+        <button class="q-score-btn" onclick="setQ('${q.id}',3,this)">
+          <span class="q-score-label" style="color:#16a34a">GREEN</span>
+          <span class="q-score-pts">3 points</span>
+          <span class="q-score-desc">${q.green}</span>
+        </button>
+        <button class="q-score-btn" onclick="setQ('${q.id}',2,this)">
+          <span class="q-score-label" style="color:#d97706">AMBER</span>
+          <span class="q-score-pts">2 points</span>
+          <span class="q-score-desc">${q.amber}</span>
+        </button>
+        <button class="q-score-btn" onclick="setQ('${q.id}',1,this)">
+          <span class="q-score-label" style="color:#dc2626">RED</span>
+          <span class="q-score-pts">1 point</span>
+          <span class="q-score-desc">${q.red}</span>
+        </button>
+      </div>
+      ${(q.exGreen||q.exRed) ? `
+      <div class="q-example">
+        <div class="q-ex-g"><span class="q-ex-label">Real GREEN</span>${q.exGreen||'—'}</div>
+        <div class="q-ex-r"><span class="q-ex-label">Real RED</span>${q.exRed||'—'}</div>
+      </div>` : ''}
+      <div class="q-why"><strong>Why this question:</strong> ${q.why}</div>
+    </div>
+  `).join('');
+}
+
+function setQ(id, score, btn) {
+  qScores[id] = score;
+  const card = btn.closest('.q-card');
+  card.querySelectorAll('.q-score-btn').forEach(b=>b.classList.remove('sel-g','sel-a','sel-r'));
+  btn.classList.add(score===3?'sel-g':score===2?'sel-a':'sel-r');
+  checkQComplete();
+}
+
+function checkQComplete() {
+  if (Object.keys(qScores).length < questionData.length) {
+    updateProgress();
+    return;
+  }
+  const total = Object.values(qScores).reduce((a,b)=>a+b,0);
+  const nonneg = ['q4','q7'].filter(id=>qScores[id]===1);
+  const verdict = document.getElementById('qVerdict');
+  const btn = document.getElementById('btn1');
+
+  if (nonneg.length > 0) {
+    const blocked = nonneg.map(id => questionData.find(q=>q.id===id).trait).join(' and ');
+    verdict.innerHTML = `<div class="verdict-card blocked"><div class="verdict-title">Process Ended</div><div class="verdict-sub">RED score on non-negotiable: <strong>${blocked}</strong>. Character cannot be trained. Total score is irrelevant. Thank the candidate for their time.</div><span class="verdict-action">Do Not Hire</span></div>`;
+    btn.disabled = true;
+  } else {
+    let cls, title, sub, action;
+    if (total >= 18) { cls='strong'; title='Strong Fit'; sub='Service instinct, pace, and cultural alignment are all present. This is your Latrell and Hayden range. Do not overthink it.'; action='Proceed to Working Interview'; }
+    else if (total >= 14) { cls='conditional'; title='Conditional Fit'; sub=`Score: ${total}/21. Move to working interview. Note which questions scored amber or red — those are coaching targets if you hire.`; action='Proceed to Working Interview'; }
+    else if (total >= 10) { cls='borderline'; title='Borderline'; sub=`Score: ${total}/21. One more focused conversation on lowest-scoring questions before investing in a working interview.`; action='One More Conversation First'; }
+    else { cls='notfit'; title='Not a Fit'; sub=`Score: ${total}/21. Cove scored in this range. The pattern of answers tells you more than any resume. Thank them for their time.`; action='Thank and Decline'; }
+    verdict.innerHTML = `<div class="verdict-card ${cls}"><div class="verdict-title">${title}</div><div class="verdict-sub">${sub}</div><span class="verdict-action">${action}</span></div>`;
+    btn.disabled = total < 10;
+  }
+  updateProgress();
+  updateHeaderScore();
+}
+
+function buildWI() {
+  const el = document.getElementById('wiChecks');
+  el.innerHTML = wiData.map(w => `
+    <div class="wi-check">
+      <div class="wi-check-head"><h3>${w.check}</h3></div>
+      <div class="wi-check-desc">${w.desc}</div>
+      <div class="wi-buttons">
+        <button class="wi-btn pass" onclick="setWI('${w.id}',true,this)">✓ Pass</button>
+        <button class="wi-btn fail" onclick="setWI('${w.id}',false,this)">✗ Fail</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function setWI(id, pass, btn) {
+  wiScores[id] = pass;
+  const wi = btn.closest('.wi-check');
+  wi.querySelectorAll('.wi-btn').forEach(b=>b.classList.remove('sel-pass','sel-fail'));
+  btn.classList.add(pass?'sel-pass':'sel-fail');
+  checkWIComplete();
+}
+
+function checkWIComplete() {
+  if (Object.keys(wiScores).length < wiData.length) { updateProgress(); return; }
+  const passes = Object.values(wiScores).filter(Boolean).length;
+  const verdict = document.getElementById('wiVerdict');
+  const btn = document.getElementById('btn2');
+  if (passes >= 6) {
+    verdict.innerHTML = `<div class="alert green">✓ ${passes}/8 checkpoints passed. Working interview cleared. Ready to view full report and hiring decision.</div>`;
+    btn.disabled = false;
+  } else {
+    verdict.innerHTML = `<div class="alert red">⛔ ${passes}/8 checkpoints passed. Minimum is 6. Thank the candidate for their time. Note which checkpoints failed to refine the questionnaire for the next candidate.</div>`;
+    btn.disabled = false;
+  }
+  updateProgress();
+}
+
+function goTab(n) {
+  if (document.getElementById('tab'+n).classList.contains('locked')) return;
+  currentTab = n;
+  document.querySelectorAll('.stage-panel').forEach((p,i)=>{ p.classList.toggle('active', i===n); });
+  document.querySelectorAll('.stage-tab').forEach((t,i)=>{ t.classList.toggle('active', i===n); });
+  if (n === 3) buildReport();
+  window.scrollTo(0,0);
+}
+
+function unlockTab(n) {
+  document.getElementById('tab'+n).classList.remove('locked');
+  document.getElementById('tab'+n).classList.add('completed');
+}
+
+function updateProgress() {
+  const total = resumeDimData.length + questionData.length + wiData.length;
+  const done = Object.keys(resumeScores).length + Object.keys(qScores).length + Object.keys(wiScores).length;
+  document.getElementById('progressFill').style.width = Math.round((done/total)*100)+'%';
+
+  // Unlock tabs
+  if (Object.keys(resumeScores).length === resumeDimData.length) unlockTab(1);
+  if (Object.keys(qScores).length === questionData.length) unlockTab(2);
+  if (Object.keys(wiScores).length === wiData.length) unlockTab(3);
+}
+
+function updateHeaderScore() {
+  const total = Object.values(qScores).reduce((a,b)=>a+b,0);
+  if (Object.keys(qScores).length === questionData.length) {
+    document.getElementById('headerScore').textContent = total + '/21';
+  }
+}
+
+function buildReport() {
+  const name = document.getElementById('candidateName').value || 'Candidate';
+  const date = new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+  const qTotal = Object.values(qScores).reduce((a,b)=>a+b,0);
+  const wiPasses = Object.values(wiScores).filter(Boolean).length;
+  const resumeReds = Object.values(resumeScores).filter(s=>s===1).length;
+  const nonnegFail = ['q4','q7'].some(id=>qScores[id]===1);
+
+  let overallVerdict, overallClass;
+  if (nonnegFail) { overallVerdict='DO NOT HIRE — Non-negotiable flag'; overallClass='blocked'; }
+  else if (resumeReds>=2) { overallVerdict='DO NOT HIRE — Resume screen failure'; overallClass='notfit'; }
+  else if (wiPasses<6) { overallVerdict='DO NOT HIRE — Working interview failure'; overallClass='notfit'; }
+  else if (qTotal>=18 && wiPasses>=6) { overallVerdict='HIRE — Strong fit confirmed'; overallClass='strong'; }
+  else if (qTotal>=14 && wiPasses>=6) { overallVerdict='HIRE — Conditional fit, note coaching targets'; overallClass='conditional'; }
+  else { overallVerdict='DO NOT HIRE — Below threshold'; overallClass='notfit'; }
+
+  const flags = [];
+  questionData.forEach(q=>{
+    if (qScores[q.id]===1) flags.push({label:q.num+' '+q.trait, type:'red', note: q.nonnego?'NON-NEGOTIABLE':'Scored RED — significant concern'});
+    else if (qScores[q.id]===2) flags.push({label:q.num+' '+q.trait, type:'amber', note:'Scored AMBER — coaching target if hired'});
+  });
+  wiData.forEach(w=>{
+    if (wiScores[w.id]===false) flags.push({label:w.check, type:'red', note:'Failed working interview checkpoint'});
+  });
+
+  const qs = questionData.map(q=>({
+    label: q.num+' '+q.trait,
+    score: qScores[q.id],
+    nonnego: q.nonnego
+  }));
+
+  document.getElementById('finalReport').innerHTML = `
+    <div class="report-section">
+      <h3>Candidate Summary</h3>
+      <div class="score-item"><span class="score-item-label">Name</span><span class="score-item-val">${name}</span></div>
+      <div class="score-item"><span class="score-item-label">Date</span><span class="score-item-val">${date}</span></div>
+      <div class="score-item"><span class="score-item-label">Resume RED flags</span><span class="score-item-val ${resumeReds>=2?'r':resumeReds===1?'a':'g'}">${resumeReds}</span></div>
+      <div class="score-item"><span class="score-item-label">Questionnaire score</span><span class="score-item-val ${qTotal>=18?'g':qTotal>=14?'a':'r'}">${qTotal}/21</span></div>
+      <div class="score-item"><span class="score-item-label">Working interview</span><span class="score-item-val ${wiPasses>=6?'g':'r'}">${wiPasses}/8 checkpoints passed</span></div>
+    </div>
+
+    <div class="verdict-card ${overallClass}">
+      <div class="verdict-title">${overallVerdict}</div>
+    </div>
+
+    <div class="report-section">
+      <h3>Question Scores</h3>
+      ${qs.map(q=>`
+        <div class="score-item">
+          <span class="score-item-label">${q.label}${q.nonnego?' ⚠':''}</span>
+          <span class="score-item-val ${q.score===3?'g':q.score===2?'a':'r'}">${q.score===3?'GREEN':q.score===2?'AMBER':'RED'} (${q.score})</span>
+        </div>
+      `).join('')}
+      <div class="score-total"><span>Total</span><span class="${qTotal>=18?'g':qTotal>=14?'a':'r'}">${qTotal}/21</span></div>
+    </div>
+
+    ${flags.length>0?`
+    <div class="report-section">
+      <h3>Flags & Coaching Notes</h3>
+      ${flags.map(f=>`
+        <div class="flag-item">
+          <div class="flag-dot ${f.type}"></div>
+          <div><strong>${f.label}</strong> — ${f.note}</div>
+        </div>
+      `).join('')}
+    </div>`:''}
+
+    <div class="report-section" style="background:#FDFBF3;border-color:#f0e8cc;">
+      <h3>The Latrell Standard</h3>
+      <p style="font-size:13px;color:#555;line-height:1.6;">Would you be comfortable sending ${name} alone into the home of your best customer — someone who has referred five families to you — without being there to supervise? If the answer is not a clear yes, the answer is no.</p>
+    </div>
+  `;
+}
+
+function resetAll() {
+  resumeScores = {}; qScores = {}; wiScores = {};
+  document.getElementById('candidateName').value = '';
+  document.getElementById('resumeVerdict').innerHTML = '';
+  document.getElementById('qVerdict').innerHTML = '';
+  document.getElementById('wiVerdict').innerHTML = '';
+  document.getElementById('finalReport').innerHTML = '';
+  document.getElementById('headerScore').textContent = '—';
+  document.getElementById('progressFill').style.width = '0%';
+  document.getElementById('btn0').disabled = true;
+  document.getElementById('btn1').disabled = true;
+  document.getElementById('btn2').disabled = true;
+  ['tab1','tab2','tab3'].forEach(id=>{ document.getElementById(id).className='stage-tab locked'; });
+  buildResume(); buildQuestions(); buildWI();
+  goTab(0);
+}
+
+init();
+</script>
+</body>
+</html>
