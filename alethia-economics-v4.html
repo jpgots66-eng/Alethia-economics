@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alethia · Economics v4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0F1B2E;
+    --navy-2:#16243B;
+    --navy-3:#1D2E48;
+    --gold:#C9A84C;
+    --gold-soft:rgba(201,168,76,0.16);
+    --ink:#EDEBE4;
+    --ink-dim:#9AA6B8;
+    --line:rgba(201,168,76,0.18);
+    --danger:#D96C5A;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--navy);
+    color:var(--ink);
+    font-family:'DM Sans',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .app{max-width:1180px;margin:0 auto;padding:28px 24px 80px;}
+  header.top{
+    display:flex;justify-content:space-between;align-items:flex-end;
+    border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:22px;
+    flex-wrap:wrap;gap:10px;
+  }
+  .eyebrow{
+    font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--gold);opacity:.85;
+  }
+  h1{
+    font-family:'Cormorant Garamond',serif;font-weight:600;font-size:38px;
+    margin:4px 0 0;color:var(--ink);letter-spacing:.01em;
+  }
+  .sub{font-size:12.5px;color:var(--ink-dim);margin-top:4px;font-family:'DM Mono',monospace;}
+  .version-tag{
+    font-family:'DM Mono',monospace;font-size:11px;color:var(--ink-dim);
+    border:1px solid var(--line);padding:6px 10px;border-radius:20px;
+  }
+
+  .summary-bar{
+    display:grid;grid-template-columns:repeat(6,1fr);gap:1px;
+    background:var(--line);border:1px solid var(--line);border-radius:10px;
+    overflow:hidden;margin-bottom:26px;
+  }
+  .stat{background:var(--navy-2);padding:16px 14px;min-width:0;}
+  .stat .label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.06em;color:var(--ink-dim);text-transform:uppercase;}
+  .stat .value{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;color:var(--gold);margin-top:5px;line-height:1.1;}
+
+  nav.tabs{display:flex;gap:6px;margin-bottom:22px;border-bottom:1px solid var(--line);}
+  nav.tabs button{
+    background:none;border:none;color:var(--ink-dim);font-family:'DM Sans',sans-serif;
+    font-size:14px;font-weight:500;padding:10px 16px;cursor:pointer;
+    border-bottom:2px solid transparent;transition:.15s;
+  }
+  nav.tabs button.active{color:var(--gold);border-bottom-color:var(--gold);}
+  nav.tabs button:hover{color:var(--ink);}
+
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
+
+  .card{
+    background:var(--navy-2);border:1px solid var(--line);border-radius:10px;
+    padding:20px 22px;margin-bottom:18px;
+  }
+  .card h2{
+    font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;
+    margin:0 0 4px;color:var(--ink);
+  }
+  .card .card-note{font-size:12px;color:var(--ink-dim);margin-bottom:14px;}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;}
+
+  .field{margin-bottom:16px;}
+  .field-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px;}
+  .field-name{font-size:13.5px;font-weight:500;color:var(--ink);}
+  .field-val{font-family:'DM Mono',monospace;font-size:13.5px;color:var(--gold);}
+  .field-desc{font-size:11.5px;color:var(--ink-dim);margin-bottom:6px;}
+  input[type=range]{
+    width:100%;height:4px;border-radius:2px;background:var(--navy-3);
+    -webkit-appearance:none;appearance:none;accent-color:var(--gold);
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;width:14px;height:14px;border-radius:50%;
+    background:var(--gold);cursor:pointer;border:2px solid var(--navy);
+  }
+  .range-minmax{display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:10px;color:var(--ink-dim);margin-top:2px;}
+  input[type=text]{
+    width:100%;background:var(--navy-3);border:1px solid var(--line);
+    color:var(--ink);font-family:'DM Sans',sans-serif;font-size:13.5px;
+    padding:7px 9px;border-radius:6px;
+  }
+  input[type=text]::placeholder{color:var(--ink-dim);}
+
+  .partner-card{
+    border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin-bottom:12px;
+    background:var(--navy-3);
+  }
+  .partner-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;}
+  .partner-name{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:600;color:var(--ink);}
+  .partner-role{font-size:11.5px;color:var(--gold);font-family:'DM Mono',monospace;}
+  .partner-desc{font-size:11.5px;color:var(--ink-dim);margin-top:6px;line-height:1.5;}
+  .slot-empty{opacity:.55;}
+
+  .subtotal-row{
+    display:flex;justify-content:space-between;font-family:'DM Mono',monospace;
+    font-size:12.5px;color:var(--ink-dim);padding:6px 0;border-top:1px solid var(--line);margin-top:8px;
+  }
+  .subtotal-row span.val{color:var(--ink);}
+  .warn{color:var(--danger);}
+  .ok-note{color:var(--gold);}
+
+  table{width:100%;border-collapse:collapse;font-size:13px;margin-top:10px;}
+  th{
+    text-align:left;font-family:'DM Mono',monospace;font-size:10.5px;
+    text-transform:uppercase;letter-spacing:.05em;color:var(--ink-dim);
+    padding:8px 10px;border-bottom:1px solid var(--line);
+  }
+  td{padding:9px 10px;border-bottom:1px solid rgba(201,168,76,0.08);color:var(--ink);}
+  tr:last-child td{border-bottom:none;}
+  td.num,th.num{text-align:right;font-family:'DM Mono',monospace;}
+
+  .waterfall-row{
+    display:flex;justify-content:space-between;padding:9px 0;
+    border-bottom:1px solid rgba(201,168,76,0.08);font-size:13.5px;
+  }
+  .waterfall-row.total{font-weight:700;color:var(--gold);border-bottom:none;border-top:1px solid var(--line);padding-top:12px;margin-top:4px;}
+  .waterfall-row .neg{color:var(--danger);}
+
+  .narrative{font-size:13px;line-height:1.65;color:var(--ink-dim);}
+  .narrative b{color:var(--gold);font-weight:600;}
+  .narrative .name{color:var(--ink);font-weight:600;}
+
+  @media (max-width:820px){
+    .summary-bar{grid-template-columns:repeat(3,1fr);}
+    .grid2,.grid3{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header class="top">
+    <div>
+      <div class="eyebrow">Alethia · Internal · Confidential</div>
+      <h1>Economics Calculator v4</h1>
+      <div class="sub">Single model · all tabs connected · one source of truth</div>
+    </div>
+    <div class="version-tag">Rev: Nick McGuire departure — equity reallocation draft</div>
+  </header>
+
+  <div class="summary-bar">
+    <div class="stat"><div class="label">Gross Revenue</div><div class="value" id="s_gross">—</div></div>
+    <div class="stat"><div class="label">Net (after costs)</div><div class="value" id="s_net">—</div></div>
+    <div class="stat"><div class="label">Distributable</div><div class="value" id="s_dist">—</div></div>
+    <div class="stat"><div class="label">Avg / Core Partner</div><div class="value" id="s_avgpartner">—</div></div>
+    <div class="stat"><div class="label">Ascend ARR</div><div class="value" id="s_ascend">—</div></div>
+    <div class="stat"><div class="label">Total All-In</div><div class="value" id="s_allin">—</div></div>
+  </div>
+
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="economics">Economics</button>
+    <button class="tab-btn" data-tab="advisory">Advisory Board</button>
+    <button class="tab-btn" data-tab="tiers">Engagement Tiers</button>
+    <button class="tab-btn" data-tab="ascend">Ascend</button>
+  </nav>
+
+  <!-- ECONOMICS TAB -->
+  <section class="tab-panel active" id="tab-economics">
+
+    <div class="card">
+      <h2>Operating Costs</h2>
+      <div class="grid2">
+        <div>
+          <div class="field">
+            <div class="field-top"><span class="field-name">Field Architect / Engagement</span><span class="field-val" id="v_fa_cost">$10,000</span></div>
+            <div class="field-desc">Byron + future FAs. Engagement 6 onwards.</div>
+            <input type="range" id="fa_cost" min="0" max="25000" step="500" value="10000">
+            <div class="range-minmax"><span>$0</span><span>$25K</span></div>
+          </div>
+          <div class="field">
+            <div class="field-top"><span class="field-name">FA Engagements / Year</span><span class="field-val" id="v_fa_count">12</span></div>
+            <div class="field-desc">How many engagements use a Field Architect this year.</div>
+            <input type="range" id="fa_count" min="0" max="100" step="1" value="12">
+            <div class="range-minmax"><span>0</span><span>100</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="field">
+            <div class="field-top"><span class="field-name">Automation / Specialist</span><span class="field-val" id="v_auto_cost">$15,000</span></div>
+            <div class="field-desc">Andrew Saltzman + specialists. Per engagement with bots.</div>
+            <input type="range" id="auto_cost" min="0" max="50000" step="500" value="15000">
+            <div class="range-minmax"><span>$0</span><span>$50K</span></div>
+          </div>
+          <div class="field">
+            <div class="field-top"><span class="field-name">Engagements with Automation</span><span class="field-val" id="v_auto_count">8</span></div>
+            <div class="field-desc">&nbsp;</div>
+            <input type="range" id="auto_count" min="0" max="80" step="1" value="8">
+            <div class="range-minmax"><span>0</span><span>80</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <div class="field-top"><span class="field-name">GTM / Tech Stack Annual</span><span class="field-val" id="v_gtm_cost">$0</span></div>
+        <div class="field-desc">GTM ownership open following Nick's departure. Model paid tools or future SDR costs here.</div>
+        <input type="range" id="gtm_cost" min="0" max="300000" step="5000" value="0">
+        <div class="range-minmax"><span>$0</span><span>$300K</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>PREP — Mandatory</h2>
+      <div class="card-note">Barry tool · non-negotiable · every engagement</div>
+      <div class="field">
+        <div class="field-top"><span class="field-name">People profiled / engagement</span><span class="field-val" id="v_prep_count">4</span></div>
+        <div class="field-desc">Pass-through: billed to client at cost. Enter price after Monday Barry call.</div>
+        <input type="range" id="prep_count" min="1" max="10" step="1" value="4">
+        <div class="range-minmax"><span>1</span><span>10</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Corporate Reserve</h2>
+      <div class="field">
+        <div class="field-top"><span class="field-name">Reserve %</span><span class="field-val" id="v_reserve_pct">10%</span></div>
+        <div class="field-desc">Off net revenue. Ops, tech, legal, future hires.</div>
+        <input type="range" id="reserve_pct" min="5" max="25" step="1" value="10">
+        <div class="range-minmax"><span>5%</span><span>25%</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Core Partners — Equity % (ownership)</h2>
+      <div class="card-note" id="equity_warning">Unallocated equity available — see subtotal below.</div>
+
+      <div class="partner-card">
+        <div class="partner-head">
+          <div><span class="partner-name">Travis Roderick</span><br><span class="partner-role">CEO · Chief Architect · IP Owner</span></div>
+        </div>
+        <div class="partner-desc">Chief Architect. All five first engagements. IP owner of AOS.</div>
+        <div class="grid2" style="margin-top:10px;">
+          <div class="field">
+            <div class="field-top"><span class="field-name">Equity</span><span class="field-val" id="v_travis_equity">25%</span></div>
+            <input type="range" id="travis_equity" min="0" max="50" step="1" value="25">
+          </div>
+          <div class="field">
+            <div class="field-top"><span class="field-name">Dist %</span><span class="field-val" id="v_travis_dist">25%</span></div>
+            <input type="range" id="travis_dist" min="0" max="50" step="1" value="25">
+          </div>
+        </div>
+      </div>
+
+      <div class="partner-card">
+        <div class="partner-head">
+          <div><span class="partner-name">Joe Pung</span><br><span class="partner-role">COO · Integrator · Client Execution</span></div>
+        </div>
+        <div class="partner-desc">Integrator. All five first engagements alongside Travis.</div>
+        <div class="grid2" style="margin-top:10px;">
+          <div class="field">
+            <div class="field-top"><span class="field-name">Equity</span><span class="field-val" id="v_joe_equity">20%</span></div>
+            <input type="range" id="joe_equity" min="0" max="50" step="1" value="20">
+          </div>
+          <div class="field">
+            <div class="field-top"><span class="field-name">Dist %</span><span class="field-val" id="v_joe_dist">20%</span></div>
+            <input type="range" id="joe_dist" min="0" max="50" step="1" value="20">
+          </div>
+        </div>
+      </div>
+
+      <div class="partner-card slot-empty" id="slot1_card">
+        <div class="partner-head">
+          <div>
+            <input type="text" id="slot1_name" placeholder="Open Partner Slot 1" style="max-width:260px;">
+            <div class="partner-role" style="margin-top:6px;">Unassigned</div>
+          </div>
+        </div>
+        <div class="grid2" style="margin-top:10px;">
+          <div class="field">
+            <div class="field-top"><span class="field-name">Equity</span><span class="field-val" id="v_slot1_equity">0%</span></div>
+            <input type="range" id="slot1_equity" min="0" max="40" step="1" value="0">
+          </div>
+          <div class="field">
+            <div class="field-top"><span class="field-name">Dist %</span><span class="field-val" id="v_slot1_dist">0%</span></div>
+            <input type="range" id="slot1_dist" min="0" max="40" step="1" value="0">
+          </div>
+        </div>
+      </div>
+
+      <div class="partner-card slot-empty" id="slot2_card">
+        <div class="partner-head">
+          <div>
+            <input type="text" id="slot2_name" placeholder="Open Partner Slot 2" style="max-width:260px;">
+            <div class="partner-role" style="margin-top:6px;">Unassigned</div>
+          </div>
+        </div>
+        <div class="grid2" style="margin-top:10px;">
+          <div class="field">
+            <div class="field-top"><span class="field-name">Equity</span><span class="field-val" id="v_slot2_equity">0%</span></div>
+            <input type="range" id="slot2_equity" min="0" max="40" step="1" value="0">
+          </div>
+          <div class="field">
+            <div class="field-top"><span class="field-name">Dist %</span><span class="field-val" id="v_slot2_dist">0%</span></div>
+            <input type="range" id="slot2_dist" min="0" max="40" step="1" value="0">
+          </div>
+        </div>
+      </div>
+
+      <div class="partner-card slot-empty" id="slot3_card">
+        <div class="partner-head">
+          <div>
+            <input type="text" id="slot3_name" placeholder="Open Partner Slot 3" style="max-width:260px;">
+            <div class="partner-role" style="margin-top:6px;">Unassigned</div>
+          </div>
+        </div>
+        <div class="grid2" style="margin-top:10px;">
+          <div class="field">
+            <div class="field-top"><span class="field-name">Equity</span><span class="field-val" id="v_slot3_equity">0%</span></div>
+            <input type="range" id="slot3_equity" min="0" max="40" step="1" value="0">
+          </div>
+          <div class="field">
+            <div class="field-top"><span class="field-name">Dist %</span><span class="field-val" id="v_slot3_dist">0%</span></div>
+            <input type="range" id="slot3_dist" min="0" max="40" step="1" value="0">
+          </div>
+        </div>
+      </div>
+
+      <div class="subtotal-row"><span>Core partners — equity subtotal</span><span class="val" id="t_core_equity">—</span></div>
+      <div class="subtotal-row"><span>Core partners — dist subtotal (take-home)</span><span class="val" id="t_core_dist">—</span></div>
+      <div class="subtotal-row"><span>Advisory equity total</span><span class="val" id="t_advisory_equity">—</span></div>
+      <div class="subtotal-row"><span>Unallocated equity (open pool)</span><span class="val" id="t_unalloc_equity">—</span></div>
+      <div class="subtotal-row"><span>Unallocated distribution (open pool)</span><span class="val" id="t_unalloc_dist">—</span></div>
+    </div>
+
+    <div class="card">
+      <h2>Revenue Waterfall</h2>
+      <div class="card-note">Driven by Engagement Tiers tab</div>
+      <div class="waterfall-row"><span>Gross Revenue</span><span id="w_gross">—</span></div>
+      <div class="waterfall-row"><span>− Field Architects</span><span class="neg" id="w_fa">—</span></div>
+      <div class="waterfall-row"><span>− Automation / Specialists</span><span class="neg" id="w_auto">—</span></div>
+      <div class="waterfall-row"><span>− PREP (pass-through)</span><span class="neg" id="w_prep">$0</span></div>
+      <div class="waterfall-row"><span>− GTM / Tech Stack</span><span class="neg" id="w_gtm">—</span></div>
+      <div class="waterfall-row total"><span>Net Revenue</span><span id="w_net">—</span></div>
+      <div class="waterfall-row"><span>− Corporate Reserve</span><span class="neg" id="w_reserve">—</span></div>
+      <div class="waterfall-row total"><span>Distributable Pool</span><span id="w_distpool">—</span></div>
+    </div>
+
+    <div class="card">
+      <h2>Distribution</h2>
+      <div class="card-note">Equity % set above · Dist % drives take-home share of the Distributable Pool</div>
+      <table>
+        <thead><tr><th>Partner / Role</th><th class="num">Equity</th><th class="num">Dist %</th><th class="num">Annual</th><th class="num">Per Engagement</th></tr></thead>
+        <tbody id="dist_table_body"></tbody>
+      </table>
+    </div>
+
+  </section>
+
+  <!-- ADVISORY TAB -->
+  <section class="tab-panel" id="tab-advisory">
+
+    <div class="card">
+      <h2>Barry Saltzman</h2>
+      <div class="partner-role">Saltzman EG · Chicago · Former $650M COO/CEO · PREP tool owner · 2,000+ ICP relationships</div>
+      <div class="partner-desc" style="margin-top:8px;">Cross-industry. Equity for referrals. PREP pass-through every engagement. Son Andrew = automation specialist (direct expense). Call Monday — confirm PREP pricing.</div>
+      <div class="field" style="margin-top:12px;max-width:340px;">
+        <div class="field-top"><span class="field-name">Equity %</span><span class="field-val" id="v_barry_equity">5.0%</span></div>
+        <input type="range" id="barry_equity" min="0" max="15" step="0.5" value="5">
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>James G. Taylor, MBA, PhD</h2>
+      <div class="partner-role">BORVO Healthcare · Tampa · MSO acquisitions · Former Dir. Equities $100M+ · VP BD $1B AUM</div>
+      <div class="partner-desc" style="margin-top:8px;">Healthcare MSO and practice acquisition referrals. $175K–$350K tier. Travis built 10 MSOs — Taylor opens those doors.</div>
+      <div class="field" style="margin-top:12px;max-width:340px;">
+        <div class="field-top"><span class="field-name">Equity %</span><span class="field-val" id="v_taylor_equity">3.0%</span></div>
+        <input type="range" id="taylor_equity" min="0" max="15" step="0.5" value="3">
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Mary E. Maloney, FACHE</h2>
+      <div class="partner-role">Revealing Genius · Tampa · Cornell faculty · ACHE Regent Advisory Council FL · Former CEO/CMO</div>
+      <div class="partner-desc" style="margin-top:8px;">Dual role: (1) physician/HC exec network referrals, (2) potential Alethia brand strategy. Consider separate structure for brand work vs referral equity.</div>
+      <div class="field" style="margin-top:12px;max-width:340px;">
+        <div class="field-top"><span class="field-name">Equity %</span><span class="field-val" id="v_maloney_equity">3.0%</span></div>
+        <input type="range" id="maloney_equity" min="0" max="15" step="0.5" value="3">
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Advisory Totals</h2>
+      <div class="subtotal-row"><span>Total advisory equity</span><span class="val" id="a_total">—</span></div>
+      <div class="subtotal-row"><span>Core + Advisory</span><span class="val" id="a_core_plus">—</span></div>
+      <div class="subtotal-row"><span>Unallocated</span><span class="val" id="a_unalloc">—</span></div>
+      <div class="card-note" style="margin-top:10px;">Advisory % set here flows directly into the Economics waterfall and distribution table.</div>
+    </div>
+
+    <div class="card">
+      <h2>What Each Advisor Earns — at current Distributable Pool</h2>
+      <table>
+        <thead><tr><th>Name</th><th>Type</th><th class="num">Equity</th><th class="num">At Current Dist.</th></tr></thead>
+        <tbody id="advisor_table_body"></tbody>
+      </table>
+    </div>
+
+  </section>
+
+  <!-- ENGAGEMENT TIERS TAB -->
+  <section class="tab-panel" id="tab-tiers">
+
+    <div class="card">
+      <h2>Signal DX — Diagnostic Only</h2>
+      <div class="grid2">
+        <div class="field">
+          <div class="field-top"><span class="field-name">DX Engagements / Year</span><span class="field-val" id="v_dx_count">3</span></div>
+          <div class="field-desc">Credits toward full engagement if they proceed.</div>
+          <input type="range" id="dx_count" min="0" max="30" step="1" value="3">
+        </div>
+        <div class="field">
+          <div class="field-top"><span class="field-name">DX Price</span><span class="field-val" id="v_dx_price">$15,000</span></div>
+          <input type="range" id="dx_price" min="10000" max="25000" step="500" value="15000">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Standard Liberation Sprint</h2>
+      <div class="grid2">
+        <div class="field">
+          <div class="field-top"><span class="field-name">Standard Engagements</span><span class="field-val" id="v_std_count">13</span></div>
+          <div class="field-desc">$3–7M companies. Travis + Joe + FAs from engagement 6.</div>
+          <input type="range" id="std_count" min="0" max="80" step="1" value="13">
+        </div>
+        <div class="field">
+          <div class="field-top"><span class="field-name">Standard Avg Price</span><span class="field-val" id="v_std_price">$125,000</span></div>
+          <input type="range" id="std_price" min="75000" max="200000" step="1000" value="125000">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Healthcare Tier</h2>
+      <div class="grid2">
+        <div class="field">
+          <div class="field-top"><span class="field-name">HC Engagements</span><span class="field-val" id="v_hc_count">4</span></div>
+          <div class="field-desc">Taylor / Maloney referrals. MSO, multi-site, clinical ops.</div>
+          <input type="range" id="hc_count" min="0" max="30" step="1" value="4">
+        </div>
+        <div class="field">
+          <div class="field-top"><span class="field-name">HC Avg Price</span><span class="field-val" id="v_hc_price">$225,000</span></div>
+          <input type="range" id="hc_price" min="150000" max="400000" step="1000" value="225000">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Enterprise / MSO Build</h2>
+      <div class="grid2">
+        <div class="field">
+          <div class="field-top"><span class="field-name">Enterprise Engagements</span><span class="field-val" id="v_ent_count">0</span></div>
+          <div class="field-desc">PE portfolio, $20M+ complexity, full MSO builds.</div>
+          <input type="range" id="ent_count" min="0" max="10" step="1" value="0">
+        </div>
+        <div class="field">
+          <div class="field-top"><span class="field-name">Enterprise Avg Price</span><span class="field-val" id="v_ent_price">$300,000</span></div>
+          <input type="range" id="ent_price" min="200000" max="500000" step="5000" value="300000">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Engagement Tier Breakdown</h2>
+      <div class="card-note">Feeds Economics waterfall directly</div>
+      <table>
+        <thead><tr><th>Tier</th><th class="num">Count</th><th class="num">Avg Value</th><th class="num">Tier Revenue</th><th class="num">% of Total</th></tr></thead>
+        <tbody id="tiers_table_body"></tbody>
+      </table>
+      <div class="subtotal-row"><span>Total engagements</span><span class="val" id="t_total_eng">—</span></div>
+      <div class="subtotal-row"><span>Blended avg value</span><span class="val" id="t_blended_avg">—</span></div>
+      <div class="subtotal-row"><span>HC premium over standard</span><span class="val" id="t_hc_premium">—</span></div>
+    </div>
+
+  </section>
+
+  <!-- ASCEND TAB -->
+  <section class="tab-panel" id="tab-ascend">
+
+    <div class="card">
+      <h2>Ascend Governance</h2>
+      <div class="field">
+        <div class="field-top"><span class="field-name">Retained Clients</span><span class="field-val" id="v_retained">5</span></div>
+        <div class="field-desc">Post-sprint clients on ongoing governance. Feeds header ARR.</div>
+        <input type="range" id="retained" min="0" max="60" step="1" value="5">
+      </div>
+      <div class="grid3">
+        <div class="field">
+          <div class="field-top"><span class="field-name">Monthly Fee / Client</span><span class="field-val" id="v_monthly_fee">$2,500</span></div>
+          <input type="range" id="monthly_fee" min="1000" max="5000" step="100" value="2500">
+        </div>
+        <div class="field">
+          <div class="field-top"><span class="field-name">Quarterly Session / Client</span><span class="field-val" id="v_quarterly_fee">$5,000</span></div>
+          <input type="range" id="quarterly_fee" min="2500" max="10000" step="250" value="5000">
+        </div>
+        <div class="field">
+          <div class="field-top"><span class="field-name">Annual Strategy Session</span><span class="field-val" id="v_annual_fee">$7,500</span></div>
+          <input type="range" id="annual_fee" min="5000" max="15000" step="500" value="7500">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Ascend ARR Summary</h2>
+      <div class="waterfall-row"><span>Monthly ARR</span><span id="asc_monthly">—</span></div>
+      <div class="waterfall-row"><span>Quarterly Revenue</span><span id="asc_quarterly">—</span></div>
+      <div class="waterfall-row"><span>Annual Sessions</span><span id="asc_annual">—</span></div>
+      <div class="waterfall-row total"><span>Total Ascend ARR</span><span id="asc_total">—</span></div>
+      <div class="waterfall-row"><span>Per Client / Year</span><span id="asc_per_client">—</span></div>
+      <div class="waterfall-row"><span>At 20 Clients</span><span id="asc_at20">—</span></div>
+    </div>
+
+    <div class="card">
+      <h2>Why Ascend changes the business model</h2>
+      <p class="narrative">Ten clients on Ascend generates <b id="n_at10">—</b> per year before closing a single new engagement. Twenty clients generates <b id="n_at20">—</b>. This is the floor that lets <span class="name">Travis</span> and <span class="name">Joe</span> be selective — only taking clients who are genuinely the right fit at the right price. It also means Alethia has real enterprise value, not just services revenue. Every client who finishes the Liberation Sprint is a potential Ascend client.</p>
+    </div>
+
+  </section>
+
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+
+const inputs = ['fa_cost','fa_count','auto_cost','auto_count','gtm_cost','prep_count','reserve_pct',
+  'travis_equity','travis_dist','joe_equity','joe_dist',
+  'slot1_equity','slot1_dist','slot2_equity','slot2_dist','slot3_equity','slot3_dist',
+  'barry_equity','taylor_equity','maloney_equity',
+  'dx_count','dx_price','std_count','std_price','hc_count','hc_price','ent_count','ent_price',
+  'retained','monthly_fee','quarterly_fee','annual_fee'];
+
+const dollarIds = new Set(['fa_cost','auto_cost','gtm_cost','dx_price','std_price','hc_price','ent_price','monthly_fee','quarterly_fee','annual_fee']);
+const pctIds = new Set(['reserve_pct','travis_equity','travis_dist','joe_equity','joe_dist','slot1_equity','slot1_dist','slot2_equity','slot2_dist','slot3_equity','slot3_dist']);
+const advisoryPctIds = new Set(['barry_equity','taylor_equity','maloney_equity']);
+
+function fmtMoney(n){
+  n = Math.round(n);
+  return (n<0?'-$':'$') + Math.abs(n).toLocaleString();
+}
+function fmtPct(n,decimals){
+  decimals = decimals===undefined?0:decimals;
+  return n.toFixed(decimals)+'%';
+}
+function val(id){ return parseFloat($(id).value); }
+
+function updateFieldDisplay(id){
+  const v = val(id);
+  const label = $('v_'+id);
+  if(!label) return;
+  if(dollarIds.has(id)) label.textContent = fmtMoney(v);
+  else if(advisoryPctIds.has(id)) label.textContent = fmtPct(v,1);
+  else if(pctIds.has(id)) label.textContent = fmtPct(v,0);
+  else label.textContent = v;
+}
+
+function recalc(){
+  inputs.forEach(updateFieldDisplay);
+
+  // Engagement tiers
+  const dxCount = val('dx_count'), dxPrice = val('dx_price');
+  const stdCount = val('std_count'), stdPrice = val('std_price');
+  const hcCount = val('hc_count'), hcPrice = val('hc_price');
+  const entCount = val('ent_count'), entPrice = val('ent_price');
+
+  const dxRev = dxCount*dxPrice;
+  const stdRev = stdCount*stdPrice;
+  const hcRev = hcCount*hcPrice;
+  const entRev = entCount*entPrice;
+
+  const totalEngagements = dxCount+stdCount+hcCount+entCount;
+  const totalTierRevenue = dxRev+stdRev+hcRev+entRev;
+  const blendedAvg = totalEngagements>0 ? totalTierRevenue/totalEngagements : 0;
+  const hcPremium = stdPrice>0 ? ((hcPrice-stdPrice)/stdPrice*100) : 0;
+
+  const tiersBody = $('tiers_table_body');
+  const tierRows = [
+    ['Signal DX', dxCount, dxPrice, dxRev],
+    ['Standard', stdCount, stdPrice, stdRev],
+    ['Healthcare', hcCount, hcPrice, hcRev],
+    ['Enterprise', entCount, entPrice, entRev],
+  ];
+  tiersBody.innerHTML = tierRows.map(r=>{
+    const pctOfTotal = totalTierRevenue>0 ? (r[3]/totalTierRevenue*100) : 0;
+    return `<tr><td>${r[0]}</td><td class="num">${r[1]}</td><td class="num">${fmtMoney(r[2])}</td><td class="num">${fmtMoney(r[3])}</td><td class="num">${fmtPct(pctOfTotal,1)}</td></tr>`;
+  }).join('');
+  $('t_total_eng').textContent = totalEngagements;
+  $('t_blended_avg').textContent = fmtMoney(blendedAvg);
+  $('t_hc_premium').textContent = fmtPct(hcPremium,1);
+
+  // Operating costs
+  const faTotal = val('fa_cost')*val('fa_count');
+  const autoTotal = val('auto_cost')*val('auto_count');
+  const gtmTotal = val('gtm_cost');
+  const grossRevenue = totalTierRevenue;
+  const netRevenue = grossRevenue - faTotal - autoTotal - gtmTotal; // PREP is pass-through, $0 impact
+  const reservePct = val('reserve_pct');
+  const corpReserve = netRevenue*reservePct/100;
+  const distributablePool = netRevenue - corpReserve;
+
+  $('w_gross').textContent = fmtMoney(grossRevenue);
+  $('w_fa').textContent = fmtMoney(faTotal);
+  $('w_auto').textContent = fmtMoney(autoTotal);
+  $('w_gtm').textContent = fmtMoney(gtmTotal);
+  $('w_net').textContent = fmtMoney(netRevenue);
+  $('w_reserve').textContent = fmtMoney(corpReserve);
+  $('w_distpool').textContent = fmtMoney(distributablePool);
+
+  // Ascend
+  const retained = val('retained');
+  const monthlyARR = val('monthly_fee')*retained*12;
+  const quarterlyRev = val('quarterly_fee')*retained*4;
+  const annualSessions = val('annual_fee')*retained;
+  const totalAscendARR = monthlyARR+quarterlyRev+annualSessions;
+  const perClientYear = retained>0 ? totalAscendARR/retained : 0;
+  const at20 = perClientYear*20;
+  const at10 = perClientYear*10;
+
+  $('asc_monthly').textContent = fmtMoney(monthlyARR);
+  $('asc_quarterly').textContent = fmtMoney(quarterlyRev);
+  $('asc_annual').textContent = fmtMoney(annualSessions);
+  $('asc_total').textContent = fmtMoney(totalAscendARR);
+  $('asc_per_client').textContent = retained>0 ? fmtMoney(perClientYear) : 'n/a';
+  $('asc_at20').textContent = fmtMoney(at20);
+  $('n_at10').textContent = fmtMoney(at10);
+  $('n_at20').textContent = fmtMoney(at20);
+
+  const totalAllIn = grossRevenue + totalAscendARR;
+
+  // Equity / distribution
+  const partners = [
+    {name:'Travis Roderick', role:'CEO · Chief Architect · IP Owner', equity:val('travis_equity'), dist:val('travis_dist')},
+    {name:'Joe Pung', role:'COO · Integrator · Client Execution', equity:val('joe_equity'), dist:val('joe_dist')},
+    {name: $('slot1_name').value.trim()||'Open Partner Slot 1', role:'Unassigned', equity:val('slot1_equity'), dist:val('slot1_dist')},
+    {name: $('slot2_name').value.trim()||'Open Partner Slot 2', role:'Unassigned', equity:val('slot2_equity'), dist:val('slot2_dist')},
+    {name: $('slot3_name').value.trim()||'Open Partner Slot 3', role:'Unassigned', equity:val('slot3_equity'), dist:val('slot3_dist')},
+  ];
+
+  const coreEquityTotal = partners.reduce((a,p)=>a+p.equity,0);
+  const coreDistTotal = partners.reduce((a,p)=>a+p.dist,0);
+  const advisoryEquityTotal = val('barry_equity')+val('taylor_equity')+val('maloney_equity');
+  const unallocEquity = 100 - coreEquityTotal - advisoryEquityTotal;
+  const unallocDist = 100 - coreDistTotal;
+
+  $('t_core_equity').textContent = fmtPct(coreEquityTotal,1);
+  $('t_core_dist').textContent = fmtPct(coreDistTotal,1);
+  $('t_advisory_equity').textContent = fmtPct(advisoryEquityTotal,1);
+  $('t_unalloc_equity').textContent = fmtPct(unallocEquity,1);
+  $('t_unalloc_dist').textContent = fmtPct(unallocDist,1);
+
+  const equityWarnEl = $('equity_warning');
+  if(coreEquityTotal+advisoryEquityTotal > 100){
+    equityWarnEl.textContent = 'Equity total exceeds 100% — adjust sliders';
+    equityWarnEl.className = 'card-note warn';
+  } else {
+    equityWarnEl.textContent = `Unallocated equity pool: ${fmtPct(unallocEquity,1)} — open following Nick McGuire's departure`;
+    equityWarnEl.className = 'card-note ok-note';
+  }
+
+  // Distribution table + avg core partner
+  const activePartners = partners.filter(p=>p.dist>0);
+  const avgCorePartner = activePartners.length>0
+    ? (distributablePool*(coreDistTotal/100))/activePartners.length
+    : 0;
+
+  const distBody = $('dist_table_body');
+  distBody.innerHTML = partners.map(p=>{
+    const annual = distributablePool*(p.dist/100);
+    const perEng = totalEngagements>0 ? annual/totalEngagements : 0;
+    return `<tr><td>${p.name}<br><span style="color:var(--ink-dim);font-size:11px;">${p.role}</span></td><td class="num">${fmtPct(p.equity,1)}</td><td class="num">${fmtPct(p.dist,1)}</td><td class="num">${fmtMoney(annual)}</td><td class="num">${fmtMoney(perEng)}</td></tr>`;
+  }).join('') + `<tr><td><b>Unallocated pool</b></td><td class="num">${fmtPct(Math.max(unallocEquity,0),1)}</td><td class="num">${fmtPct(Math.max(unallocDist,0),1)}</td><td class="num">${fmtMoney(distributablePool*(Math.max(unallocDist,0)/100))}</td><td class="num">—</td></tr>`;
+
+  // Advisory tab totals
+  $('a_total').textContent = fmtPct(advisoryEquityTotal,1);
+  $('a_core_plus').textContent = fmtPct(coreEquityTotal+advisoryEquityTotal,1);
+  $('a_unalloc').textContent = fmtPct(unallocEquity,1);
+
+  const advisors = [
+    {name:'Barry Saltzman', type:'Cross-Industry', equity:val('barry_equity')},
+    {name:'James G. Taylor', type:'Healthcare MSO', equity:val('taylor_equity')},
+    {name:'Mary E. Maloney', type:'Brand + HC', equity:val('maloney_equity')},
+  ];
+  $('advisor_table_body').innerHTML = advisors.map(a=>{
+    const earn = distributablePool*(a.equity/100);
+    return `<tr><td>${a.name}</td><td>${a.type}</td><td class="num">${fmtPct(a.equity,1)}</td><td class="num">${fmtMoney(earn)}</td></tr>`;
+  }).join('');
+
+  // Header summary
+  $('s_gross').textContent = fmtMoney(grossRevenue);
+  $('s_net').textContent = fmtMoney(netRevenue);
+  $('s_dist').textContent = fmtMoney(distributablePool);
+  $('s_avgpartner').textContent = activePartners.length>0 ? fmtMoney(avgCorePartner) : 'n/a';
+  $('s_ascend').textContent = fmtMoney(totalAscendARR);
+  $('s_allin').textContent = fmtMoney(totalAllIn);
+}
+
+inputs.forEach(id=>{
+  $(id).addEventListener('input', recalc);
+});
+['slot1_name','slot2_name','slot3_name'].forEach(id=>{
+  $(id).addEventListener('input', recalc);
+});
+
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    $('tab-'+btn.dataset.tab).classList.add('active');
+  });
+});
+
+recalc();
+</script>
+</body>
+</html>
