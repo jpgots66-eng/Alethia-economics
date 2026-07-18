@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alethia · Economics v5</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+--navy:#0F1B2E;--navy-2:#16243B;--navy-3:#1D2E48;
+--gold:#C9A84C;--gold-soft:rgba(201,168,76,0.16);
+--ink:#EDEBE4;--ink-dim:#9AA6B8;--line:rgba(201,168,76,0.18);
+--danger:#D96C5A;--ok:#6FBF8B;--amber:#E0B94E;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--navy);color:var(--ink);font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased;}
+.app{max-width:1240px;margin:0 auto;padding:28px 24px 80px;}
+header.top{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:22px;flex-wrap:wrap;gap:10px;}
+.eyebrow{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);opacity:.85;}
+h1{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:36px;margin:4px 0 0;color:var(--ink);letter-spacing:.01em;}
+.sub{font-size:12.5px;color:var(--ink-dim);margin-top:4px;font-family:'DM Mono',monospace;}
+.version-tag{font-family:'DM Mono',monospace;font-size:11px;color:var(--ink-dim);border:1px solid var(--line);padding:6px 10px;border-radius:20px;}
+.banner{background:var(--gold-soft);border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-size:12.5px;color:var(--ink);margin-bottom:18px;line-height:1.5;}
+.banner b{color:var(--gold);}
+.summary-bar{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:26px;}
+.stat{background:var(--navy-2);padding:14px 12px;min-width:0;}
+.stat .label{font-family:'DM Mono',monospace;font-size:9.5px;letter-spacing:.05em;color:var(--ink-dim);text-transform:uppercase;}
+.stat .value{font-family:'Cormorant Garamond',serif;font-size:21px;font-weight:600;color:var(--gold);margin-top:4px;line-height:1.1;}
+nav.tabs{display:flex;gap:4px;margin-bottom:22px;border-bottom:1px solid var(--line);flex-wrap:wrap;}
+nav.tabs button{background:none;border:none;color:var(--ink-dim);font-family:'DM Sans',sans-serif;font-size:13.5px;font-weight:500;padding:10px 14px;cursor:pointer;border-bottom:2px solid transparent;transition:.15s;white-space:nowrap;}
+nav.tabs button.active{color:var(--gold);border-bottom-color:var(--gold);}
+nav.tabs button:hover{color:var(--ink);}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+.card{background:var(--navy-2);border:1px solid var(--line);border-radius:10px;padding:20px 22px;margin-bottom:18px;}
+.card h2{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:600;margin:0 0 4px;color:var(--ink);}
+.card .card-note{font-size:12px;color:var(--ink-dim);margin-bottom:14px;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;}
+.grid4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px;}
+.field{margin-bottom:16px;}
+.field-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px;gap:8px;}
+.field-name{font-size:13px;font-weight:500;color:var(--ink);}
+.field-inline{display:flex;align-items:center;gap:8px;}
+.field-val{font-family:'DM Mono',monospace;font-size:13px;color:var(--gold);}
+.field-desc{font-size:11.5px;color:var(--ink-dim);margin-bottom:6px;}
+input[type=range]{width:100%;height:4px;border-radius:2px;background:var(--navy-3);-webkit-appearance:none;appearance:none;accent-color:var(--gold);}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--gold);cursor:pointer;border:2px solid var(--navy);}
+.range-minmax{display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:10px;color:var(--ink-dim);margin-top:2px;}
+.range-row{display:flex;align-items:center;gap:10px;}
+.range-row input[type=range]{flex:1;}
+input[type=number]{width:88px;background:var(--navy-3);border:1px solid var(--line);color:var(--ink);font-family:'DM Mono',monospace;font-size:12.5px;padding:5px 7px;border-radius:6px;}
+input[type=text],select{width:100%;background:var(--navy-3);border:1px solid var(--line);color:var(--ink);font-family:'DM Sans',sans-serif;font-size:13px;padding:7px 9px;border-radius:6px;}
+input[type=date]{background:var(--navy-3);border:1px solid var(--line);color:var(--ink);font-family:'DM Mono',monospace;font-size:12px;padding:6px 8px;border-radius:6px;}
+select{cursor:pointer;}
+textarea{width:100%;background:var(--navy-3);border:1px solid var(--line);color:var(--ink);font-family:'DM Sans',sans-serif;font-size:12.5px;padding:7px 9px;border-radius:6px;resize:vertical;min-height:44px;}
+.partner-card{border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin-bottom:12px;background:var(--navy-3);}
+.partner-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;}
+.partner-name{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:var(--ink);}
+.partner-role{font-size:11px;color:var(--gold);font-family:'DM Mono',monospace;}
+.partner-desc{font-size:11.5px;color:var(--ink-dim);margin-top:6px;line-height:1.5;}
+.partner-amount{font-family:'DM Mono',monospace;font-size:17px;color:var(--gold);}
+.subtotal-row{display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:12.5px;color:var(--ink-dim);padding:6px 0;border-top:1px solid var(--line);margin-top:8px;}
+.subtotal-row span.val{color:var(--ink);}
+.subtotal-row.total span.val{color:var(--gold);font-weight:600;font-size:14px;}
+.warn{color:var(--danger);}
+.ok-note{color:var(--ok);}
+table{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:10px;}
+th{text-align:left;font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-dim);padding:8px 10px;border-bottom:1px solid var(--line);}
+td{padding:9px 10px;border-bottom:1px solid rgba(201,168,76,0.08);color:var(--ink);}
+tr:last-child td{border-bottom:none;}
+td.num,th.num{text-align:right;font-family:'DM Mono',monospace;}
+.waterfall-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(201,168,76,0.08);font-size:13.5px;}
+.waterfall-row.total{font-weight:700;color:var(--gold);border-bottom:none;border-top:1px solid var(--line);padding-top:12px;margin-top:4px;}
+.waterfall-row .neg{color:var(--danger);}
+.alert{border-radius:8px;padding:10px 14px;font-size:12.5px;margin-bottom:8px;border:1px solid;line-height:1.5;}
+.alert.red{background:rgba(217,108,90,0.12);border-color:var(--danger);color:#F0B4A8;}
+.alert.amber{background:rgba(224,185,78,0.12);border-color:var(--amber);color:var(--amber);}
+.alert.green{background:rgba(111,191,139,0.12);border-color:var(--ok);color:var(--ok);}
+.alert.blue{background:rgba(154,166,184,0.12);border-color:var(--ink-dim);color:var(--ink-dim);}
+.pill{display:inline-block;font-family:'DM Mono',monospace;font-size:10px;padding:3px 9px;border-radius:20px;border:1px solid var(--line);color:var(--ink-dim);}
+.notice{background:rgba(201,168,76,0.08);border:1px dashed var(--line);border-radius:8px;padding:12px 14px;font-size:12px;color:var(--ink-dim);line-height:1.6;margin-bottom:16px;}
+.notice b{color:var(--gold);}
+.scenario-col{background:var(--navy-3);border:1px solid var(--line);border-radius:8px;padding:14px 16px;}
+.scenario-col h3{font-family:'Cormorant Garamond',serif;font-size:17px;margin:0 0 10px;color:var(--gold);}
+.narrative{font-size:13px;line-height:1.65;color:var(--ink-dim);}
+.narrative b{color:var(--gold);font-weight:600;}
+.narrative .name{color:var(--ink);font-weight:600;}
+.radio-row{display:flex;flex-direction:column;gap:6px;}
+.radio-row label{font-size:12.5px;color:var(--ink);display:flex;align-items:center;gap:8px;cursor:pointer;}
+hr.div{border:none;border-top:1px solid var(--line);margin:16px 0;}
+@media (max-width:900px){.summary-bar{grid-template-columns:repeat(3,1fr);}.grid2,.grid3,.grid4{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="app">
+
+<header class="top">
+<div>
+<div class="eyebrow">Alethia · Internal · Confidential</div>
+<h1>Economics Calculator v5</h1>
+<div class="sub">Cash economics ≠ equity ownership · three concepts, kept separate</div>
+</div>
+<div class="version-tag">Rev: V5 — cash/equity separation + Brandon module</div>
+</header>
+
+<div class="banner"><b>Core principle:</b> this model keeps operating/GTM costs, cash-distribution participation, and legal equity ownership as three separate concepts. Ownership % never automatically drives cash distributions, and no cash is distributed to an unissued equity pool.</div>
+
+<div class="summary-bar">
+<div class="stat"><div class="label">Gross Revenue</div><div class="value" id="s_gross">—</div></div>
+<div class="stat"><div class="label">GTM / Growth</div><div class="value" id="s_gtm">—</div></div>
+<div class="stat"><div class="label">Net Operating Cash</div><div class="value" id="s_net">—</div></div>
+<div class="stat"><div class="label">To Named People</div><div class="value" id="s_named">—</div></div>
+<div class="stat"><div class="label">Retained by Alethia</div><div class="value" id="s_retained">—</div></div>
+<div class="stat"><div class="label">Reconciliation</div><div class="value" id="s_recon">—</div></div>
+</div>
+
+<nav class="tabs">
+<button class="tab-btn active" data-tab="exec">Executive Summary</button>
+<button class="tab-btn" data-tab="engagements">Engagement Economics</button>
+<button class="tab-btn" data-tab="gtm">GTM &amp; Brandon</button>
+<button class="tab-btn" data-tab="cash">Cash Allocations</button>
+<button class="tab-btn" data-tab="equity">Ownership Planning</button>
+<button class="tab-btn" data-tab="scenarios">Scenario Comparison</button>
+</nav>
+
+<!-- EXECUTIVE SUMMARY -->
+<section class="tab-panel active" id="tab-exec">
+<div class="card">
+<h2>Executive Summary</h2>
+<div class="card-note">Gross Revenue → Direct Delivery Costs → PREP pass-through → GTM/Growth → Net Operating Cash Available for Allocation</div>
+<div class="waterfall-row"><span>Gross Revenue</span><span id="e_gross">—</span></div>
+<div class="waterfall-row"><span>− Direct Delivery Costs (Field Architect + Automation/Specialist)</span><span class="neg" id="e_direct">—</span></div>
+<div class="waterfall-row"><span>− PREP pass-through costs</span><span class="neg" id="e_prep">—</span></div>
+<div class="waterfall-row"><span>− GTM / Growth Costs</span><span class="neg" id="e_gtm">—</span></div>
+<div class="waterfall-row total"><span>Net Operating Cash Available for Allocation</span><span id="e_net">—</span></div>
+<hr class="div">
+<div class="waterfall-row"><span>GTM as % of Gross Revenue</span><span id="e_gtmpct">—</span></div>
+<div class="waterfall-row"><span>Cash allocated to named people</span><span id="e_named">—</span></div>
+<div class="waterfall-row"><span>Cash retained by Alethia</span><span id="e_retained">—</span></div>
+<div class="waterfall-row"><span>&nbsp;&nbsp;— Corporate reserve</span><span id="e_reserve">—</span></div>
+<div class="waterfall-row"><span>&nbsp;&nbsp;— Strategic / unallocated retained cash</span><span id="e_strategic">—</span></div>
+<div class="waterfall-row total"><span>Reconciliation (allocated − Net Operating Cash)</span><span id="e_recon">—</span></div>
+</div>
+<div class="card">
+<h2>Alerts &amp; Guardrails</h2>
+<div id="alerts_box"></div>
+</div>
+</section>
+
+<!-- ENGAGEMENT ECONOMICS -->
+<section class="tab-panel" id="tab-engagements">
+<div class="card">
+<h2>2026 Engagement Assumptions</h2>
+<div class="card-note">Count and price inputs are fully adjustable — sliders allow zero, numeric boxes let you type exact values.</div>
+<table>
+<thead><tr><th>Engagement</th><th class="num">Count</th><th class="num">Avg Price</th><th class="num">Revenue</th></tr></thead>
+<tbody id="eng_table_body"></tbody>
+</table>
+</div>
+
+<div class="card"><h2>Signal DX</h2><div class="grid2">
+<div class="field"><div class="field-top"><span class="field-name">Count</span><span class="field-inline"><input type="number" id="n_sdx_count" min="0" max="50" value="10"></span></div><input type="range" id="sdx_count" min="0" max="50" step="1" value="10"><div class="range-minmax"><span>0</span><span>50</span></div></div>
+<div class="field"><div class="field-top"><span class="field-name">Avg Price</span><span class="field-inline"><input type="number" id="n_sdx_price" min="0" max="50000" step="500" value="12000"></span></div><input type="range" id="sdx_price" min="0" max="50000" step="500" value="12000"><div class="range-minmax"><span>$0</span><span>$50K</span></div></div>
+</div></div>
+
+<div class="card"><h2>Standard Engagements</h2><div class="grid2">
+<div class="field"><div class="field-top"><span class="field-name">Count</span><span class="field-inline"><input type="number" id="n_std_count" min="0" max="60" value="10"></span></div><input type="range" id="std_count" min="0" max="60" step="1" value="10"><div class="range-minmax"><span>0</span><span>60</span></div></div>
+<div class="field"><div class="field-top"><span class="field-name">Avg Price</span><span class="field-inline"><input type="number" id="n_std_price" min="0" max="300000" step="1000" value="100000"></span></div><input type="range" id="std_price" min="0" max="300000" step="1000" value="100000"><div class="range-minmax"><span>$0</span><span>$300K</span></div></div>
+</div></div>
+
+<div class="card"><h2>Healthcare Engagement</h2><div class="grid2">
+<div class="field"><div class="field-top"><span class="field-name">Count</span><span class="field-inline"><input type="number" id="n_hc_count" min="0" max="20" value="1"></span></div><input type="range" id="hc_count" min="0" max="20" step="1" value="1"><div class="range-minmax"><span>0</span><span>20</span></div></div>
+<div class="field"><div class="field-top"><span class="field-name">Avg Price</span><span class="field-inline"><input type="number" id="n_hc_price" min="0" max="500000" step="1000" value="225000"></span></div><input type="range" id="hc_price" min="0" max="500000" step="1000" value="225000"><div class="range-minmax"><span>$0</span><span>$500K</span></div></div>
+</div></div>
+
+<div class="card"><h2>Enterprise Engagements</h2><div class="grid2">
+<div class="field"><div class="field-top"><span class="field-name">Count</span><span class="field-inline"><input type="number" id="n_ent_count" min="0" max="15" value="0"></span></div><input type="range" id="ent_count" min="0" max="15" step="1" value="0"><div class="range-minmax"><span>0</span><span>15</span></div></div>
+<div class="field"><div class="field-top"><span class="field-name">Avg Price</span><span class="field-inline"><input type="number" id="n_ent_price" min="0" max="750000" step="5000" value="300000"></span></div><input type="range" id="ent_price" min="0" max="750000" step="5000" value="300000"><div class="range-minmax"><span>$0</span><span>$750K</span></div></div>
+</div></div>
+
+<div class="card"><h2>Ascend Clients</h2><div class="grid2">
+<div class="field"><div class="field-top"><span class="field-name">Count</span><span class="field-inline"><input type="number" id="n_asc_count" min="0" max="60" value="0"></span></div><input type="range" id="asc_count" min="0" max="60" step="1" value="0"><div class="range-minmax"><span>0</span><span>60</span></div></div>
+<div class="field"><div class="field-top"><span class="field-name">Avg Annual Value</span><span class="field-inline"><input type="number" id="n_asc_price" min="0" max="60000" step="500" value="0"></span></div><input type="range" id="asc_price" min="0" max="60000" step="500" value="0"><div class="range-minmax"><span>$0</span><span>$60K</span></div></div>
+</div></div>
+
+<div class="card">
+<h2>Cash Collection</h2>
+<div class="field"><div class="field-top"><span class="field-name">Cash-Collection Percentage</span><span class="field-inline"><input type="number" id="n_cash_collect_pct" min="0" max="100" value="100"></span></div>
+<div class="field-desc">Share of contracted revenue actually collected as cash this period. Brandon's commission base uses cash collected, not contracted revenue.</div>
+<input type="range" id="cash_collect_pct" min="0" max="100" step="1" value="100"><div class="range-minmax"><span>0%</span><span>100%</span></div></div>
+</div>
+
+<div class="card">
+<h2>Direct Delivery Costs</h2>
+<div class="card-note">External Field Architect and automation/specialist costs. Default $0 — turn on by increasing the engagement count using each.</div>
+<div class="grid2">
+<div>
+<div class="field"><div class="field-top"><span class="field-name">Field Architect Cost / Engagement</span><span class="field-inline"><input type="number" id="n_fa_cost" min="0" max="25000" step="500" value="10000"></span></div><input type="range" id="fa_cost" min="0" max="25000" step="500" value="10000"><div class="range-minmax"><span>$0</span><span>$25K</span></div></div>
+<div class="field"><div class="field-top"><span class="field-name">Engagements Using Field Architect</span><span class="field-inline"><input type="number" id="n_fa_count" min="0" max="40" value="0"></span></div><input type="range" id="fa_count" min="0" max="40" step="1" value="0"><div class="range-minmax"><span>0</span><span>40</span></div></div>
+</div>
+<div>
+<div class="field"><div class="field-top"><span class="field-name">Automation/Specialist Cost / Engagement</span><span class="field-inline"><input type="number" id="n_auto_cost" min="0" max="50000" step="500" value="15000"></span></div><input type="range" id="auto_cost" min="0" max="50000" step="500" value="15000"><div class="range-minmax"><span>$0</span><span>$50K</span></div></div>
+<div class="field"><div class="field-top"><span class="field-name">Engagements Using Automation</span><span class="field-inline"><input type="number" id="n_auto_count" min="0" max="40" value="0"></span></div><input type="range" id="auto_count" min="0" max="40" step="1" value="0"><div class="range-minmax"><span>0</span><span>40</span></div></div>
+</div>
+</div>
+</div>
+
+<div class="card">
+<h2>PREP Pass-Through</h2>
+<div class="card-note">Barry's PREP tool. Billed to client at cost — $0 impact on Net Operating Cash until pricing is confirmed.</div>
+<div class="grid2">
+<div class="field"><div class="field-top"><span class="field-name">PREP Cost / Person</span><span class="field-inline"><input type="number" id="n_prep_cost" min="0" max="5000" step="50" value="0"></span></div><input type="range" id="prep_cost" min="0" max="5000" step="50" value="0"><div class="range-minmax"><span>$0</span><span>$5K</span></div></div>
+<div class="field"><div class="field-top"><span class="field-name">People Profiled / Engagement</span><span class="field-inline"><input type="number" id="n_prep_people" min="0" max="10" value="4"></span></div><input type="range" id="prep_people" min="0" max="10" step="1" value="4"><div class="range-minmax"><span>0</span><span>10</span></div></div>
+</div>
+</div>
+</section>
+
+<!-- GTM & BRANDON -->
+<section class="tab-panel" id="tab-gtm">
+
+<div class="card">
+<h2>GTM / Growth Budget</h2>
+<div class="card-note">Target range 12–15% of gross revenue. Default $175,000 (~13.0% of $1,345,000).</div>
+<div class="field"><div class="field-top"><span class="field-name">Consolidated GTM / Growth Budget</span><span class="field-inline"><input type="number" id="n_gtm_total" min="0" max="500000" step="1000" value="175000"></span></div><input type="range" id="gtm_total" min="0" max="500000" step="1000" value="175000"><div class="range-minmax"><span>$0</span><span>$500K</span></div></div>
+<div id="gtm_recon_note" class="card-note"></div>
+</div>
+
+<div class="card">
+<h2>GTM Components</h2>
+<div class="card-note">Should sum to the consolidated GTM budget above. Brandon's acquisition and service compensation are computed from the Brandon module below, not entered directly.</div>
+<div class="grid2">
+<div class="field"><div class="field-top"><span class="field-name">Brandon Monthly Retainer</span><span class="field-inline"><input type="number" id="n_brandon_retainer" min="0" max="10000" step="100" value="2000"></span></div><input type="range" id="brandon_retainer" min="0" max="10000" step="100" value="2000"><div class="range-minmax"><span>$0/mo</span><span>$10K/mo</span></div></div>
+<div class="field"><div class="field-top"><span class="field-name">Brandon Acquisition Comp (annual)</span><span class="field-val" id="v_brandon_acq_gtm">—</span></div><div class="field-desc">Computed below from attributed engagements.</div></div>
+<div class="field"><div class="field-top"><span class="field-name">Brandon Client BizDev/Service Comp (annual)</span><span class="field-val" id="v_brandon_svc_gtm">—</span></div><div class="field-desc">Computed below from attributed engagements.</div></div>
+<div class="field"><div class="field-top"><span class="field-name">TellrLabs / AI-Powered GTM</span><span class="field-inline"><input type="number" id="n_tellr" min="0" max="150000" step="1000" value="45000"></span></div><input type="range" id="tellr" min="0" max="150000" step="1000" value="45000"><div class="range-minmax"><span>$0</span><span>$150K</span></div></div>
+<div class="field"><div class="field-top"><span class="field-name">Content &amp; LinkedIn Support</span><span class="field-inline"><input type="number" id="n_content" min="0" max="150000" step="1000" value="35000"></span></div><input type="range" id="content" min="0" max="150000" step="1000" value="35000"><div class="range-minmax"><span>$0</span><span>$150K</span></div></div>
+<div class="field"><div class="field-top"><span class="field-name">Workshops &amp; Podcasts</span><span class="field-inline"><input type="number" id="n_workshops" min="0" max="150000" step="1000" value="25000"></span></div><input type="range" id="workshops" min="0" max="150000" step="1000" value="25000"><div class="range-minmax"><span>$0</span><span>$150K</span></div></div>
+<div class="field"><div class="field-top"><span class="field-name">VA / SDR Support</span><span class="field-inline"><input type="number" id="n_va_sdr" min="0" max="150000" step="1000" value="30000"></span></div><input type="range" id="va_sdr" min="0" max="150000" step="1000" value="30000"><div class="range-minmax"><span>$0</span><span>$150K</span></div></div>
+<div class="field"><div class="field-top"><span class="field-name">CRM &amp; Software</span><span class="field-inline"><input type="number" id="n_crm" min="0" max="75000" step="500" value="16000"></span></div><input type="range" id="crm" min="0" max="75000" step="500" value="16000"><div class="range-minmax"><span>$0</span><span>$75K</span></div></div>
+<div class="field"><div class="field-top"><span class="field-name">Other GTM Expenses</span><span class="field-inline"><input type="number" id="n_other_gtm" min="0" max="150000" step="1000" value="0"></span></div><input type="range" id="other_gtm" min="0" max="150000" step="1000" value="0"><div class="range-minmax"><span>$0</span><span>$150K</span></div></div>
+</div>
+<div class="subtotal-row total"><span>Components total</span><span class="val" id="t_gtm_components">—</span></div>
+</div>
+
+<div class="notice"><b>Brandon Saltzman — external GTM &amp; fractional business-development provider.</b> Not an owner, advisor, junior partner, or permanent participant in profits. Commission applies to cash collected, not contracted revenue, and excludes taxes, refunds, travel, reimbursed expenses, pass-through costs, and third-party costs billed through Alethia. Origination must be documented in the CRM. No origination percentage on opportunities already in the network of Joe, Travis, Barry, Byron, or another advisor/ambassador unless written shared credit is agreed. Shared-source opportunities split one 5% origination pool — never duplicate payments.</div>
+
+<div class="card">
+<h2>Brandon Attribution by Engagement Category</h2>
+<div class="card-note">Default: no involvement anywhere. Assign a status per category only where it reflects a real, documented origination or service role.</div>
+<table>
+<thead><tr><th>Category</th><th>Status</th><th class="num">Service % (if applicable)</th><th class="num">Attributed Revenue</th><th class="num">Brandon Comp</th></tr></thead>
+<tbody id="brandon_table_body"></tbody>
+</table>
+<div class="subtotal-row"><span>Total Brandon acquisition + service compensation</span><span class="val" id="t_brandon_total">—</span></div>
+<div class="subtotal-row total"><span>Total Brandon compensation incl. retainer</span><span class="val" id="t_brandon_allin">—</span></div>
+<div id="brandon_alerts"></div>
+</div>
+
+<div class="card">
+<h2>Termination Tail</h2>
+<div class="field"><div class="field-top"><span class="field-name">Tail Length (months)</span><span class="field-inline"><input type="number" id="n_tail_months" min="6" max="12" value="6"></span></div>
+<div class="field-desc">Applies only to a written list of qualified opportunities introduced before termination. No general 24-month tail.</div>
+<input type="range" id="tail_months" min="6" max="12" step="1" value="6"><div class="range-minmax"><span>6 mo</span><span>12 mo</span></div></div>
+</div>
+
+<div class="card">
+<h2>90-Day Review Dashboard</h2>
+<div class="card-note">Fill in from the CRM each review period — not auto-calculated.</div>
+<div class="grid4">
+<div class="field"><div class="field-top"><span class="field-name">Cash Collected</span></div><input type="number" id="d_cash_collected" placeholder="$"></div>
+<div class="field"><div class="field-top"><span class="field-name">Qualified Pipeline</span></div><input type="number" id="d_pipeline" placeholder="$"></div>
+<div class="field"><div class="field-top"><span class="field-name">Attributed Opportunities</span></div><input type="number" id="d_attributed" placeholder="#"></div>
+<div class="field"><div class="field-top"><span class="field-name">Close Rate</span></div><input type="number" id="d_close_rate" placeholder="%"></div>
+<div class="field"><div class="field-top"><span class="field-name">Customer Acquisition Cost</span></div><input type="number" id="d_cac" placeholder="$"></div>
+<div class="field"><div class="field-top"><span class="field-name">Brandon Compensation</span></div><input type="number" id="d_brandon_paid" placeholder="$"></div>
+<div class="field"><div class="field-top"><span class="field-name">Total GTM Cost</span></div><input type="number" id="d_gtm_actual" placeholder="$"></div>
+<div class="field"><div class="field-top"><span class="field-name">Actual Workload</span></div><input type="text" id="d_workload" placeholder="hrs/wk or notes"></div>
+</div>
+<div class="waterfall-row total"><span>GTM Cost as % of Gross Revenue (actual)</span><span id="d_gtm_pct_actual">—</span></div>
+</div>
+
+</section>
+
+<!-- CASH ALLOCATIONS -->
+<section class="tab-panel" id="tab-cash">
+<div class="notice"><b>Cash-distribution participation is not equity ownership.</b> Percentages below govern how Net Operating Cash is allocated this period. They do not, by themselves, grant membership interests, voting rights, or capital-account rights. See the Ownership Planning tab for legal equity.</div>
+
+<div class="card">
+<h2>Cash Allocation of Net Operating Cash</h2>
+<div class="card-note">All percentages apply directly to Net Operating Cash Available for Allocation — as parallel allocations, not sequential deductions.</div>
+<table>
+<thead><tr><th>Recipient / Bucket</th><th class="num">% of Net Operating Cash</th><th class="num">Amount</th></tr></thead>
+<tbody id="cash_table_body"></tbody>
+</table>
+<div class="subtotal-row"><span>Total allocated to named people</span><span class="val" id="t_named_total">—</span></div>
+<div class="subtotal-row"><span>Total retained by Alethia (reserve + strategic)</span><span class="val" id="t_retained_total">—</span></div>
+<div class="subtotal-row total"><span>Total allocated</span><span class="val" id="t_alloc_total">—</span></div>
+<div class="subtotal-row"><span>Unassigned cash allocation</span><span class="val" id="t_unassigned">—</span></div>
+<div id="cash_warning"></div>
+</div>
+
+<div class="grid2">
+<div class="card">
+<h2>Founders</h2>
+<div class="field"><div class="field-top"><span class="field-name">Travis Roderick</span><span class="field-inline"><input type="number" id="n_travis_pct" min="0" max="100" step="0.5" value="25"></span></div><input type="range" id="travis_pct" min="0" max="100" step="0.5" value="25"></div>
+<div class="field"><div class="field-top"><span class="field-name">Joe Pung</span><span class="field-inline"><input type="number" id="n_joe_pct" min="0" max="100" step="0.5" value="20"></span></div><input type="range" id="joe_pct" min="0" max="100" step="0.5" value="20"></div>
+</div>
+<div class="card">
+<h2>Junior Partners</h2>
+<div class="field"><div class="field-top"><span class="field-name">Craig — Systems &amp; AI Automation</span><span class="field-inline"><input type="number" id="n_craig_pct" min="0" max="100" step="0.5" value="10"></span></div>
+<div class="field-desc">Signal DX and related systems, AI automation, scalable internal infrastructure, productization of Alethia's IP. Broad ongoing participation — not a per-deal commission.</div>
+<input type="range" id="craig_pct" min="0" max="100" step="0.5" value="10"></div>
+<div class="field"><div class="field-top"><span class="field-name">Byron — Marketing, LinkedIn, Relationships &amp; GTM Development</span><span class="field-inline"><input type="number" id="n_byron_pct" min="0" max="100" step="0.5" value="10"></span></div>
+<div class="field-desc">LinkedIn/relationship-driven marketing, brought Brandon into the Alethia opportunity, partner-level initiative identifying and recruiting GTM resources — contributes beyond assigned task execution. Broad ongoing participation — not a per-deal commission.</div>
+<input type="range" id="byron_pct" min="0" max="100" step="0.5" value="10"></div>
+</div>
+</div>
+
+<div class="card">
+<h2>Advisors</h2>
+<div class="grid3">
+<div class="field"><div class="field-top"><span class="field-name">Barry Saltzman</span><span class="field-inline"><input type="number" id="n_barry_pct" min="0" max="100" step="0.5" value="10"></span></div><input type="range" id="barry_pct" min="0" max="100" step="0.5" value="10"></div>
+<div class="field"><div class="field-top"><span class="field-name">James G. Taylor</span><span class="field-inline"><input type="number" id="n_james_pct" min="0" max="100" step="0.5" value="2.5"></span></div><input type="range" id="james_pct" min="0" max="100" step="0.5" value="2.5"></div>
+<div class="field"><div class="field-top"><span class="field-name">Mary / Ty / Open Advisor Slot</span><span class="field-inline"><input type="number" id="n_open_pct" min="0" max="100" step="0.5" value="2.5"></span></div><input type="range" id="open_pct" min="0" max="100" step="0.5" value="2.5"></div>
+</div>
+<hr class="div">
+<h2>Barry Scenario Compare</h2>
+<div class="card-note">Barry's cash allocation is a planning assumption, not a fixed term. Compare framings — selecting one sets his % above.</div>
+<div class="radio-row">
+<label><input type="radio" name="barry_scenario" value="10" checked> 10% routine cash allocation</label>
+<label><input type="radio" name="barry_scenario" value="5"> 5% routine cash allocation</label>
+<label><input type="radio" name="barry_scenario" value="0"> No routine cash distribution — retains legal equity rights only</label>
+<label><input type="radio" name="barry_scenario" value="deal"> Deal-specific referral compensation instead of a routine %</label>
+</div>
+</div>
+
+<div class="card">
+<h2>Alethia Corporate Buckets</h2>
+<div class="grid2">
+<div class="field"><div class="field-top"><span class="field-name">Corporate Reserve</span><span class="field-inline"><input type="number" id="n_reserve_pct" min="0" max="100" step="0.5" value="15"></span></div><div class="field-desc">Ops, tech, legal, future hires.</div><input type="range" id="reserve_pct" min="0" max="100" step="0.5" value="15"></div>
+<div class="field"><div class="field-top"><span class="field-name">Strategic / Unallocated Retained Cash</span><span class="field-inline"><input type="number" id="n_strategic_pct" min="0" max="100" step="0.5" value="5"></span></div><div class="field-desc">Parallel allocation from the same Net Operating Cash base — not deducted after the reserve.</div><input type="range" id="strategic_pct" min="0" max="100" step="0.5" value="5"></div>
+</div>
+</div>
+</section>
+
+<!-- OWNERSHIP PLANNING -->
+<section class="tab-panel" id="tab-equity">
+<div class="card">
+<h2>Equity Ownership Planning — Separate From Cash Distributions</h2>
+<div class="notice">Cash-distribution participation does not itself grant membership interests, equity, voting rights, capital-account rights, or permanent ownership. Legal ownership is governed by executed agreements and Alethia's operating agreement. This section does not drive the cash-distribution waterfall.</div>
+<table>
+<thead><tr><th>Member</th><th class="num">Target %</th><th class="num">Legally Granted %</th><th class="num">Vested %</th><th class="num">Cash-Dist. Participation</th></tr></thead>
+<tbody id="equity_table_body"></tbody>
+</table>
+<div class="subtotal-row"><span>Total target ownership</span><span class="val" id="t_equity_target">—</span></div>
+<div class="subtotal-row total"><span>Unissued equity pool (auto-calculated remainder)</span><span class="val" id="t_equity_pool">—</span></div>
+<div id="equity_warning"></div>
+</div>
+
+<div id="equity_detail_cards"></div>
+
+<div class="card">
+<h2>Barry — Equity Notes</h2>
+<div class="narrative">Planning assumption per advisory discussion: <b>5% immediately vested</b> membership interest, with an <b>additional 5%</b> upon achievement of specified conditions. No guaranteed salary or cash compensation solely because of the advisory relationship. Any referral or ambassador economics apply only if separately documented.</div>
+</div>
+</section>
+
+<!-- SCENARIOS -->
+<section class="tab-panel" id="tab-scenarios">
+<div class="card">
+<h2>Scenario Comparison</h2>
+<div class="card-note">Each scenario scales the live engagement counts on the Engagement Economics tab by the multiplier below. Prices, GTM budget, and allocation percentages stay constant across scenarios unless changed here.</div>
+<div class="grid3">
+<div class="scenario-col">
+<h3>Conservative</h3>
+<div class="field"><div class="field-top"><span class="field-name">Engagement Count Multiplier</span><span class="field-inline"><input type="number" id="n_mult_cons" min="0" max="300" value="70"></span></div><input type="range" id="mult_cons" min="0" max="300" step="5" value="70"><div class="range-minmax"><span>0%</span><span>300%</span></div></div>
+<div class="subtotal-row"><span>Gross Revenue</span><span class="val" id="sc_cons_gross">—</span></div>
+<div class="subtotal-row"><span>Net Operating Cash</span><span class="val" id="sc_cons_net">—</span></div>
+<div class="subtotal-row"><span>To Named People</span><span class="val" id="sc_cons_named">—</span></div>
+<div class="subtotal-row total"><span>Retained by Alethia</span><span class="val" id="sc_cons_retained">—</span></div>
+</div>
+<div class="scenario-col">
+<h3>Expected / Default</h3>
+<div class="card-note" style="margin-bottom:0;">Mirrors live inputs on the other tabs (100%).</div>
+<div class="subtotal-row"><span>Gross Revenue</span><span class="val" id="sc_exp_gross">—</span></div>
+<div class="subtotal-row"><span>Net Operating Cash</span><span class="val" id="sc_exp_net">—</span></div>
+<div class="subtotal-row"><span>To Named People</span><span class="val" id="sc_exp_named">—</span></div>
+<div class="subtotal-row total"><span>Retained by Alethia</span><span class="val" id="sc_exp_retained">—</span></div>
+</div>
+<div class="scenario-col">
+<h3>Upside</h3>
+<div class="field"><div class="field-top"><span class="field-name">Engagement Count Multiplier</span><span class="field-inline"><input type="number" id="n_mult_up" min="0" max="300" value="140"></span></div><input type="range" id="mult_up" min="0" max="300" step="5" value="140"><div class="range-minmax"><span>0%</span><span>300%</span></div></div>
+<div class="subtotal-row"><span>Gross Revenue</span><span class="val" id="sc_up_gross">—</span></div>
+<div class="subtotal-row"><span>Net Operating Cash</span><span class="val" id="sc_up_net">—</span></div>
+<div class="subtotal-row"><span>To Named People</span><span class="val" id="sc_up_named">—</span></div>
+<div class="subtotal-row total"><span>Retained by Alethia</span><span class="val" id="sc_up_retained">—</span></div>
+</div>
+</div>
+</div>
+</section>
+
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+function fmtMoney(n){ n=Math.round(n); return (n<0?'-$':'$')+Math.abs(n).toLocaleString(); }
+function fmtPct(n,d){ d=d===undefined?1:d; return (isFinite(n)?n:0).toFixed(d)+'%'; }
+
+// link every range+number pair so they mirror each other
+const linkedPairs = [
+['sdx_count','n_sdx_count'],['sdx_price','n_sdx_price'],
+['std_count','n_std_count'],['std_price','n_std_price'],
+['hc_count','n_hc_count'],['hc_price','n_hc_price'],
+['ent_count','n_ent_count'],['ent_price','n_ent_price'],
+['asc_count','n_asc_count'],['asc_price','n_asc_price'],
+['cash_collect_pct','n_cash_collect_pct'],
+['fa_cost','n_fa_cost'],['fa_count','n_fa_count'],
+['auto_cost','n_auto_cost'],['auto_count','n_auto_count'],
+['prep_cost','n_prep_cost'],['prep_people','n_prep_people'],
+['gtm_total','n_gtm_total'],
+['brandon_retainer','n_brandon_retainer'],
+['tellr','n_tellr'],['content','n_content'],['workshops','n_workshops'],
+['va_sdr','n_va_sdr'],['crm','n_crm'],['other_gtm','n_other_gtm'],
+['tail_months','n_tail_months'],
+['travis_pct','n_travis_pct'],['joe_pct','n_joe_pct'],
+['craig_pct','n_craig_pct'],['byron_pct','n_byron_pct'],
+['barry_pct','n_barry_pct'],['james_pct','n_james_pct'],['open_pct','n_open_pct'],
+['reserve_pct','n_reserve_pct'],['strategic_pct','n_strategic_pct'],
+['mult_cons','n_mult_cons'],['mult_up','n_mult_up'],
+];
+linkedPairs.forEach(([rangeId,numId])=>{
+const r=$(rangeId), n=$(numId);
+if(!r||!n) return;
+r.addEventListener('input',()=>{ n.value=r.value; recalc(); });
+n.addEventListener('input',()=>{ r.value=n.value; recalc(); });
+});
+
+function v(id){ const el=$(id); return el?parseFloat(el.value)||0:0; }
+
+// Brandon status options per category
+const BRANDON_STATUSES = {
+none:{label:'No Brandon involvement',pct:0,editable:false},
+sourced:{label:'Sourced only',pct:5,editable:false},
+service:{label:'Material client BizDev/service only',pct:5,editable:true},
+both:{label:'Sourced and materially serviced',pct:10,editable:false},
+shared:{label:'Shared origination (pool share)',pct:2.5,editable:true},
+};
+const brandonCategories = [
+{key:'sdx',label:'Signal DX',countId:'sdx_count',priceId:'sdx_price'},
+{key:'std',label:'Standard',countId:'std_count',priceId:'std_price'},
+{key:'hc',label:'Healthcare',countId:'hc_count',priceId:'hc_price'},
+{key:'ent',label:'Enterprise',countId:'ent_count',priceId:'ent_price'},
+{key:'asc',label:'Ascend',countId:'asc_count',priceId:'asc_price'},
+];
+const brandonState = {sdx:{status:'none',svc:5},std:{status:'none',svc:5},hc:{status:'none',svc:5},ent:{status:'none',svc:5},asc:{status:'none',svc:5}};
+
+function buildBrandonTable(){
+const body = $('brandon_table_body');
+body.innerHTML = brandonCategories.map(c=>{
+const opts = Object.entries(BRANDON_STATUSES).map(([k,o])=>`<option value="${k}" ${brandonState[c.key].status===k?'selected':''}>${o.label} (${o.pct}%${o.editable?', adj.':''})</option>`).join('');
+return `<tr>
+<td>${c.label}</td>
+<td><select data-cat="${c.key}" class="brandon-status">${opts}</select></td>
+<td class="num"><input type="number" min="0" max="10" step="0.5" style="width:70px" data-cat="${c.key}" class="brandon-svc" value="${brandonState[c.key].svc}" ${BRANDON_STATUSES[brandonState[c.key].status].editable?'':'disabled'}></td>
+<td class="num" id="brandon_rev_${c.key}">—</td>
+<td class="num" id="brandon_comp_${c.key}">—</td>
+</tr>`;
+}).join('');
+body.querySelectorAll('.brandon-status').forEach(sel=>{
+sel.addEventListener('change',e=>{ brandonState[e.target.dataset.cat].status = e.target.value; buildBrandonTable(); recalc(); });
+});
+body.querySelectorAll('.brandon-svc').forEach(inp=>{
+inp.addEventListener('input',e=>{ brandonState[e.target.dataset.cat].svc = parseFloat(e.target.value)||0; recalc(); });
+});
+}
+buildBrandonTable();
+
+// Equity people model
+const equityPeople = [
+{key:'travis',name:'Travis Roderick',target:25,legal:25,vested:25,cashId:'travis_pct'},
+{key:'joe',name:'Joe Pung',target:20,legal:20,vested:20,cashId:'joe_pct'},
+{key:'barry',name:'Barry Saltzman',target:10,legal:5,vested:5,cashId:'barry_pct'},
+{key:'james',name:'James G. Taylor',target:2.5,legal:2.5,vested:2.5,cashId:'james_pct'},
+{key:'open',name:'Mary / Ty / Open Advisor Slot',target:2.5,legal:0,vested:0,cashId:'open_pct'},
+{key:'craig',name:'Craig',target:10,legal:0,vested:0,cashId:'craig_pct'},
+{key:'byron',name:'Byron',target:10,legal:0,vested:0,cashId:'byron_pct'},
+];
+
+function buildEquityTable(){
+const body = $('equity_table_body');
+body.innerHTML = equityPeople.map(p=>`<tr>
+<td>${p.name}</td>
+<td class="num"><input type="number" min="0" max="100" step="0.5" style="width:70px" data-p="${p.key}" data-f="target" value="${p.target}"></td>
+<td class="num"><input type="number" min="0" max="100" step="0.5" style="width:70px" data-p="${p.key}" data-f="legal" value="${p.legal}"></td>
+<td class="num"><input type="number" min="0" max="100" step="0.5" style="width:70px" data-p="${p.key}" data-f="vested" value="${p.vested}"></td>
+<td class="num" id="eq_cash_${p.key}">—</td>
+</tr>`).join('');
+body.querySelectorAll('input').forEach(inp=>{
+inp.addEventListener('input',e=>{
+const p = equityPeople.find(x=>x.key===e.target.dataset.p);
+p[e.target.dataset.f] = parseFloat(e.target.value)||0;
+recalc();
+});
+});
+const detail = $('equity_detail_cards');
+detail.innerHTML = equityPeople.map(p=>`
+<div class="card">
+<h2>${p.name} — Vesting Detail</h2>
+<div class="grid4">
+<div class="field"><div class="field-top"><span class="field-name">Vesting Start</span></div><input type="date" id="vs_${p.key}"></div>
+<div class="field"><div class="field-top"><span class="field-name">Vesting Period (yrs)</span></div><input type="number" id="vp_${p.key}" min="0" max="10" value="4" style="width:100%"></div>
+<div class="field"><div class="field-top"><span class="field-name">Cliff (months)</span></div><input type="number" id="cl_${p.key}" min="0" max="24" value="12" style="width:100%"></div>
+<div class="field"><div class="field-top"><span class="field-name">Notes / Milestones</span></div><textarea id="nt_${p.key}" placeholder="e.g. Craig/Byron: not automatically vested from cash %"></textarea></div>
+</div>
+</div>`).join('');
+}
+buildEquityTable();
+
+document.querySelectorAll('input[name="barry_scenario"]').forEach(r=>{
+r.addEventListener('change',e=>{
+const val = e.target.value;
+if(val==='deal'){ /* leave % as-is, just a note flag */ }
+else { $('barry_pct').value=val; $('n_barry_pct').value=val; }
+recalc();
+});
+});
+
+function recalc(){
+// Engagement revenue
+const cats = [
+{key:'sdx',label:'Signal DX',count:v('sdx_count'),price:v('sdx_price')},
+{key:'std',label:'Standard engagements',count:v('std_count'),price:v('std_price')},
+{key:'hc',label:'Healthcare engagement',count:v('hc_count'),price:v('hc_price')},
+{key:'ent',label:'Enterprise engagements',count:v('ent_count'),price:v('ent_price')},
+{key:'asc',label:'Ascend clients',count:v('asc_count'),price:v('asc_price')},
+];
+cats.forEach(c=>c.revenue=c.count*c.price);
+const grossRevenue = cats.reduce((a,c)=>a+c.revenue,0);
+const totalCount = cats.reduce((a,c)=>a+c.count,0);
+
+const engBody = $('eng_table_body');
+engBody.innerHTML = cats.map(c=>`<tr><td>${c.label}</td><td class="num">${c.count}</td><td class="num">${fmtMoney(c.price)}</td><td class="num">${fmtMoney(c.revenue)}</td></tr>`).join('')
++ `<tr><td><b>Total gross revenue</b></td><td class="num">${totalCount}</td><td class="num">—</td><td class="num"><b>${fmtMoney(grossRevenue)}</b></td></tr>`;
+
+const cashCollectPct = v('cash_collect_pct')/100;
+const cashCollected = grossRevenue*cashCollectPct;
+
+// Direct delivery costs
+const faTotal = v('fa_cost')*v('fa_count');
+const autoTotal = v('auto_cost')*v('auto_count');
+const directDelivery = faTotal+autoTotal;
+const prepTotal = v('prep_cost')*v('prep_people')*totalCount; // pass-through, nets to $0 impact on P&L since billed at cost, shown for transparency
+// Per spec: PREP is pass-through — net effect on Net Operating Cash is $0 regardless of the sub-total shown.
+const prepImpact = 0;
+
+// Brandon calc
+let brandonAcqSvcTotal = 0;
+brandonCategories.forEach(c=>{
+const cat = cats.find(x=>x.key===c.key);
+const st = brandonState[c.key];
+const pctDef = BRANDON_STATUSES[st.status];
+const pct = pctDef.editable ? st.svc : pctDef.pct;
+const attributedRevenue = cat.revenue*cashCollectPct;
+const comp = attributedRevenue*pct/100;
+brandonAcqSvcTotal += comp;
+const revEl = $('brandon_rev_'+c.key); if(revEl) revEl.textContent = fmtMoney(attributedRevenue);
+const compEl = $('brandon_comp_'+c.key); if(compEl) compEl.textContent = fmtMoney(comp);
+});
+$('t_brandon_total').textContent = fmtMoney(brandonAcqSvcTotal);
+const brandonRetainerAnnual = v('brandon_retainer')*12;
+$('t_brandon_allin').textContent = fmtMoney(brandonAcqSvcTotal+brandonRetainerAnnual);
+$('v_brandon_acq_gtm').textContent = fmtMoney(brandonAcqSvcTotal*0.5);
+$('v_brandon_svc_gtm').textContent = fmtMoney(brandonAcqSvcTotal*0.5);
+
+// brandon alerts
+let brandonAlertsHtml = '';
+brandonCategories.forEach(c=>{
+const st = brandonState[c.key];
+const pctDef = BRANDON_STATUSES[st.status];
+const pct = pctDef.editable ? st.svc : pctDef.pct;
+if(pct>10){ brandonAlertsHtml += `<div class="alert red">Brandon exceeds 10% on ${c.label} (${pct}%).</div>`; }
+if(c.key==='hc' && st.status!=='none'){ brandonAlertsHtml += `<div class="alert red">Brandon has compensation assigned on the Healthcare engagement — default scenario excludes this.</div>`; }
+if(c.key==='asc' && st.status!=='none'){ brandonAlertsHtml += `<div class="alert amber">Ascend has automatic Brandon compensation assigned — spec default is none.</div>`; }
+});
+$('brandon_alerts').innerHTML = brandonAlertsHtml;
+
+// GTM total from components
+const gtmComponents = brandonRetainerAnnual + brandonAcqSvcTotal + v('tellr')+v('content')+v('workshops')+v('va_sdr')+v('crm')+v('other_gtm');
+$('t_gtm_components').textContent = fmtMoney(gtmComponents);
+const gtmTarget = v('gtm_total');
+const gtmDiff = gtmComponents - gtmTarget;
+$('gtm_recon_note').innerHTML = Math.abs(gtmDiff)<1 ?
+`<span class="ok-note">Components reconcile with the consolidated budget.</span>` :
+`<span class="warn">Components total ${fmtMoney(gtmComponents)} — off from the consolidated budget of ${fmtMoney(gtmTarget)} by ${fmtMoney(gtmDiff)}.</span>`;
+const gtmCost = gtmComponents; // actual cost used in waterfall is the built-up components total
+
+const netOperatingCash = grossRevenue - directDelivery - prepImpact - gtmCost;
+const gtmPct = grossRevenue>0 ? (gtmCost/grossRevenue*100) : 0;
+
+// 90-day dashboard actual GTM %
+const dGtm = parseFloat($('d_gtm_actual').value)||0;
+$('d_gtm_pct_actual').textContent = grossRevenue>0 ? fmtPct(dGtm/grossRevenue*100,1) : '—';
+
+// Cash allocation
+const allocations = [
+{key:'travis',label:'Travis Roderick',pct:v('travis_pct'),named:true},
+{key:'joe',label:'Joe Pung',pct:v('joe_pct'),named:true},
+{key:'barry',label:'Barry Saltzman',pct:v('barry_pct'),named:true},
+{key:'james',label:'James G. Taylor',pct:v('james_pct'),named:true},
+{key:'open',label:'Mary / Ty / Open Advisor Slot',pct:v('open_pct'),named:true},
+{key:'craig',label:'Craig — Junior Partner',pct:v('craig_pct'),named:true},
+{key:'byron',label:'Byron — Junior Partner',pct:v('byron_pct'),named:true},
+{key:'reserve',label:'Alethia Corporate Reserve',pct:v('reserve_pct'),named:false},
+{key:'strategic',label:'Alethia Strategic / Unallocated Retained Cash',pct:v('strategic_pct'),named:false},
+];
+const totalPct = allocations.reduce((a,x)=>a+x.pct,0);
+const namedTotal = allocations.filter(x=>x.named).reduce((a,x)=>a+netOperatingCash*x.pct/100,0);
+const retainedTotal = allocations.filter(x=>!x.named).reduce((a,x)=>a+netOperatingCash*x.pct/100,0);
+const allocTotal = namedTotal+retainedTotal;
+const unassignedPct = Math.max(0,100-totalPct);
+const unassignedAmt = netOperatingCash*unassignedPct/100;
+
+$('cash_table_body').innerHTML = allocations.map(x=>`<tr><td>${x.label}</td><td class="num">${fmtPct(x.pct,1)}</td><td class="num">${fmtMoney(netOperatingCash*x.pct/100)}</td></tr>`).join('')
++ (totalPct<100? `<tr><td><i>Unassigned cash allocation</i></td><td class="num">${fmtPct(unassignedPct,1)}</td><td class="num">${fmtMoney(unassignedAmt)}</td></tr>`:'');
+$('t_named_total').textContent = fmtMoney(namedTotal);
+$('t_retained_total').textContent = fmtMoney(retainedTotal);
+$('t_alloc_total').textContent = fmtMoney(allocTotal+unassignedAmt);
+$('t_unassigned').textContent = fmtMoney(unassignedAmt);
+
+let cashWarn = '';
+if(totalPct>100.01){ cashWarn = `<div class="alert red">Cash allocations total ${fmtPct(totalPct,1)} — exceeds 100%. Results are not valid until corrected.</div>`; }
+else if(totalPct<99.99){ cashWarn = `<div class="alert amber">Cash allocations total ${fmtPct(totalPct,1)} — remainder shown as Unassigned cash allocation.</div>`; }
+else { cashWarn = `<div class="alert green">Allocations reconcile to 100%. Unreconciled amount: $0.</div>`; }
+$('cash_warning').innerHTML = cashWarn;
+
+// Equity
+buildEquityTable_values: {
+equityPeople.forEach(p=>{
+const el = $('eq_cash_'+p.key); if(el) el.textContent = fmtPct(v(p.cashId),1);
+});
+}
+const equityTargetTotal = equityPeople.reduce((a,p)=>a+p.target,0);
+const equityPool = 100-equityTargetTotal;
+$('t_equity_target').textContent = fmtPct(equityTargetTotal,1);
+$('t_equity_pool').textContent = fmtPct(Math.max(equityPool,0),1);
+$('equity_warning').innerHTML = equityTargetTotal>100 ? `<div class="alert red">Target ownership totals ${fmtPct(equityTargetTotal,1)} — exceeds 100%.</div>` : '';
+
+// Alerts (executive summary)
+let alerts = [];
+if(gtmPct<10) alerts.push(['amber',`GTM is ${fmtPct(gtmPct,1)} of gross revenue — below the 10% floor.`]);
+else if(gtmPct>=12 && gtmPct<=15) alerts.push(['green',`GTM is ${fmtPct(gtmPct,1)} of gross revenue — within the 12–15% target range.`]);
+else if(gtmPct>15) alerts.push(['amber',`GTM is ${fmtPct(gtmPct,1)} of gross revenue — above the 15% ceiling.`]);
+else alerts.push(['blue',`GTM is ${fmtPct(gtmPct,1)} of gross revenue — between the floor and target range.`]);
+if(totalPct>100.01) alerts.push(['red',`Total cash allocations exceed 100% (${fmtPct(totalPct,1)}).`]);
+if(totalPct<99.99) alerts.push(['amber',`Total cash allocations are below 100% (${fmtPct(totalPct,1)}) — remainder is Unassigned.`]);
+if(equityTargetTotal>100) alerts.push(['red',`Total target ownership exceeds 100% (${fmtPct(equityTargetTotal,1)}).`]);
+if(netOperatingCash<0) alerts.push(['red',`Net Operating Cash is negative (${fmtMoney(netOperatingCash)}) after costs.`]);
+if((v('reserve_pct')+v('strategic_pct'))<15) alerts.push(['amber',`Retained company cash is ${fmtPct(v('reserve_pct')+v('strategic_pct'),1)} — below the 15% floor.`]);
+brandonCategories.forEach(c=>{
+const st = brandonState[c.key]; const pctDef = BRANDON_STATUSES[st.status];
+const pct = pctDef.editable?st.svc:pctDef.pct;
+if(pct>10) alerts.push(['red',`Brandon exceeds 10% on ${c.label}.`]);
+});
+if(brandonState.hc.status!=='none') alerts.push(['red','Brandon has compensation on the excluded Healthcare engagement.']);
+alerts.push(['blue','Reminder: cash-distribution participation is not equity ownership — see Ownership Planning.']);
+
+$('alerts_box').innerHTML = alerts.map(([lvl,msg])=>`<div class="alert ${lvl}">${msg}</div>`).join('');
+
+// Executive summary
+$('e_gross').textContent = fmtMoney(grossRevenue);
+$('e_direct').textContent = fmtMoney(directDelivery);
+$('e_prep').textContent = fmtMoney(prepImpact);
+$('e_gtm').textContent = fmtMoney(gtmCost);
+$('e_net').textContent = fmtMoney(netOperatingCash);
+$('e_gtmpct').textContent = fmtPct(gtmPct,1);
+$('e_named').textContent = fmtMoney(namedTotal);
+$('e_retained').textContent = fmtMoney(retainedTotal);
+$('e_reserve').textContent = fmtMoney(netOperatingCash*v('reserve_pct')/100);
+$('e_strategic').textContent = fmtMoney(netOperatingCash*v('strategic_pct')/100);
+const recon = (namedTotal+retainedTotal+unassignedAmt) - netOperatingCash;
+$('e_recon').textContent = fmtMoney(recon);
+$('s_recon').textContent = fmtMoney(recon);
+
+// header bar
+$('s_gross').textContent = fmtMoney(grossRevenue);
+$('s_gtm').textContent = fmtMoney(gtmCost);
+$('s_net').textContent = fmtMoney(netOperatingCash);
+$('s_named').textContent = fmtMoney(namedTotal);
+$('s_retained').textContent = fmtMoney(retainedTotal);
+
+// Scenarios
+function scenarioCalc(multPct){
+const m = multPct/100;
+const g = cats.reduce((a,c)=>a+c.count*m*c.price,0);
+const dd = faTotal*m + autoTotal*m;
+const net = g - dd - gtmCost; // hold GTM fixed as a budget commitment across scenarios
+const named = net*(namedTotal_pct());
+const retained = net*(retainedTotal_pct());
+return {g,net,named,retained};
+}
+function namedTotal_pct(){ return allocations.filter(x=>x.named).reduce((a,x)=>a+x.pct,0)/100; }
+function retainedTotal_pct(){ return allocations.filter(x=>!x.named).reduce((a,x)=>a+x.pct,0)/100; }
+
+const cons = scenarioCalc(v('mult_cons'));
+$('sc_cons_gross').textContent=fmtMoney(cons.g); $('sc_cons_net').textContent=fmtMoney(cons.net);
+$('sc_cons_named').textContent=fmtMoney(cons.named); $('sc_cons_retained').textContent=fmtMoney(cons.retained);
+
+$('sc_exp_gross').textContent=fmtMoney(grossRevenue); $('sc_exp_net').textContent=fmtMoney(netOperatingCash);
+$('sc_exp_named').textContent=fmtMoney(namedTotal); $('sc_exp_retained').textContent=fmtMoney(retainedTotal);
+
+const up = scenarioCalc(v('mult_up'));
+$('sc_up_gross').textContent=fmtMoney(up.g); $('sc_up_net').textContent=fmtMoney(up.net);
+$('sc_up_named').textContent=fmtMoney(up.named); $('sc_up_retained').textContent=fmtMoney(up.retained);
+}
+
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+btn.addEventListener('click', ()=>{
+document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+btn.classList.add('active');
+$('tab-'+btn.dataset.tab).classList.add('active');
+});
+});
+
+// wire 90-day dashboard inputs to recalc for the % line
+['d_gtm_actual'].forEach(id=>{ $(id).addEventListener('input', recalc); });
+
+recalc();
+</script>
+</body>
+</html>
