@@ -3,1001 +3,599 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Alethia · Economics v3</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>Signal DX Lite | Alethia Company Health Check</title>
 <style>
-:root {
-  --gold:#C9A84C;--gold-light:#e8c870;--gold-dim:#8a6e28;--gold-bg:rgba(201,168,76,0.07);
-  --bg:#0d0d0d;--bg2:#111108;--bg3:#181508;--bg4:#221e0a;
-  --border:rgba(201,168,76,0.16);--border-hi:rgba(201,168,76,0.36);
-  --text:#f0e8cc;--text-dim:#d4c090;--text-muted:#a89060;--text-faint:#605838;
-  --green:#4ecb97;--red:#e06060;--blue:#6aaddd;--purple:#a07acc;--coral:#d4856a;
-}
-*{box-sizing:border-box;margin:0;padding:0;}
-body{background:var(--bg);color:var(--text);font-family:'Source Sans 3',sans-serif;font-size:14px;line-height:1.5;min-height:100vh;}
-
-.header{background:var(--bg2);border-bottom:1px solid var(--border);padding:16px 32px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;}
-.h-left .eyebrow{font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:var(--text-faint);margin-bottom:3px;}
-.h-left h1{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:var(--gold-light);letter-spacing:.04em;}
-.h-left .sub{font-size:10px;color:var(--text-muted);margin-top:2px;}
-.kpis{display:flex;gap:7px;flex-wrap:wrap;}
-.kpi{background:var(--bg3);border:.5px solid var(--border);border-radius:5px;padding:7px 12px;text-align:center;min-width:100px;}
-.kpi-label{font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-faint);margin-bottom:2px;}
-.kpi-val{font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--gold-light);}
-.kpi-val.g{color:var(--green);}.kpi-val.b{color:var(--blue);}.kpi-val.p{color:var(--purple);}
-
-/* ENGAGEMENT DASHBOARD */
-.eng-dash{background:var(--bg2);border-bottom:.5px solid var(--border);padding:8px 32px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;}
-.eng-tile{background:var(--bg3);border:.5px solid var(--border);border-radius:4px;padding:6px 14px;display:flex;align-items:center;gap:10px;}
-.eng-tile-label{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-faint);}
-.eng-tile-val{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--gold-light);}
-.eng-tile-val.g{color:var(--green);}.eng-tile-val.b{color:var(--blue);}.eng-tile-val.p{color:var(--purple);}
-.eng-tile-val.coral{color:var(--coral);}
-.eng-dash-total{font-size:10px;color:var(--text-faint);padding:0 8px;border-left:.5px solid var(--border);margin-left:4px;}
-.eng-dash-total span{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--text-dim);margin-left:4px;}
-
-.tabs{display:flex;background:var(--bg2);border-bottom:.5px solid var(--border);padding:0 32px;}
-.tab{padding:9px 18px;font-size:12px;font-weight:600;color:var(--text-faint);cursor:pointer;border:none;background:transparent;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s;font-family:'Source Sans 3',sans-serif;}
-.tab:hover{color:var(--text-dim);}
-.tab.active{color:var(--gold-light);border-bottom-color:var(--gold);}
-
-.tab-pane{display:none;}
-.tab-pane.active{display:grid;grid-template-columns:290px 1fr;min-height:calc(100vh - 110px);}
-
-.sb{background:var(--bg2);border-right:.5px solid var(--border);padding:18px 16px;overflow-y:auto;}
-.sb-section{font-size:8px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-dim);font-weight:700;padding-bottom:5px;border-bottom:.5px solid var(--border);margin-bottom:12px;margin-top:20px;}
-.sb-section:first-child{margin-top:0;}
-
-.ctrl{margin-bottom:14px;}
-.ctrl-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px;}
-.ctrl-label{font-size:11px;font-weight:600;color:var(--text-dim);}
-.ctrl-val{font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--gold-light);}
-.ctrl-desc{font-size:9px;color:var(--text-faint);margin-bottom:5px;line-height:1.4;}
-input[type=range]{width:100%;-webkit-appearance:none;height:3px;border-radius:2px;background:var(--bg4);outline:none;cursor:pointer;}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--gold);border:1.5px solid var(--gold-light);cursor:pointer;}
-.range-ends{display:flex;justify-content:space-between;font-size:9px;color:var(--text-faint);margin-top:2px;}
-
-.pblock{background:var(--bg3);border:.5px solid var(--border);border-radius:5px;padding:10px 10px 8px;margin-bottom:8px;}
-.pb-name{font-size:11px;font-weight:700;color:var(--text-dim);}
-.pb-role{font-size:9px;color:var(--text-faint);margin-bottom:7px;}
-.pb-row{display:flex;align-items:center;gap:7px;margin-bottom:5px;}
-.pb-lbl{font-size:10px;color:var(--text-muted);width:55px;flex-shrink:0;}
-.pb-val{font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--gold-light);min-width:34px;text-align:right;}
-.pb-row input[type=range]{flex:1;}
-.pb-notes{width:100%;margin-top:5px;background:var(--bg4);border:.5px solid var(--border);border-radius:3px;color:var(--text-muted);font-family:'Source Sans 3',sans-serif;font-size:9px;padding:4px 7px;resize:none;height:36px;outline:none;}
-.pb-notes:focus{border-color:var(--gold-dim);}
-.pb-notes::placeholder{color:var(--text-faint);}
-
-.ablock{background:var(--bg3);border:.5px solid var(--border);border-radius:5px;padding:10px 10px 8px;margin-bottom:8px;}
-.ab-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:5px;}
-.ab-name{font-size:11px;font-weight:700;color:var(--text-dim);}
-.ab-badge{font-size:8px;letter-spacing:.1em;text-transform:uppercase;padding:2px 6px;border-radius:10px;font-weight:700;white-space:nowrap;}
-.badge-cross{background:rgba(106,173,221,.12);color:var(--blue);border:.5px solid rgba(106,173,221,.3);}
-.badge-health{background:rgba(160,122,204,.12);color:var(--purple);border:.5px solid rgba(160,122,204,.3);}
-.badge-brand{background:rgba(212,133,106,.12);color:var(--coral);border:.5px solid rgba(212,133,106,.3);}
-.ab-role{font-size:9px;color:var(--text-faint);margin-bottom:7px;}
-.ab-row{display:flex;align-items:center;gap:7px;margin-bottom:5px;}
-.ab-lbl{font-size:10px;color:var(--text-muted);width:55px;flex-shrink:0;}
-.ab-val{font-family:'Cormorant Garamond',serif;font-size:14px;min-width:34px;text-align:right;}
-.ab-row input[type=range]{flex:1;}
-.ab-notes{width:100%;margin-top:5px;background:var(--bg4);border:.5px solid var(--border);border-radius:3px;color:var(--text-muted);font-family:'Source Sans 3',sans-serif;font-size:9px;padding:4px 7px;resize:none;height:36px;outline:none;}
-.ab-notes:focus{border-color:var(--gold-dim);}
-.ab-notes::placeholder{color:var(--text-faint);}
-
-.toggle-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:.5px solid rgba(201,168,76,.07);}
-.tgl-info{flex:1;}
-.tgl-label{font-size:11px;color:var(--text-dim);font-weight:600;}
-.tgl-sub{font-size:9px;color:var(--text-faint);margin-top:1px;}
-.tgl-switch{position:relative;width:32px;height:17px;flex-shrink:0;}
-.tgl-switch input{opacity:0;width:0;height:0;}
-.tgl-track{position:absolute;top:0;left:0;right:0;bottom:0;background:var(--bg4);border:.5px solid var(--border);border-radius:9px;cursor:pointer;transition:background .2s;}
-.tgl-switch input:checked+.tgl-track{background:var(--gold-dim);border-color:var(--gold);}
-.tgl-track:after{content:'';position:absolute;top:2px;left:2px;width:11px;height:11px;background:var(--text-faint);border-radius:50%;transition:all .2s;}
-.tgl-switch input:checked+.tgl-track:after{left:17px;background:var(--gold-light);}
-.tgl-cost{font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--gold-light);min-width:48px;text-align:right;}
-
-.prep-input{width:100%;background:var(--bg4);border:.5px solid var(--gold-dim);border-radius:3px;color:var(--gold-light);font-family:'Cormorant Garamond',serif;font-size:15px;padding:4px 7px;outline:none;margin-top:5px;}
-.prep-input:focus{border-color:var(--gold);}
-.prep-note{font-size:9px;color:var(--text-faint);margin-top:3px;}
-
-.sum-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-top:.5px solid var(--border);margin-top:3px;}
-.sum-label{font-size:10px;color:var(--text-faint);}
-.sum-val{font-family:'Cormorant Garamond',serif;font-size:14px;font-weight:600;}
-.ok{color:var(--green);}.warn{color:var(--red);}
-
-.content{padding:18px 26px;overflow-y:auto;}
-
-.rcards{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:18px;}
-.rcard{background:var(--bg2);border:.5px solid var(--border);border-radius:5px;padding:10px 12px;}
-.rcard-label{font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-faint);margin-bottom:3px;}
-.rcard-val{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--gold-light);}
-.rcard-val.g{color:var(--green);}.rcard-val.b{color:var(--blue);}.rcard-val.p{color:var(--purple);}
-.rcard-sub{font-size:9px;color:var(--text-faint);margin-top:2px;}
-
-.wf-head{font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:8px;}
-.wf-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:.5px solid rgba(201,168,76,.05);}
-.wf-row:last-child{border-bottom:none;}
-.wf-lbl{font-size:10px;color:var(--text-muted);width:175px;flex-shrink:0;}
-.wf-lbl.bold{color:var(--text-dim);font-weight:700;}
-.wf-bar-wrap{flex:1;height:4px;background:var(--bg4);border-radius:2px;overflow:hidden;}
-.wf-bar{height:100%;border-radius:2px;transition:width .3s;}
-.wf-val{font-family:'Cormorant Garamond',serif;font-size:12px;width:75px;text-align:right;}
-.wf-val.r{color:var(--red);}.wf-val.g{color:var(--green);}.wf-val.gold{color:var(--gold-light);}
-.wf-sep{border-top:.5px solid var(--border-hi);margin:3px 0;}
-
-.dist-table{width:100%;border-collapse:collapse;margin-bottom:16px;}
-.dist-table th{font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-faint);font-weight:700;padding:5px 8px;border-bottom:.5px solid var(--border);text-align:left;}
-.dist-table td{padding:8px 8px;border-bottom:.5px solid rgba(201,168,76,.05);font-size:11px;vertical-align:middle;}
-.dist-table tr:hover td{background:var(--gold-bg);}
-.dist-table tr.total-row td{border-top:.5px solid var(--border-hi);background:var(--bg3);font-weight:700;}
-.dist-table tr.section-row td{background:rgba(0,0,0,.2);color:var(--text-faint);font-size:8px;letter-spacing:.14em;text-transform:uppercase;padding:3px 8px;}
-.d-name{font-weight:700;color:var(--text-dim);}
-.d-role{font-size:9px;color:var(--text-faint);display:block;margin-top:1px;font-weight:400;}
-.d-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;vertical-align:middle;}
-.d-pct{font-size:10px;color:var(--text-muted);}
-.d-amt{font-family:'Cormorant Garamond',serif;font-size:14px;text-align:right;color:var(--text);}
-.d-amt.gold{color:var(--gold-light);}.d-amt.muted{color:var(--text-muted);font-size:12px;}
-.d-per{font-size:9px;color:var(--text-faint);display:block;text-align:right;margin-top:1px;}
-
-.tier-table{width:100%;border-collapse:collapse;margin-bottom:16px;}
-.tier-table th{font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-faint);font-weight:700;padding:5px 8px;border-bottom:.5px solid var(--border);text-align:left;}
-.tier-table td{padding:8px 8px;border-bottom:.5px solid rgba(201,168,76,.05);font-size:11px;}
-.tier-table tr.ht td{background:rgba(160,122,204,.04);}
-.tier-val{font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--gold-light);}
-.tier-tag{font-size:8px;letter-spacing:.08em;text-transform:uppercase;padding:2px 6px;border-radius:10px;display:inline-block;}
-.t-dx{background:rgba(201,168,76,.08);color:var(--gold);border:.5px solid rgba(201,168,76,.2);}
-.t-std{background:rgba(106,173,221,.08);color:var(--blue);border:.5px solid rgba(106,173,221,.2);}
-.t-ht{background:rgba(160,122,204,.08);color:var(--purple);border:.5px solid rgba(160,122,204,.2);}
-.t-ent{background:rgba(212,133,106,.08);color:var(--coral);border:.5px solid rgba(212,133,106,.2);}
-
-.asc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px;}
-.asc-card{background:var(--bg2);border:.5px solid var(--border);border-radius:5px;padding:10px 12px;}
-.asc-lbl{font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-faint);margin-bottom:3px;}
-.asc-val{font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--green);}
-.asc-sub{font-size:9px;color:var(--text-faint);margin-top:2px;}
-
-.adv-proj-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;}
-.adv-proj-card{background:var(--bg3);border:.5px solid var(--border);border-radius:4px;padding:10px 12px;}
-.apc-name{font-size:11px;font-weight:700;color:var(--text-dim);margin-bottom:1px;}
-.apc-pct{font-size:9px;color:var(--text-faint);margin-bottom:7px;}
-.apc-row{display:flex;justify-content:space-between;align-items:baseline;padding:3px 0;border-bottom:.5px solid rgba(201,168,76,.05);}
-.apc-row:last-child{border-bottom:none;}
-.apc-lbl{font-size:9px;color:var(--text-faint);}
-.apc-val{font-family:'Cormorant Garamond',serif;font-size:13px;color:var(--green);}
-
-.info-box{background:var(--bg2);border:.5px solid var(--border);border-radius:5px;padding:14px 16px;font-size:11px;color:var(--text-muted);line-height:1.8;margin-bottom:16px;}
-.alert{background:rgba(224,96,96,.08);border:.5px solid rgba(224,96,96,.3);border-radius:4px;padding:6px 10px;font-size:10px;color:var(--red);margin-bottom:8px;display:none;}
-.alert.show{display:block;}
+  :root {
+    --navy: #1F3864;
+    --navy-dark: #14264A;
+    --accent: #C0782E;
+    --confirmed: #C0392B;
+    --partial: #B7950B;
+    --clean: #1E8449;
+    --bg: #F7F6F3;
+    --card: #FFFFFF;
+    --border: #DDD8CF;
+    --text: #2B2A28;
+    --text-muted: #6B6862;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .wrap {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 32px 20px 80px;
+    min-height: 100vh;
+  }
+  .brand {
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--navy);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  h1 {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--navy);
+    margin: 0 0 12px;
+  }
+  h2 {
+    font-size: 19px;
+    font-weight: 600;
+    color: var(--navy);
+    margin: 0 0 16px;
+  }
+  p { margin: 0 0 14px; color: var(--text); }
+  .muted { color: var(--text-muted); font-size: 14px; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 28px 24px;
+    margin-top: 20px;
+  }
+  .progress-track {
+    height: 5px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.3s ease;
+  }
+  .options { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
+  .opt-btn {
+    text-align: left;
+    padding: 14px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    background: #fff;
+    font-size: 15px;
+    color: var(--text);
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .opt-btn:hover { border-color: var(--accent); background: #FDF8F2; }
+  .opt-btn.selected { border-color: var(--navy); background: #EAEFF7; font-weight: 600; }
+  .nav-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 28px;
+  }
+  button.primary {
+    background: var(--navy);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 13px 26px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  button.primary:hover { background: var(--navy-dark); }
+  button.primary:disabled { background: #B5BAC4; cursor: not-allowed; }
+  button.ghost {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 14px;
+    cursor: pointer;
+    padding: 10px;
+  }
+  button.ghost:hover { color: var(--text); }
+  .start-btn {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 15px 30px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  .start-btn:hover { background: #A6631F; }
+  .q-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  .section-score-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+  .section-name { flex: 0 0 170px; font-size: 14px; font-weight: 600; }
+  .bar-track {
+    flex: 1;
+    height: 10px;
+    background: var(--border);
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  .bar-fill { height: 100%; border-radius: 5px; }
+  .score-num { flex: 0 0 42px; text-align: right; font-size: 14px; font-weight: 700; }
+  .overall-box {
+    text-align: center;
+    padding: 20px;
+    background: var(--navy);
+    color: #fff;
+    border-radius: 10px;
+    margin-bottom: 24px;
+  }
+  .overall-num { font-size: 44px; font-weight: 700; line-height: 1; }
+  .overall-label { font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.85; margin-top: 6px; }
+  .finding {
+    border-left: 4px solid var(--border);
+    padding: 10px 0 10px 14px;
+    margin-bottom: 12px;
+  }
+  .finding.confirmed { border-color: var(--confirmed); }
+  .finding.partial { border-color: var(--partial); }
+  .finding-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-bottom: 6px;
+  }
+  .finding.confirmed .finding-tag { background: #FBEAE8; color: var(--confirmed); }
+  .finding.partial .finding-tag { background: #FBF4DE; color: var(--partial); }
+  .finding-name { font-weight: 700; font-size: 15px; margin-bottom: 3px; }
+  .finding-text { font-size: 14px; color: var(--text-muted); }
+  .cta-box {
+    background: #FDF8F2;
+    border: 1.5px solid var(--accent);
+    border-radius: 10px;
+    padding: 24px;
+    text-align: center;
+    margin-top: 28px;
+  }
+  .cta-box h2 { margin-bottom: 8px; }
+  a.cta-btn {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 8px;
+    padding: 14px 28px;
+    font-weight: 700;
+    font-size: 15px;
+    margin-top: 14px;
+  }
+  a.cta-btn:hover { background: #A6631F; }
+  .clean-note {
+    font-size: 14px;
+    color: var(--clean);
+    background: #EAF5EC;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 12px;
+  }
+  input[type="text"], input[type="email"] {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 15px;
+    margin-bottom: 12px;
+    font-family: inherit;
+  }
+  label.field-label { font-size: 13px; font-weight: 600; color: var(--navy); display: block; margin-bottom: 4px; }
 </style>
 </head>
 <body>
-
-<div class="header">
-  <div class="h-left">
-    <div class="eyebrow">Alethia · Internal · Confidential</div>
-    <h1>Economics Calculator v3</h1>
-    <div class="sub">Single model · all tabs connected · one source of truth</div>
-  </div>
-  <div class="kpis">
-    <div class="kpi"><div class="kpi-label">Gross Revenue</div><div class="kpi-val" id="hb-gross">—</div></div>
-    <div class="kpi"><div class="kpi-label">Net (after costs)</div><div class="kpi-val g" id="hb-net">—</div></div>
-    <div class="kpi"><div class="kpi-label">Distributable</div><div class="kpi-val b" id="hb-dist">—</div></div>
-    <div class="kpi"><div class="kpi-label">Avg / Core Partner</div><div class="kpi-val" id="hb-each">—</div></div>
-    <div class="kpi"><div class="kpi-label">Ascend ARR</div><div class="kpi-val p" id="hb-asc">—</div></div>
-    <div class="kpi"><div class="kpi-label">Total All-In</div><div class="kpi-val g" id="hb-total">—</div></div>
-  </div>
-</div>
-
-<div class="tabs">
-  <button class="tab active" onclick="switchTab('economics',this)">Economics</button>
-  <button class="tab" onclick="switchTab('advisory',this)">Advisory Board</button>
-  <button class="tab" onclick="switchTab('tiers',this)">Engagement Tiers</button>
-  <button class="tab" onclick="switchTab('ascend',this)">Ascend</button>
-</div>
-
-<!-- ENGAGEMENT DASHBOARD -->
-<div class="eng-dash" id="eng-dash">
-  <div class="eng-tile">
-    <div><div class="eng-tile-label">Signal DX</div><div class="eng-tile-val" id="ed-dx">—</div></div>
-  </div>
-  <div class="eng-tile">
-    <div><div class="eng-tile-label">Standard</div><div class="eng-tile-val b" id="ed-std">—</div></div>
-  </div>
-  <div class="eng-tile">
-    <div><div class="eng-tile-label">Healthcare</div><div class="eng-tile-val p" id="ed-ht">—</div></div>
-  </div>
-  <div class="eng-tile">
-    <div><div class="eng-tile-label">Enterprise</div><div class="eng-tile-val coral" id="ed-ent">—</div></div>
-  </div>
-  <div class="eng-tile">
-    <div><div class="eng-tile-label">Ascend Retained</div><div class="eng-tile-val g" id="ed-asc">—</div></div>
-  </div>
-  <div class="eng-dash-total">Total Engagements<span id="ed-total">—</span></div>
-  <div class="eng-dash-total">Blended Avg<span id="ed-blend">—</span></div>
-</div>
-
-<!-- ══ TAB 1: ECONOMICS ══ -->
-<div id="tab-economics" class="tab-pane active">
-  <div class="sb">
-    <div class="sb-section">Operating Costs</div>
-    <div class="ctrl">
-      <div class="ctrl-top"><span class="ctrl-label">Field Architect / Engagement</span><span class="ctrl-val" id="cv-fa">$10K</span></div>
-      <div class="ctrl-desc">Byron + future FAs. Engagement 6 onwards.</div>
-      <input type="range" min="0" max="25" step="1" value="10" oninput="S.fa=+this.value;render()">
-      <div class="range-ends"><span>$0</span><span>$25K</span></div>
-    </div>
-    <div class="ctrl">
-      <div class="ctrl-top"><span class="ctrl-label">FA Engagements / Year</span><span class="ctrl-val" id="cv-faeng">12</span></div>
-      <div class="ctrl-desc">How many engagements use a Field Architect this year.</div>
-      <input type="range" min="0" max="100" step="1" value="12" oninput="S.faeng=+this.value;render()">
-      <div class="range-ends"><span>0</span><span>100</span></div>
-    </div>
-    <div class="ctrl">
-      <div class="ctrl-top"><span class="ctrl-label">Automation / Specialist</span><span class="ctrl-val" id="cv-auto">$15K</span></div>
-      <div class="ctrl-desc">Andrew Saltzman + specialists. Per engagement with bots.</div>
-      <input type="range" min="0" max="50" step="5" value="15" oninput="S.auto=+this.value;render()">
-      <div class="range-ends"><span>$0</span><span>$50K</span></div>
-    </div>
-    <div class="ctrl">
-      <div class="ctrl-top"><span class="ctrl-label">Engagements with Automation</span><span class="ctrl-val" id="cv-autoeng">8</span></div>
-      <input type="range" min="0" max="80" step="1" value="8" oninput="S.autoeng=+this.value;render()">
-      <div class="range-ends"><span>0</span><span>80</span></div>
-    </div>
-    <div class="ctrl">
-      <div class="ctrl-top"><span class="ctrl-label">GTM / Tech Stack Annual</span><span class="ctrl-val" id="cv-gtm">$0</span></div>
-      <div class="ctrl-desc">Nick owns GTM. Model paid tools or future SDR costs here.</div>
-      <input type="range" min="0" max="300" step="10" value="0" oninput="S.gtm=+this.value;render()">
-      <div class="range-ends"><span>$0</span><span>$300K</span></div>
-    </div>
-
-    <div class="sb-section">PREP — Mandatory</div>
-    <div class="toggle-row">
-      <div class="tgl-info">
-        <div class="tgl-label">PREP Behavioral Profiling</div>
-        <div class="tgl-sub">Barry tool · non-negotiable · every engagement</div>
-      </div>
-      <label class="tgl-switch">
-        <input type="checkbox" id="prep-toggle" checked onchange="S.prepOn=this.checked?1:0;render()">
-        <div class="tgl-track"></div>
-      </label>
-      <span class="tgl-cost" id="cv-prep-cost">TBD</span>
-    </div>
-    <input type="number" class="prep-input" placeholder="PREP cost per person ($) — enter Monday" oninput="S.prepPrice=+this.value;render()" min="0" max="5000">
-    <div class="ctrl" style="margin-top:7px;">
-      <div class="ctrl-top"><span class="ctrl-label">People profiled / engagement</span><span class="ctrl-val" id="cv-prepcount">4</span></div>
-      <input type="range" min="1" max="10" step="1" value="4" oninput="S.prepCount=+this.value;render()">
-      <div class="range-ends"><span>1</span><span>10</span></div>
-    </div>
-    <div class="prep-note">Pass-through: billed to client at cost. Enter price after Monday Barry call.</div>
-
-    <div class="sb-section">Corporate Reserve</div>
-    <div class="ctrl">
-      <div class="ctrl-top"><span class="ctrl-label">Reserve %</span><span class="ctrl-val" id="cv-res">10%</span></div>
-      <div class="ctrl-desc">Off net revenue. Ops, tech, legal, future hires.</div>
-      <input type="range" min="5" max="25" step="1" value="15" oninput="S.res=+this.value;render()">
-      <div class="range-ends"><span>5%</span><span>25%</span></div>
-    </div>
-
-    <div class="sb-section">Core 3 — Equity % (ownership)</div>
-    <div id="alert-pct" class="alert">Equity total exceeds 100% — adjust sliders</div>
-    <div id="alert-dist" class="alert">Distribution % must total 100% — adjust sliders</div>
-
-    <div class="pblock">
-      <div class="pb-name">Travis Roderick</div>
-      <div class="pb-role">CEO · Chief Architect · IP Owner</div>
-      <div class="pb-row">
-        <span class="pb-lbl">Equity</span>
-        <input type="range" min="15" max="60" step="1" value="30" oninput="S.travis=+this.value;render()">
-        <span class="pb-val" id="cv-travis">34%</span>
-      </div>
-      <div class="pb-row">
-        <span class="pb-lbl" style="color:var(--green)">Dist %</span>
-        <input type="range" min="0" max="60" step="1" value="30" oninput="S.travisDist=+this.value;render()" style="accent-color:var(--green)">
-        <span class="pb-val" id="cv-travis-dist" style="color:var(--green)">34%</span>
-      </div>
-      <textarea class="pb-notes">Chief Architect. All five first engagements. IP owner of AOS.</textarea>
-    </div>
-    <div class="pblock">
-      <div class="pb-name">Joe Pung</div>
-      <div class="pb-role">COO · Integrator · Client Execution</div>
-      <div class="pb-row">
-        <span class="pb-lbl">Equity</span>
-        <input type="range" min="15" max="50" step="1" value="25" oninput="S.joe=+this.value;render()">
-        <span class="pb-val" id="cv-joe">28%</span>
-      </div>
-      <div class="pb-row">
-        <span class="pb-lbl" style="color:var(--green)">Dist %</span>
-        <input type="range" min="0" max="50" step="1" value="25" oninput="S.joeDist=+this.value;render()" style="accent-color:var(--green)">
-        <span class="pb-val" id="cv-joe-dist" style="color:var(--green)">28%</span>
-      </div>
-      <textarea class="pb-notes">Integrator. All five first engagements alongside Travis.</textarea>
-    </div>
-    <div class="pblock">
-      <div class="pb-name">Nick McGuire</div>
-      <div class="pb-role">GTM · Brand · Tech Stack</div>
-      <div class="pb-row">
-        <span class="pb-lbl">Equity</span>
-        <input type="range" min="10" max="40" step="1" value="25" oninput="S.nick=+this.value;render()">
-        <span class="pb-val" id="cv-nick">23%</span>
-      </div>
-      <div class="pb-row">
-        <span class="pb-lbl" style="color:var(--green)">Dist %</span>
-        <input type="range" min="0" max="40" step="1" value="25" oninput="S.nickDist=+this.value;render()" style="accent-color:var(--green)">
-        <span class="pb-val" id="cv-nick-dist" style="color:var(--green)">23%</span>
-      </div>
-      <textarea class="pb-notes">Full GTM authority. Tech stack owner. Lead engine.</textarea>
-    </div>
-
-    <div class="sum-row">
-      <span class="sum-label">Equity subtotal (ownership)</span>
-      <span class="sum-val" id="core-sum">85%</span>
-    </div>
-    <div class="sum-row" style="border-top:none;padding-top:0;">
-      <span class="sum-label" style="color:var(--green)">Dist subtotal (take-home)</span>
-      <span class="sum-val" id="core-dist-sum">85%</span>
-    </div>
-    <div class="sum-row" style="border-top:none;padding-top:0;">
-      <span class="sum-label">Advisory equity total</span>
-      <span class="sum-val" id="adv-sum-eco">11%</span>
-    </div>
-    <div class="sum-row" style="border-top:none;padding-top:0;">
-      <span class="sum-label">Unallocated equity</span>
-      <span class="sum-val" id="unalloc-pct">4%</span>
-    </div>
-  </div>
-
-  <div class="content">
-    <div class="rcards">
-      <div class="rcard"><div class="rcard-label">Gross Revenue</div><div class="rcard-val" id="r-gross">—</div><div class="rcard-sub" id="r-gross-sub">—</div></div>
-      <div class="rcard"><div class="rcard-label">Net After Costs</div><div class="rcard-val g" id="r-net">—</div><div class="rcard-sub" id="r-net-sub">—</div></div>
-      <div class="rcard"><div class="rcard-label">Distributable Pool</div><div class="rcard-val b" id="r-dist">—</div><div class="rcard-sub" id="r-dist-sub">—</div></div>
-      <div class="rcard"><div class="rcard-label">Total All-In Revenue</div><div class="rcard-val p" id="r-total">—</div><div class="rcard-sub">gross + Ascend ARR</div></div>
-    </div>
-
-    <div class="wf-head" style="margin-bottom:8px;">Revenue Waterfall — driven by Engagement Tiers tab</div>
-    <div style="margin-bottom:18px;">
-      <div class="wf-row"><span class="wf-lbl bold">Gross Revenue</span><div class="wf-bar-wrap"><div class="wf-bar" id="wb-gross" style="background:var(--gold);width:100%"></div></div><span class="wf-val gold" id="wv-gross">—</span></div>
-      <div class="wf-row"><span class="wf-lbl">− Field Architects</span><div class="wf-bar-wrap"><div class="wf-bar" id="wb-fa" style="background:var(--red)"></div></div><span class="wf-val r" id="wv-fa">—</span></div>
-      <div class="wf-row"><span class="wf-lbl">− Automation / Specialists</span><div class="wf-bar-wrap"><div class="wf-bar" id="wb-auto" style="background:var(--red)"></div></div><span class="wf-val r" id="wv-auto">—</span></div>
-      <div class="wf-row"><span class="wf-lbl">− PREP (pass-through)</span><div class="wf-bar-wrap"><div class="wf-bar" id="wb-prep" style="background:var(--red)"></div></div><span class="wf-val r" id="wv-prep">—</span></div>
-      <div class="wf-row"><span class="wf-lbl">− GTM / Tech Stack</span><div class="wf-bar-wrap"><div class="wf-bar" id="wb-gtm" style="background:var(--red)"></div></div><span class="wf-val r" id="wv-gtm">—</span></div>
-      <div class="wf-sep"></div>
-      <div class="wf-row"><span class="wf-lbl bold">Net Revenue</span><div class="wf-bar-wrap"><div class="wf-bar" id="wb-net" style="background:var(--blue)"></div></div><span class="wf-val" id="wv-net">—</span></div>
-      <div class="wf-row"><span class="wf-lbl">− Corp Reserve</span><div class="wf-bar-wrap"><div class="wf-bar" id="wb-res" style="background:var(--text-faint)"></div></div><span class="wf-val r" id="wv-res">—</span></div>
-      <div class="wf-sep"></div>
-      <div class="wf-row"><span class="wf-lbl bold">Distributable Pool</span><div class="wf-bar-wrap"><div class="wf-bar" id="wb-dist" style="background:var(--green)"></div></div><span class="wf-val g" id="wv-dist">—</span></div>
-    </div>
-
-    <div class="wf-head" style="margin-bottom:8px;">Distribution — equity % set in Core 3 (left) and Advisory Board tab</div>
-    <table class="dist-table">
-      <thead><tr>
-        <th style="width:185px">Partner / Role</th><th style="width:42px">Equity</th><th style="width:42px">Dist %</th>
-        <th>Share</th><th style="text-align:right">Annual</th><th style="text-align:right">Per Engagement</th>
-      </tr></thead>
-      <tbody id="dist-body"></tbody>
-    </table>
-  </div>
-</div>
-
-<!-- ══ TAB 2: ADVISORY ══ -->
-<div id="tab-advisory" class="tab-pane">
-  <div class="sb">
-    <div class="sb-section">Barry Saltzman</div>
-    <div class="ablock">
-      <div class="ab-header">
-        <div><div class="ab-name">Barry Saltzman</div><div class="ab-role">Saltzman EG · Chicago · Former $650M COO/CEO<br>PREP tool owner · 2,000+ ICP relationships</div></div>
-        <span class="ab-badge badge-cross">Cross-Industry</span>
-      </div>
-      <div class="ab-row">
-        <span class="ab-lbl">Equity %</span>
-        <input type="range" min="0" max="15" step="0.5" value="5" oninput="S.barry=+this.value;render()" style="flex:1">
-        <span class="ab-val" id="cv-barry" style="color:var(--gold-light)">5.0%</span>
-      </div>
-      <textarea class="ab-notes">Equity for referrals. PREP pass-through every engagement. Son Andrew = automation specialist (direct expense). Call Monday — confirm PREP pricing.</textarea>
-    </div>
-
-    <div class="sb-section">James G. Taylor, MBA, PhD</div>
-    <div class="ablock">
-      <div class="ab-header">
-        <div><div class="ab-name">James G. Taylor</div><div class="ab-role">BORVO Healthcare · Tampa · MSO acquisitions<br>Former Dir. Equities $100M+ · VP BD $1B AUM</div></div>
-        <span class="ab-badge badge-health">Healthcare MSO</span>
-      </div>
-      <div class="ab-row">
-        <span class="ab-lbl">Equity %</span>
-        <input type="range" min="0" max="15" step="0.5" value="5" oninput="S.taylor=+this.value;render()" style="flex:1">
-        <span class="ab-val" id="cv-taylor" style="color:var(--purple)">3.0%</span>
-      </div>
-      <textarea class="ab-notes">Healthcare MSO and practice acquisition referrals. $175K–$350K tier. Travis built 10 MSOs — Taylor opens those doors.</textarea>
-    </div>
-
-    <div class="sb-section">Mary E. Maloney, FACHE</div>
-    <div class="ablock">
-      <div class="ab-header">
-        <div><div class="ab-name">Mary E. Maloney</div><div class="ab-role">Revealing Genius · Tampa · Cornell faculty<br>ACHE Regent Advisory Council FL · Former CEO/CMO</div></div>
-        <span class="ab-badge badge-brand">Brand + HC</span>
-      </div>
-      <div class="ab-row">
-        <span class="ab-lbl">Equity %</span>
-        <input type="range" min="0" max="15" step="0.5" value="5" oninput="S.maloney=+this.value;render()" style="flex:1">
-        <span class="ab-val" id="cv-maloney" style="color:var(--coral)">3.0%</span>
-      </div>
-      <textarea class="ab-notes">Dual role: (1) physician/HC exec network referrals, (2) potential Alethia brand strategy. Consider separate structure for brand work vs referral equity.</textarea>
-    </div>
-
-    <div class="sb-section">Advisory Totals</div>
-    <div class="sum-row" style="border-top:none;">
-      <span class="sum-label">Total advisory equity</span>
-      <span class="sum-val" id="adv-total-pct">11.0%</span>
-    </div>
-    <div class="sum-row" style="border-top:none;padding-top:0;">
-      <span class="sum-label">Core 3 + Advisory</span>
-      <span class="sum-val" id="adv-grand-pct">—</span>
-    </div>
-    <div class="sum-row" style="border-top:none;padding-top:0;">
-      <span class="sum-label">Unallocated</span>
-      <span class="sum-val" id="adv-unalloc">—</span>
-    </div>
-    <div class="prep-note" style="margin-top:8px;">Advisory % set here flows directly into Economics waterfall and distribution table.</div>
-  </div>
-
-  <div class="content">
-    <div class="wf-head" style="margin-bottom:10px;">What Each Advisor Earns — at Distributable Pool Scenarios</div>
-    <div class="adv-proj-grid" id="adv-proj-grid"></div>
-
-    <div class="wf-head" style="margin-bottom:8px;">Advisory Board Summary</div>
-    <table class="dist-table" style="margin-bottom:16px;">
-      <thead><tr>
-        <th>Name</th><th>Type</th><th>Primary Value to Alethia</th><th style="text-align:right">Equity</th><th style="text-align:right">At Current Dist.</th>
-      </tr></thead>
-      <tbody id="adv-table-body"></tbody>
-    </table>
-
-    <div class="info-box">
-      <strong style="color:var(--text-dim);">Is this an all-healthcare advisory board? No — and that's a strength.</strong><br><br>
-      <strong style="color:var(--gold);">Barry Saltzman</strong> — Cross-industry. $650M operator. 2,000+ relationships across your full ICP. PREP is sector-agnostic. His son Andrew is your automation specialist. Highest-volume referral channel.<br><br>
-      <strong style="color:var(--purple);">James G. Taylor</strong> — Healthcare-specific. MSO acquisition, medical practice consolidation, capital markets. Opens your highest-ticket engagements ($175K–$350K). Travis's MSO expertise + Taylor's network = unfair advantage in that sector.<br><br>
-      <strong style="color:var(--coral);">Mary Maloney</strong> — Healthcare-adjacent. Physician and HC executive network via ACHE and Cornell. But her real superpower may be Alethia's own brand — executive presence, positioning, digital storytelling. Consider whether she holds equity as a referral advisor OR whether there's a separate paid engagement for Alethia brand strategy.<br><br>
-      <strong style="color:var(--text-dim);">Recommendation:</strong> Keep this board. Add one cross-industry connector outside healthcare when you find your second Barry.
-    </div>
-  </div>
-</div>
-
-<!-- ══ TAB 3: TIERS ══ -->
-<div id="tab-tiers" class="tab-pane">
-  <div class="sb">
-    <div class="sb-section">Signal DX — Diagnostic Only</div>
-    <div class="ctrl">
-      <div class="ctrl-top"><span class="ctrl-label">DX Engagements / Year</span><span class="ctrl-val" id="cv-dx">3</span></div>
-      <div class="ctrl-desc">Credits toward full engagement if they proceed.</div>
-      <input type="range" min="0" max="30" step="1" value="15" oninput="S.dx=+this.value;render()">
-      <div class="range-ends"><span>0</span><span>30</span></div>
-    </div>
-    <div class="ctrl">
-      <div class="ctrl-top"><span class="ctrl-label">DX Price</span><span class="ctrl-val" id="cv-dxprice">$15K</span></div>
-      <input type="range" min="10" max="25" step="1" value="15" oninput="S.dxprice=+this.value;render()">
-      <div class="range-ends"><span>$10K</span><span>$25K</span></div>
-    </div>
-
-    <div class="sb-section">Standard Liberation Sprint</div>
-    <div class="ctrl">
-      <div class="ctrl-top"><span class="ctrl-label">Standard Engagements</span><span class="ctrl-val" id="cv-std">13</span></div>
-      <div class="ctrl-desc">$3–7M companies. Travis + Joe + FAs from engagement 6.</div>
-      <input type="range" min="0" max="100" step="1" value="50" oninput="S.std=+this.value;render()">
-      <div class="range-ends"><span>0</span><span>80</span></div>
-    </div>
-    <div class="ctrl">
-      <div class="ctrl-top"><span class="ctrl-label">Standard Avg Price</span><span class="ctrl-val" id="cv-stdprice">$125K</span></div>
-      <input type="range" min="75" max="200" step="5" value="125" oninput="S.stdprice=+this.value;render()">
-      <div class="range-ends"><span>$75K</span><span>$200K</span></div>
-    </div>
-
-    <div class="sb-section">Healthcare Tier</div>
-    <div class="ctrl">
-      <div class="ctrl-top"><span class="ctrl-label">HC Engagements</span><span class="ctrl-val" id="cv-ht">4</span></div>
-      <div class="ctrl-desc">Taylor / Maloney referrals. MSO, multi-site, clinical ops.</div>
-      <input type="range" min="0" max="30" step="1" value="2" oninput="S.ht=+this.value;render()">
-      <div class="range-ends"><span>0</span><span>30</span></div>
-    </div>
-    <div class="ctrl">
-      <div class="ctrl-top"><span class="ctrl-label">HC Avg Price</span><span class="ctrl-val" id="cv-htprice">$225K</span></div>
-      <input type="range" min="150" max="400" step="25" value="225" oninput="S.htprice=+this.value;render()">
-      <div class="range-ends"><span>$150K</span><span>$400K</span></div>
-    </div>
-
-    <div class="sb-section">Enterprise / MSO Build</div>
-    <div class="ctrl">
-      <div class="ctrl-top"><span class="ctrl-label">Enterprise Engagements</span><span class="ctrl-val" id="cv-ent">0</span></div>
-      <div class="ctrl-desc">PE portfolio, $20M+ complexity, full MSO builds.</div>
-      <input type="range" min="0" max="10" step="1" value="0" oninput="S.ent=+this.value;render()">
-      <div class="range-ends"><span>0</span><span>10</span></div>
-    </div>
-    <div class="ctrl">
-      <div class="ctrl-top"><span class="ctrl-label">Enterprise Avg Price</span><span class="ctrl-val" id="cv-entprice">$300K</span></div>
-      <input type="range" min="200" max="500" step="25" value="300" oninput="S.entprice=+this.value;render()">
-      <div class="range-ends"><span>$200K</span><span>$500K</span></div>
-    </div>
-
-    <div class="sum-row">
-      <span class="sum-label">Total engagements</span>
-      <span class="sum-val" id="tier-total-eng">—</span>
-    </div>
-    <div class="sum-row" style="border-top:none;padding-top:0;">
-      <span class="sum-label">Blended avg value</span>
-      <span class="sum-val" id="tier-blend">—</span>
-    </div>
-    <div class="prep-note" style="margin-top:6px;">These tier inputs drive the Economics waterfall directly.</div>
-  </div>
-
-  <div class="content">
-    <div class="rcards">
-      <div class="rcard"><div class="rcard-label">Total Engagements</div><div class="rcard-val" id="t-eng">—</div></div>
-      <div class="rcard"><div class="rcard-label">Blended Avg Value</div><div class="rcard-val g" id="t-blend">—</div></div>
-      <div class="rcard"><div class="rcard-label">Total Tier Revenue</div><div class="rcard-val b" id="t-rev">—</div></div>
-      <div class="rcard"><div class="rcard-label">HC Premium Over Standard</div><div class="rcard-val p" id="t-hc-prem">—</div></div>
-    </div>
-
-    <div class="wf-head" style="margin-bottom:8px;">Engagement Tier Breakdown → feeds Economics waterfall</div>
-    <table class="tier-table">
-      <thead><tr>
-        <th>Tier</th><th>Count</th><th>Avg Value</th><th>Tier Revenue</th><th>% of Total</th><th>Referral Source</th>
-      </tr></thead>
-      <tbody id="tier-body"></tbody>
-    </table>
-  </div>
-</div>
-
-<!-- ══ TAB 4: ASCEND ══ -->
-<div id="tab-ascend" class="tab-pane">
-  <div class="sb">
-    <div class="sb-section">Ascend Governance</div>
-    <div class="ctrl">
-      <div class="ctrl-top"><span class="ctrl-label">Retained Clients</span><span class="ctrl-val" id="cv-asc">5</span></div>
-      <div class="ctrl-desc">Post-sprint clients on ongoing governance. Feeds header ARR.</div>
-      <input type="range" min="0" max="60" step="1" value="5" oninput="S.asc=+this.value;render()">
-      <div class="range-ends"><span>0</span><span>60</span></div>
-    </div>
-    <div class="ctrl">
-      <div class="ctrl-top"><span class="ctrl-label">Monthly Fee / Client</span><span class="ctrl-val" id="cv-ascmo">$2,500</span></div>
-      <input type="range" min="1000" max="5000" step="250" value="2500" oninput="S.ascmo=+this.value;render()">
-      <div class="range-ends"><span>$1K</span><span>$5K</span></div>
-    </div>
-    <div class="ctrl">
-      <div class="ctrl-top"><span class="ctrl-label">Quarterly Session / Client</span><span class="ctrl-val" id="cv-ascqtr">$5,000</span></div>
-      <input type="range" min="2500" max="10000" step="500" value="5000" oninput="S.ascqtr=+this.value;render()">
-      <div class="range-ends"><span>$2.5K</span><span>$10K</span></div>
-    </div>
-    <div class="ctrl">
-      <div class="ctrl-top"><span class="ctrl-label">Annual Strategy Session</span><span class="ctrl-val" id="cv-ascann">$7,500</span></div>
-      <input type="range" min="5000" max="15000" step="500" value="7500" oninput="S.ascann=+this.value;render()">
-      <div class="range-ends"><span>$5K</span><span>$15K</span></div>
-    </div>
-    <div class="sum-row">
-      <span class="sum-label">Per client / year</span>
-      <span class="sum-val" id="asc-perclient-sb">—</span>
-    </div>
-    <div class="prep-note" style="margin-top:6px;">Ascend ARR feeds the header Total All-In and Ascend KPI directly.</div>
-  </div>
-
-  <div class="content">
-    <div class="asc-grid">
-      <div class="asc-card"><div class="asc-lbl">Monthly ARR</div><div class="asc-val" id="asc-mo">—</div><div class="asc-sub">$/mo × clients × 12</div></div>
-      <div class="asc-card"><div class="asc-lbl">Quarterly Revenue</div><div class="asc-val" id="asc-qtr">—</div><div class="asc-sub">$/qtr × clients × 4</div></div>
-      <div class="asc-card"><div class="asc-lbl">Annual Sessions</div><div class="asc-val" id="asc-ann">—</div><div class="asc-sub">$/yr × clients</div></div>
-      <div class="asc-card"><div class="asc-lbl">Total Ascend ARR</div><div class="asc-val" id="asc-total">—</div><div class="asc-sub">all tiers combined</div></div>
-      <div class="asc-card"><div class="asc-lbl">Per Client / Year</div><div class="asc-val" id="asc-perclient">—</div><div class="asc-sub">full package</div></div>
-      <div class="asc-card"><div class="asc-lbl">At 20 Clients</div><div class="asc-val" id="asc-20">—</div><div class="asc-sub">scale target</div></div>
-    </div>
-    <div class="info-box">
-      <strong style="color:var(--text-dim);">Why Ascend changes the business model.</strong><br><br>
-      Ten clients on Ascend generates <strong id="asc-10-inline" style="color:var(--green)">—</strong> per year before closing a single new engagement. Twenty clients generates <strong id="asc-20-inline" style="color:var(--green)">—</strong>. This is the floor that lets Travis and Joe be selective — only taking clients who are genuinely the right fit at the right price. It also means Alethia has real enterprise value, not just services revenue. Every client who finishes the Liberation Sprint is a potential Ascend client.
-    </div>
-  </div>
-</div>
+<div class="wrap" id="app"></div>
 
 <script>
-// ══ SINGLE SOURCE OF TRUTH ══
-const S = {
-  // Costs (Economics tab)
-  fa:10, faeng:12, auto:15, autoeng:8, gtm:0,
-  prepOn:1, prepPrice:0, prepCount:4,
-  res:15,
-  // Core 3 equity (ownership %) and distribution % — independent
-  travis:30, joe:25, nick:25,
-  travisDist:30, joeDist:25, nickDist:25,
-  // Advisory (Advisory tab — single source)
-  barry:5, taylor:5, maloney:5,
-  // Tiers (Tiers tab — single source for gross revenue)
-  dx:15, dxprice:15, std:50, stdprice:125, ht:2, htprice:225, ent:0, entprice:300,
-  // Ascend (Ascend tab — single source)
-  asc:5, ascmo:2500, ascqtr:5000, ascann:7500
+/* ===================== DATA ===================== */
+
+const GATING = [
+  { id: "g1", label: "About how big is the company?",
+    options: ["Under $250K a year", "$250K to $1M", "$1M to $3M", "$3M to $10M", "$10M or more"] },
+  { id: "g2", label: "How long has the company been operating?",
+    options: ["Under 2 years", "2 to 5 years", "5 to 15 years", "15+ years"] },
+  { id: "g3", label: "How is ownership structured?",
+    options: ["Just me", "Me plus one partner", "Three or more partners or investors"] },
+  { id: "g4", label: "How would you describe leadership today?",
+    options: ["It's just me wearing every hat", "Me plus a couple key people", "A real leadership team", "A professional CEO or C-suite"] },
+  { id: "g5", label: "Which best describes the business?",
+    options: ["Products / retail / consumer goods", "Services / consulting / agency", "Construction / trades / field services",
+              "Healthcare / wellness", "Food & beverage", "Technology / software", "Something else"] },
+  { id: "g6", label: "Which of these feels closest to what's actually slowing you down right now?",
+    options: ["Sales & Leads", "Fulfillment & Capacity", "Money & Margins", "People & Culture", "Leadership & Decisions", "Not sure"] },
+];
+
+const BUCKETS = ["Sales & Leads", "Fulfillment & Capacity", "Money & Margins", "People & Culture", "Leadership & Decisions"];
+
+// fracture#, name, bucket
+const FRACTURES = [
+  { n: 1, name: "Founder-monopolized operations", bucket: "Fulfillment & Capacity" },
+  { n: 2, name: "Fulfillment concentration risk", bucket: "Fulfillment & Capacity" },
+  { n: 3, name: "No decision architecture", bucket: "Leadership & Decisions" },
+  { n: 4, name: "Unpredictable revenue engine", bucket: "Sales & Leads" },
+  { n: 5, name: "Unmonetized strategic partnerships", bucket: "Sales & Leads" },
+  { n: 6, name: "Value-based pricing failure", bucket: "Money & Margins" },
+  { n: 7, name: "Operational infrastructure gaps", bucket: "Fulfillment & Capacity" },
+  { n: 8, name: "Positioning / ICP misalignment", bucket: "Sales & Leads" },
+  { n: 9, name: "Culture & hiring without a system", bucket: "People & Culture" },
+  { n: 10, name: "No execution cadence / scorecard", bucket: "Leadership & Decisions" },
+  { n: 11, name: "Ownership alignment", bucket: "Leadership & Decisions", conditional: true },
+];
+
+const LIGHT_COPY = {
+  1: "Right now, if you stepped away for two weeks, most of what makes this business run would stop with you.",
+  2: "A single person, vendor, or crew failure could seriously disrupt your ability to deliver, with no real backup in place.",
+  3: "Too many decisions still have to come through you personally, even ones your team could likely handle.",
+  4: "Your pipeline runs more on relationships and luck than on a system you control, which makes growth hard to plan around.",
+  5: "You likely have referral or partnership relationships that could be driving a lot more business than they currently are.",
+  6: "Your pricing may not be capturing the full value you deliver, often bundled invisibly into materials and labor.",
+  7: "Core processes still live in people's heads rather than in writing, which makes the business fragile to any change in the team.",
+  8: "Your marketing may be attracting more price-comparison shoppers than the clients you actually want.",
+  9: "Hiring and culture decisions may be running more on instinct than on a documented standard, a risk as you grow.",
+  10: "There's no regular rhythm for reviewing the numbers that actually indicate the health of the business.",
+  11: "You and your partner(s) may not have explicitly aligned on what success looks like individually, a gap that tends to surface at the worst time.",
 };
 
-function fmt(n){
-  if(isNaN(n)||n===undefined)return'—';
-  if(n>=1000000)return'$'+(n/1000000).toFixed(1)+'M';
-  if(n>=1000)return'$'+Math.round(n/1000)+'K';
-  return'$'+Math.round(n).toLocaleString();
-}
-function fmtFull(n){return'$'+Math.round(n).toLocaleString();}
+// question bank: id, fracture, bucket, text, options[0..3]
+const QUESTIONS = [
+  { id: "Q1a", f: 1, text: "If your revenue doubled overnight, what would break first?",
+    opts: ["Absorb it with current systems", "Strain but manage", "Struggle significantly", "Everything routes through me and breaks immediately"] },
+  { id: "Q1b", f: 1, text: "What share of your week is spent on tasks only you can do, vs. tasks someone else could do if trained?",
+    opts: ["Under 25%", "25 to 50%", "50 to 75%", "Over 75%"] },
+  { id: "Q2a", f: 2, text: "Is there one person, crew, or vendor that, if you lost them tomorrow, would seriously disrupt your ability to deliver?",
+    opts: ["No single point of failure", "Minor disruption, recoverable", "Significant disruption", "Business-threatening, no backup"] },
+  { id: "Q2b", f: 2, text: "How many people on your team could independently run a job or deliver your core service without you present?",
+    opts: ["Most of the team", "A few", "One, maybe", "Only me"] },
+  { id: "Q3a", f: 3, text: "When a client asks for a mid-project change, how many people on your team can approve it without checking with you first?",
+    opts: ["Most people, within limits", "A couple people", "One person, rarely", "No one, everything comes to me"] },
+  { id: "Q3b", f: 3, text: "Do you have written thresholds for what your team can decide on their own vs. what must come to you?",
+    opts: ["Yes, documented and used", "Documented but not really used", "Informal understanding only", "No, it's all in my head"] },
+  { id: "Q4a", f: 4, text: "In the last 90 days, what share of new business came from a source you actively control, vs. word of mouth or luck?",
+    opts: ["Mostly controlled / predictable", "About half", "Mostly word of mouth", "Entirely word of mouth"] },
+  { id: "Q4b", f: 4, text: "Do you track what it actually costs you to win a new customer?",
+    opts: ["Yes, tracked and reviewed", "Roughly, informally", "Not really", "No idea"] },
+  { id: "Q5a", f: 5, text: "Do you have any formal, structured referral relationships with complementary businesses in your space?",
+    opts: ["Yes, structured with tracked results", "A few informal ones", "One or two, unstructured", "None"] },
+  { id: "Q5b", f: 5, text: "If a referral partner sent you five deals this year, would you know it?",
+    opts: ["Yes, precisely", "Roughly", "Probably not", "No way to know"] },
+  { id: "Q6a", f: 6, text: "Do you charge separately for your own time, expertise, and coordination, or is it bundled invisibly into materials and labor?",
+    opts: ["Charged / itemized separately", "Partially itemized", "Rarely itemized", "Never charged for separately"] },
+  { id: "Q6b", f: 6, text: "Have you raised prices in the last 12 months specifically because you reassessed the value you provide, not just rising costs?",
+    opts: ["Yes, deliberately", "Small adjustment", "Only to cover cost increases", "Prices haven't changed"] },
+  { id: "Q7a", f: 7, text: "If a new hire started tomorrow, is there a written process for your core work, or would they need you to explain it?",
+    opts: ["Fully documented", "Partially documented", "Only the basics written down", "Lives entirely in people's heads"] },
+  { id: "Q7b", f: 7, text: "Are your sales, delivery, and invoicing processes written down anywhere?",
+    opts: ["Yes, all three", "Two of the three", "One of the three", "None written down"] },
+  { id: "Q8a", f: 8, text: "When someone calls just to compare your price against competitors, how often do you still win the job?",
+    opts: ["Usually win", "Win about half", "Rarely win", "Almost never win"] },
+  { id: "Q8b", f: 8, text: "Does your current marketing attract the client you actually want, or does it mostly attract price-shoppers?",
+    opts: ["Attracts ideal clients", "Mixed", "Mostly price-shoppers", "Almost entirely price-shoppers"] },
+  { id: "Q9a", f: 9, text: "Do you have documented values or standards you hire against, or is it mostly gut feel?",
+    opts: ["Documented and used in hiring", "Loosely documented", "Mostly gut feel, some structure", "Pure gut feel"] },
+  { id: "Q9b", f: 9, text: "In the last two years, has anyone you trained left to compete directly against you?",
+    opts: ["No", "Once, minor impact", "More than once", "This happens regularly"] },
+  { id: "Q10a", f: 10, text: "Do you have a regular (weekly or monthly) meeting where you review a fixed set of numbers against a plan?",
+    opts: ["Yes, consistently", "Sometimes", "Rarely", "Never"] },
+  { id: "Q10b", f: 10, text: "If asked right now for the 5 to 8 numbers that tell you the health of your business, could you produce them from memory?",
+    opts: ["Yes, immediately", "Most of them", "One or two", "No"] },
+  { id: "Q11a", f: 11, text: "Have you and your partner(s) ever explicitly written down what success looks like for each of you individually, not just for the business?",
+    opts: ["Yes, documented", "Discussed but not documented", "Touched on briefly", "Never discussed"] },
+  { id: "Q11b", f: 11, text: "If one of you wanted to sell in 3 years and the other wanted to hold for 15, would you already know that about each other?",
+    opts: ["Yes, confidently", "Think so", "Not sure", "No idea"] },
+];
 
-function switchTab(id,btn){
-  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById('tab-'+id).classList.add('active');
-  btn.classList.add('active');
-}
+/* ===================== STATE ===================== */
 
-function set(id,val){const el=document.getElementById(id);if(el)el.textContent=val;}
+let state = {
+  screen: "intro",
+  gatingIdx: 0,
+  gatingAnswers: {},
+  coreQueue: [],
+  coreIdx: 0,
+  coreAnswers: {},
+  contact: { name: "", email: "", company: "" },
+};
 
-function render(){
-  // ── DERIVED FINANCIALS ──
-  // Gross from Tiers tab
-  const totalEng = S.dx + S.std + S.ht + S.ent;
-  const dxRev    = S.dx  * S.dxprice  * 1000;
-  const stdRev   = S.std * S.stdprice * 1000;
-  const htRev    = S.ht  * S.htprice  * 1000;
-  const entRev   = S.ent * S.entprice * 1000;
-  const gross    = dxRev + stdRev + htRev + entRev;
-  const blended  = totalEng > 0 ? gross / totalEng : 0;
-
-  // Costs from Economics tab
-  const faCost   = S.faeng   * S.fa   * 1000;
-  const autoCost = S.autoeng * S.auto * 1000;
-  const prepCost = S.prepOn  ? totalEng * S.prepCount * (S.prepPrice||0) : 0;
-  const gtmCost  = S.gtm * 1000;
-  const netRev   = gross - faCost - autoCost - prepCost - gtmCost;
-  const resDollars = netRev * (S.res/100);
-  const distPool = netRev - resDollars;
-
-  // Advisory from Advisory tab
-  const advTotal = S.barry + S.taylor + S.maloney;
-  const core3    = S.travis + S.joe + S.nick;
-  const totalAlloc = core3 + advTotal;
-  const unalloc  = Math.max(0, 100 - totalAlloc);
-
-  // Partner dollars — use distribution % (independent from equity %)
-  const travisD  = distPool * (S.travisDist/100);
-  const joeD     = distPool * (S.joeDist/100);
-  const nickD    = distPool * (S.nickDist/100);
-  const coreDist = S.travisDist + S.joeDist + S.nickDist;
-  const barryD   = distPool * (S.barry/100);
-  const taylorD  = distPool * (S.taylor/100);
-  const maloneyD = distPool * (S.maloney/100);
-  unallocD = distPool * (unalloc/100);
-  const avgPartner = (travisD+joeD+nickD)/3;
-
-  // Ascend from Ascend tab
-  const ascMoTotal  = S.asc * S.ascmo  * 12;
-  const ascQtrTotal = S.asc * S.ascqtr * 4;
-  const ascAnnTotal = S.asc * S.ascann;
-  const ascTotal    = ascMoTotal + ascQtrTotal + ascAnnTotal;
-  const ascPerClient = S.asc>0 ? ascTotal/S.asc : 0;
-  const asc10 = 10*(S.ascmo*12 + S.ascqtr*4 + S.ascann);
-  const asc20 = 20*(S.ascmo*12 + S.ascqtr*4 + S.ascann);
-
-  // ── HEADER KPIs ──
-  set('hb-gross', fmt(gross));
-  set('hb-net',   fmt(netRev));
-  set('hb-dist',  fmt(distPool));
-  set('hb-each',  fmt(avgPartner));
-  set('hb-asc',   fmt(ascTotal));
-  set('hb-total', fmt(gross + ascTotal));
-
-  // ── ECONOMICS SIDEBAR ──
-  set('cv-fa',       '$'+S.fa+'K');
-  set('cv-faeng',    S.faeng);
-  set('cv-auto',     '$'+S.auto+'K');
-  set('cv-autoeng',  S.autoeng);
-  set('cv-gtm',      S.gtm===0?'$0':'$'+S.gtm+'K');
-  set('cv-prepcount',S.prepCount);
-  set('cv-res',      S.res+'%');
-  set('cv-travis',      S.travis+'%');
-  set('cv-joe',         S.joe+'%');
-  set('cv-nick',        S.nick+'%');
-  set('cv-travis-dist', S.travisDist+'%');
-  set('cv-joe-dist',    S.joeDist+'%');
-  set('cv-nick-dist',   S.nickDist+'%');
-
-  const cds = document.getElementById('core-dist-sum');
-  if(cds){cds.textContent=coreDist+'%';cds.className='sum-val '+(Math.abs(coreDist+advTotal-100)<1?'ok':'warn');}
-
-  const distAlert = document.getElementById('alert-dist');
-  if(distAlert) distAlert.classList.toggle('show', Math.abs(coreDist+advTotal-100)>1);
-
-  const prepPerEng = S.prepOn ? (S.prepPrice||0)*S.prepCount : 0;
-  set('cv-prep-cost', S.prepOn ? (S.prepPrice>0 ? fmt(prepPerEng)+'/eng' : 'TBD') : 'Off');
-
-  const cs = document.getElementById('core-sum');
-  if(cs){cs.textContent=core3+'%';cs.className='sum-val '+(core3<=85?'ok':'warn');}
-  set('adv-sum-eco', advTotal.toFixed(1)+'%');
-  const up = document.getElementById('unalloc-pct');
-  if(up){up.textContent=unalloc.toFixed(1)+'%';up.className='sum-val '+(unalloc>=0?'ok':'warn');}
-
-  const alertEl = document.getElementById('alert-pct');
-  if(alertEl) alertEl.classList.toggle('show', totalAlloc>100);
-
-  // ── ECONOMICS CONTENT ──
-  set('r-gross',    fmt(gross));
-  set('r-gross-sub', S.dx+'dx + '+S.std+'std + '+S.ht+'hc + '+S.ent+'ent engagements');
-  set('r-net',      fmt(netRev));
-  set('r-net-sub',  'FA:'+fmt(faCost)+' Auto:'+fmt(autoCost)+' PREP:'+fmt(prepCost)+' GTM:'+fmt(gtmCost));
-  set('r-dist',     fmt(distPool));
-  set('r-dist-sub', 'after '+S.res+'% reserve ('+fmt(resDollars)+')');
-  set('r-total',    fmt(gross+ascTotal));
-
-  // Waterfall bars
-  const mx = gross||1;
-  function bar(id,val){const el=document.getElementById(id);if(el)el.style.width=Math.max(0,Math.min(100,(val/mx)*100))+'%';}
-  bar('wb-gross',gross); bar('wb-fa',faCost); bar('wb-auto',autoCost);
-  bar('wb-prep',prepCost); bar('wb-gtm',gtmCost); bar('wb-net',netRev);
-  bar('wb-res',resDollars); bar('wb-dist',distPool);
-
-  set('wv-gross', fmt(gross));
-  set('wv-fa',    faCost>0?'−'+fmt(faCost):'$0');
-  set('wv-auto',  autoCost>0?'−'+fmt(autoCost):'$0');
-  set('wv-prep',  prepCost>0?'−'+fmt(prepCost):'TBD');
-  set('wv-gtm',   gtmCost>0?'−'+fmt(gtmCost):'$0');
-  set('wv-net',   fmt(netRev));
-  set('wv-res',   '−'+fmt(resDollars));
-  set('wv-dist',  fmt(distPool));
-
-  // Distribution table
-  const engCount = Math.max(totalEng,1);
-  const coreRows = [
-    {name:'Travis Roderick',role:'CEO · Chief Architect',eq:S.travis,dist:S.travisDist,amt:travisD,color:'#C9A84C'},
-    {name:'Joe Pung',       role:'COO · Integrator',     eq:S.joe,   dist:S.joeDist,  amt:joeD,   color:'#6aaddd'},
-    {name:'Nick McGuire',   role:'GTM · Brand · Tech',   eq:S.nick,  dist:S.nickDist, amt:nickD,  color:'#4ecb97'},
-  ];
-  const advRows = [
-    {name:'Barry Saltzman', role:'Cross-industry · PREP · Connector',  pct:S.barry,  amt:barryD,  color:'#a07acc'},
-    {name:'James G. Taylor',role:'Healthcare MSO · Practice Acq.',     pct:S.taylor, amt:taylorD, color:'#9b6cc4'},
-    {name:'Mary Maloney',   role:'Brand + HC Executive Network',       pct:S.maloney,amt:maloneyD,color:'#d4856a'},
-  ];
-  let html = '<tr class="section-row"><td colspan="5">Core Partners</td></tr>';
-  coreRows.forEach(r=>{
-    html+=`<tr>
-      <td><span class="d-name"><span class="d-dot" style="background:${r.color}"></span>${r.name}</span><span class="d-role">${r.role}</span></td>
-      <td><span class="d-pct">${r.pct}%</span></td>
-      <td><div style="height:4px;background:var(--bg4);border-radius:2px;overflow:hidden;"><div style="height:100%;border-radius:2px;background:${r.color};width:${Math.min(100,(r.pct/Math.max(S.travis,1))*100)}%;transition:width .3s;"></div></div></td>
-      <td><span class="d-amt gold">${fmt(r.amt)}</span><span class="d-per">${fmtFull(r.amt)}</span></td>
-      <td><span class="d-amt">${fmt(r.amt/engCount)}</span></td></tr>`;
+function buildCoreQueue() {
+  const chosenBucket = GATING[5].options[state.gatingAnswers.g6];
+  const multiOwner = state.gatingAnswers.g3 !== undefined && state.gatingAnswers.g3 >= 1;
+  const queue = [];
+  FRACTURES.forEach(fr => {
+    if (fr.conditional && !multiOwner) return;
+    const deep = (chosenBucket !== "Not sure" && fr.bucket === chosenBucket);
+    const qs = QUESTIONS.filter(q => q.f === fr.n);
+    if (deep) {
+      queue.push(qs[0], qs[1]);
+    } else {
+      queue.push(qs[0]);
+    }
   });
-  html += '<tr class="section-row"><td colspan="5">Advisory Board — set in Advisory tab</td></tr>';
-  advRows.forEach(r=>{
-    html+=`<tr>
-      <td><span class="d-name"><span class="d-dot" style="background:${r.color}"></span>${r.name}</span><span class="d-role">${r.role}</span></td>
-      <td><span class="d-pct">${r.pct.toFixed(1)}%</span></td>
-      <td><div style="height:4px;background:var(--bg4);border-radius:2px;overflow:hidden;"><div style="height:100%;border-radius:2px;background:${r.color};width:${Math.min(100,(r.pct/Math.max(S.travis,1))*100)}%;transition:width .3s;"></div></div></td>
-      <td><span class="d-amt muted">${fmt(r.amt)}</span><span class="d-per">${fmtFull(r.amt)}</span></td>
-      <td><span class="d-amt muted">${fmt(r.amt/engCount)}</span></td></tr>`;
+  return queue;
+}
+
+/* ===================== RENDER ===================== */
+
+const app = document.getElementById("app");
+
+function render() {
+  if (state.screen === "intro") return renderIntro();
+  if (state.screen === "gating") return renderGating();
+  if (state.screen === "core") return renderCore();
+  if (state.screen === "contact") return renderContact();
+  if (state.screen === "results") return renderResults();
+}
+
+function renderIntro() {
+  app.innerHTML = `
+    <div class="brand">Alethia</div>
+    <h1>Company health check diagnostic</h1>
+    <p>Answer a short set of questions about how the business actually runs day to day. Takes about 5 minutes. At the end you'll see exactly where the business is strong and where it's fractured, based only on what you tell us &mdash; nothing guessed, nothing filled in.</p>
+    <div class="card">
+      <p class="muted">6 quick setup questions, then roughly 13 to 16 targeted questions about your business. No AI, no guesswork &mdash; just your own answers, scored.</p>
+      <button class="start-btn" onclick="startGating()">Start the diagnostic &rarr;</button>
+    </div>
+  `;
+}
+
+function startGating() { state.screen = "gating"; state.gatingIdx = 0; render(); }
+
+function renderGating() {
+  const idx = state.gatingIdx;
+  const q = GATING[idx];
+  const total = GATING.length;
+  const pct = Math.round((idx / total) * 100);
+  const selected = state.gatingAnswers[q.id];
+  app.innerHTML = `
+    <div class="brand">Alethia &middot; Setup</div>
+    <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+    <div class="q-label">Question ${idx + 1} of ${total}</div>
+    <h2>${q.label}</h2>
+    <div class="options" id="opts"></div>
+    <div class="nav-row">
+      <button class="ghost" onclick="gatingBack()" ${idx === 0 ? "disabled style='visibility:hidden'" : ""}>&larr; Back</button>
+      <button class="primary" id="nextBtn" ${selected === undefined ? "disabled" : ""} onclick="gatingNext()">Continue &rarr;</button>
+    </div>
+  `;
+  const optsDiv = document.getElementById("opts");
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement("button");
+    btn.className = "opt-btn" + (selected === i ? " selected" : "");
+    btn.textContent = opt;
+    btn.onclick = () => {
+      state.gatingAnswers[q.id] = i;
+      render();
+    };
+    optsDiv.appendChild(btn);
   });
-  if(unalloc>0.4){
-    html+=`<tr class="section-row"><td colspan="5">System</td></tr>
-    <tr><td><span class="d-name" style="color:var(--text-faint)"><span class="d-dot" style="background:#444"></span>Unallocated</span><span class="d-role">Available · future partners · Andrew Saltzman equity</span></td>
-    <td><span class="d-pct">${unalloc.toFixed(1)}%</span></td><td></td>
-    <td><span class="d-amt muted">${fmt(unallocD)}</span></td><td>—</td></tr>`;
+}
+
+function gatingBack() {
+  if (state.gatingIdx > 0) { state.gatingIdx--; render(); }
+}
+function gatingNext() {
+  if (state.gatingIdx < GATING.length - 1) {
+    state.gatingIdx++;
+    render();
+  } else {
+    state.coreQueue = buildCoreQueue();
+    state.coreIdx = 0;
+    state.screen = "core";
+    render();
   }
-  html+=`<tr class="total-row">
-    <td><span class="d-name">Total</span></td>
-    <td><span class="d-pct" style="color:${totalAlloc<=100?'var(--green)':'var(--red)'};">${totalAlloc.toFixed(0)}%</span></td>
-    <td></td>
-    <td><span class="d-amt gold">${fmt(distPool+resDollars)}</span></td>
-    <td><span class="d-amt">${fmt((distPool+resDollars)/engCount)}</span></td></tr>`;
-  const db = document.getElementById('dist-body');if(db)db.innerHTML=html;
+}
 
-  // ── ADVISORY TAB ──
-  set('cv-barry',   S.barry.toFixed(1)+'%');
-  set('cv-taylor',  S.taylor.toFixed(1)+'%');
-  set('cv-maloney', S.maloney.toFixed(1)+'%');
-  set('adv-total-pct', advTotal.toFixed(1)+'%');
-  const ag = document.getElementById('adv-grand-pct');
-  if(ag){ag.textContent=totalAlloc.toFixed(1)+'%';ag.className='sum-val '+(totalAlloc<=100?'ok':'warn');}
-  const au = document.getElementById('adv-unalloc');
-  if(au){au.textContent=unalloc.toFixed(1)+'%';au.className='sum-val '+(unalloc>=0?'ok':'warn');}
-
-  // Advisory projections — use actual distPool and scenarios
-  const scenarios = [1000000,3000000,5000000,10000000];
-  const advisors = [
-    {name:'Barry Saltzman',pct:S.barry,color:'#a07acc',amt:barryD},
-    {name:'James Taylor',  pct:S.taylor,color:'#9b6cc4',amt:taylorD},
-    {name:'Mary Maloney',  pct:S.maloney,color:'#d4856a',amt:maloneyD},
-  ];
-  let projHtml='';
-  advisors.forEach(a=>{
-    projHtml+=`<div class="adv-proj-card">
-      <div class="apc-name">${a.name}</div>
-      <div class="apc-pct">${a.pct.toFixed(1)}% · Current dist: <strong style="color:var(--green)">${fmt(a.amt)}</strong></div>`;
-    scenarios.forEach(s=>{
-      projHtml+=`<div class="apc-row"><span class="apc-lbl">At ${fmt(s)} dist.</span><span class="apc-val">${fmt(s*(a.pct/100))}</span></div>`;
-    });
-    projHtml+='</div>';
+function renderCore() {
+  const idx = state.coreIdx;
+  const q = state.coreQueue[idx];
+  const total = state.coreQueue.length;
+  const pct = Math.round(((idx + GATING.length) / (total + GATING.length)) * 100);
+  const selected = state.coreAnswers[q.id];
+  app.innerHTML = `
+    <div class="brand">Alethia &middot; Diagnostic</div>
+    <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+    <div class="q-label">Question ${idx + 1} of ${total}</div>
+    <h2>${q.text}</h2>
+    <div class="options" id="opts"></div>
+    <div class="nav-row">
+      <button class="ghost" onclick="coreBack()">&larr; Back</button>
+      <button class="primary" id="nextBtn" ${selected === undefined ? "disabled" : ""} onclick="coreNext()">${idx === total - 1 ? "See results" : "Continue"} &rarr;</button>
+    </div>
+  `;
+  const optsDiv = document.getElementById("opts");
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement("button");
+    btn.className = "opt-btn" + (selected === i ? " selected" : "");
+    btn.textContent = opt;
+    btn.onclick = () => {
+      state.coreAnswers[q.id] = i;
+      render();
+    };
+    optsDiv.appendChild(btn);
   });
-  const apg=document.getElementById('adv-proj-grid');if(apg)apg.innerHTML=projHtml;
+}
 
-  const advDefs=[
-    {name:'Barry Saltzman',type:'Cross-Industry',value:'PREP tool · 2,000+ ICP contacts · automation son',pct:S.barry,color:'#a07acc',amt:barryD},
-    {name:'James G. Taylor',type:'Healthcare MSO',value:'Practice acquisitions · capital markets · MSO builds',pct:S.taylor,color:'#9b6cc4',amt:taylorD},
-    {name:'Mary Maloney',type:'Brand + Healthcare',value:'ACHE network · Cornell · Alethia brand strategy',pct:S.maloney,color:'#d4856a',amt:maloneyD},
-  ];
-  let advTabHtml='';
-  advDefs.forEach(a=>{
-    advTabHtml+=`<tr>
-      <td><span class="d-name"><span class="d-dot" style="background:${a.color}"></span>${a.name}</span></td>
-      <td style="font-size:10px;color:var(--text-muted)">${a.type}</td>
-      <td style="font-size:10px;color:var(--text-muted)">${a.value}</td>
-      <td style="text-align:right;font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--gold-light)">${a.pct.toFixed(1)}%</td>
-      <td style="text-align:right;font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--green)">${fmt(a.amt)}</td></tr>`;
+function coreBack() {
+  if (state.coreIdx > 0) {
+    state.coreIdx--;
+    render();
+  } else {
+    state.screen = "gating";
+    state.gatingIdx = GATING.length - 1;
+    render();
+  }
+}
+function coreNext() {
+  if (state.coreIdx < state.coreQueue.length - 1) {
+    state.coreIdx++;
+    render();
+  } else {
+    state.screen = "contact";
+    render();
+  }
+}
+
+function renderContact() {
+  app.innerHTML = `
+    <div class="brand">Alethia &middot; Almost there</div>
+    <h2>Where should we send your results?</h2>
+    <p class="muted">Your report is ready. Enter your details to view it.</p>
+    <div class="card">
+      <label class="field-label">Name</label>
+      <input type="text" id="c-name" value="${state.contact.name}">
+      <label class="field-label">Email</label>
+      <input type="email" id="c-email" value="${state.contact.email}">
+      <label class="field-label">Company</label>
+      <input type="text" id="c-company" value="${state.contact.company}">
+      <button class="primary" style="width:100%; margin-top:6px;" onclick="submitContact()">View my results &rarr;</button>
+    </div>
+  `;
+}
+
+function submitContact() {
+  state.contact.name = document.getElementById("c-name").value;
+  state.contact.email = document.getElementById("c-email").value;
+  state.contact.company = document.getElementById("c-company").value;
+  state.screen = "results";
+  render();
+}
+
+function scoreFracture(fnum) {
+  const qs = QUESTIONS.filter(q => q.f === fnum && state.coreAnswers[q.id] !== undefined);
+  if (qs.length === 0) return null;
+  const points = qs.reduce((sum, q) => sum + state.coreAnswers[q.id], 0);
+  const max = qs.length * 3;
+  const pct = points / max;
+  let status = "Not Evident";
+  if (pct >= 0.66) status = "Confirmed";
+  else if (pct >= 0.33) status = "Partial";
+  return { pct, status };
+}
+
+function scoreSection(bucket) {
+  const qs = QUESTIONS.filter(q => {
+    const fr = FRACTURES.find(f => f.n === q.f);
+    return fr.bucket === bucket && state.coreAnswers[q.id] !== undefined;
   });
-  const atb=document.getElementById('adv-table-body');if(atb)atb.innerHTML=advTabHtml;
+  if (qs.length === 0) return null;
+  const points = qs.reduce((sum, q) => sum + state.coreAnswers[q.id], 0);
+  const max = qs.length * 3;
+  return Math.round(100 * (1 - points / max));
+}
 
-  // ── TIERS TAB ──
-  set('cv-dx',       S.dx);
-  set('cv-dxprice',  '$'+S.dxprice+'K');
-  set('cv-std',      S.std);
-  set('cv-stdprice', '$'+S.stdprice+'K');
-  set('cv-ht',       S.ht);
-  set('cv-htprice',  '$'+S.htprice+'K');
-  set('cv-ent',      S.ent);
-  set('cv-entprice', '$'+S.entprice+'K');
-  set('tier-total-eng', totalEng);
-  set('tier-blend',  fmt(blended));
-  set('t-eng',       totalEng);
-  set('t-blend',     fmt(blended));
-  set('t-rev',       fmt(gross));
-  set('t-hc-prem',   fmt(S.ht*(S.htprice-S.stdprice)*1000));
+function scoreOverall() {
+  const qs = QUESTIONS.filter(q => state.coreAnswers[q.id] !== undefined);
+  if (qs.length === 0) return null;
+  const points = qs.reduce((sum, q) => sum + state.coreAnswers[q.id], 0);
+  const max = qs.length * 3;
+  return Math.round(100 * (1 - points / max));
+}
 
-  const tierDefs=[
-    {label:'Signal DX — Diagnostic Only', count:S.dx,  price:S.dxprice*1000,  rev:dxRev,  tag:'t-dx',  tagLabel:'Diagnostic', ref:'All channels'},
-    {label:'Standard Liberation Sprint',  count:S.std, price:S.stdprice*1000, rev:stdRev, tag:'t-std', tagLabel:'Standard',   ref:'Barry · Nick GTM'},
-    {label:'Healthcare Tier',             count:S.ht,  price:S.htprice*1000,  rev:htRev,  tag:'t-ht',  tagLabel:'Healthcare', ref:'Taylor · Maloney', ht:true},
-    {label:'Enterprise / MSO Build',      count:S.ent, price:S.entprice*1000, rev:entRev, tag:'t-ent', tagLabel:'Enterprise', ref:'Taylor · Travis network'},
-  ];
-  let tierHtml='';
-  tierDefs.forEach(r=>{
-    tierHtml+=`<tr class="${r.ht?'ht':''}">
-      <td>${r.label}</td><td>${r.count}</td>
-      <td><span class="tier-val">${fmt(r.price)}</span></td>
-      <td><span class="tier-val">${fmt(r.rev)}</span></td>
-      <td style="color:var(--text-muted)">${gross>0?Math.round((r.rev/gross)*100):0}%</td>
-      <td><span class="tier-tag ${r.tag}">${r.tagLabel}</span> <span style="font-size:9px;color:var(--text-faint);margin-left:4px">${r.ref}</span></td></tr>`;
+function barColor(score) {
+  if (score >= 66) return "#1E8449";
+  if (score >= 33) return "#B7950B";
+  return "#C0392B";
+}
+
+function renderResults() {
+  const overall = scoreOverall();
+  const findings = FRACTURES
+    .map(fr => ({ fr, r: scoreFracture(fr.n) }))
+    .filter(x => x.r && (x.r.status === "Confirmed" || x.r.status === "Partial"))
+    .sort((a, b) => b.r.pct - a.r.pct);
+
+  const cleanCount = FRACTURES.filter(fr => {
+    const r = scoreFracture(fr.n);
+    return r && r.status === "Not Evident";
+  }).length;
+
+  let sectionsHtml = "";
+  BUCKETS.forEach(b => {
+    const s = scoreSection(b);
+    if (s === null) return;
+    sectionsHtml += `
+      <div class="section-score-row">
+        <div class="section-name">${b}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${s}%; background:${barColor(s)}"></div></div>
+        <div class="score-num">${s}</div>
+      </div>`;
   });
-  tierHtml+=`<tr style="background:var(--bg3);font-weight:700;">
-    <td>Total</td><td>${totalEng}</td>
-    <td><span class="tier-val">${fmt(blended)}</span> <span style="font-size:9px;color:var(--text-faint)">blended</span></td>
-    <td><span class="tier-val">${fmt(gross)}</span></td><td>100%</td><td></td></tr>`;
-  const tb=document.getElementById('tier-body');if(tb)tb.innerHTML=tierHtml;
 
-  // ── ASCEND TAB ──
-  set('cv-asc',     S.asc);
-  set('cv-ascmo',   '$'+S.ascmo.toLocaleString());
-  set('cv-ascqtr',  '$'+S.ascqtr.toLocaleString());
-  set('cv-ascann',  '$'+S.ascann.toLocaleString());
-  set('asc-perclient-sb', fmt(ascPerClient));
-  set('asc-mo',     fmt(ascMoTotal));
-  set('asc-qtr',    fmt(ascQtrTotal));
-  set('asc-ann',    fmt(ascAnnTotal));
-  set('asc-total',  fmt(ascTotal));
-  set('asc-perclient', fmt(ascPerClient));
-  set('asc-20',     fmt(asc20));
-  const a10=document.getElementById('asc-10-inline');if(a10)a10.textContent=fmt(asc10);
-  const a20=document.getElementById('asc-20-inline');if(a20)a20.textContent=fmt(asc20);
+  let findingsHtml = "";
+  findings.forEach(({ fr, r }) => {
+    const cls = r.status === "Confirmed" ? "confirmed" : "partial";
+    findingsHtml += `
+      <div class="finding ${cls}">
+        <div class="finding-tag">${r.status}</div>
+        <div class="finding-name">${fr.name}</div>
+        <div class="finding-text">${LIGHT_COPY[fr.n]}</div>
+      </div>`;
+  });
 
-  // ── ENGAGEMENT DASHBOARD (always visible) ──
-  set('ed-dx',    S.dx);
-  set('ed-std',   S.std);
-  set('ed-ht',    S.ht);
-  set('ed-ent',   S.ent);
-  set('ed-asc',   S.asc);
-  set('ed-total', totalEng);
-  set('ed-blend', fmt(blended));
+  app.innerHTML = `
+    <div class="brand">Alethia &middot; Your results</div>
+    <h1>Company health check</h1>
+    <p class="muted">${state.contact.company ? state.contact.company : "Your business"} &middot; based only on the answers you gave</p>
+    <div class="overall-box">
+      <div class="overall-num">${overall !== null ? overall : "--"}</div>
+      <div class="overall-label">Overall health score</div>
+    </div>
+    <div class="card">
+      <h2>By area</h2>
+      ${sectionsHtml}
+    </div>
+    <div class="card">
+      <h2>What's showing up</h2>
+      ${findings.length ? findingsHtml : '<div class="clean-note">Nothing rose to a confirmed or partial level in the areas you covered &mdash; solid signal so far.</div>'}
+      ${cleanCount > 0 ? `<p class="muted" style="margin-top:10px;">${cleanCount} other area${cleanCount === 1 ? "" : "s"} showed no signal of a problem based on your answers.</p>` : ""}
+    </div>
+    <div class="cta-box">
+      <h2>Want the full picture?</h2>
+      <p class="muted">This is the light version. A Fireside Chat with our team goes deeper on exactly what's driving these findings and what to do about them &mdash; no cost, no obligation.</p>
+      <a class="cta-btn" href="mailto:hello@alethia.com?subject=Fireside%20Chat%20request&body=Hi%2C%20I%20just%20took%20the%20Signal%20DX%20diagnostic%20and%20want%20to%20book%20a%20Fireside%20Chat.">Book a Fireside Chat &rarr;</a>
+    </div>
+  `;
 }
 
 render();
-
-// ── LOCAL STORAGE — persist notes and slider state ──
-const STORE_KEY = 'alethia_econ_v3';
-
-function saveState() {
-  const notes = {};
-  document.querySelectorAll('textarea').forEach((el,i) => {
-    notes['ta_'+i] = el.value;
-  });
-  try {
-    localStorage.setItem(STORE_KEY, JSON.stringify({S, notes}));
-  } catch(e) {}
-}
-
-function loadState() {
-  try {
-    const raw = localStorage.getItem(STORE_KEY);
-    if (!raw) return;
-    const saved = JSON.parse(raw);
-
-    // Restore S values
-    if (saved.S) {
-      Object.keys(saved.S).forEach(k => {
-        if (k in S) S[k] = saved.S[k];
-      });
-    }
-
-    // Restore slider positions to match S
-    syncSlidersToS();
-
-    // Restore notes
-    if (saved.notes) {
-      document.querySelectorAll('textarea').forEach((el,i) => {
-        if (saved.notes['ta_'+i] !== undefined) el.value = saved.notes['ta_'+i];
-      });
-    }
-
-    render();
-  } catch(e) {}
-}
-
-function syncSlidersToS() {
-  // Map each slider oninput to its S key and sync value
-  const sliderMap = [
-    ['S.fa=',     S.fa],
-    ['S.faeng=',  S.faeng],
-    ['S.auto=',   S.auto],
-    ['S.autoeng=',S.autoeng],
-    ['S.gtm=',    S.gtm],
-    ['S.prepCount=', S.prepCount],
-    ['S.res=',    S.res],
-    ['S.travis=', S.travis],
-    ['S.travisDist=', S.travisDist],
-    ['S.joe=',    S.joe],
-    ['S.joeDist=',S.joeDist],
-    ['S.nick=',   S.nick],
-    ['S.nickDist=',S.nickDist],
-    ['S.barry=',  S.barry],
-    ['S.taylor=', S.taylor],
-    ['S.maloney=',S.maloney],
-    ['S.dx=',     S.dx],
-    ['S.dxprice=',S.dxprice],
-    ['S.std=',    S.std],
-    ['S.stdprice=',S.stdprice],
-    ['S.ht=',     S.ht],
-    ['S.htprice=',S.htprice],
-    ['S.ent=',    S.ent],
-    ['S.entprice=',S.entprice],
-    ['S.asc=',    S.asc],
-    ['S.ascmo=',  S.ascmo],
-    ['S.ascqtr=', S.ascqtr],
-    ['S.ascann=', S.ascann],
-  ];
-  document.querySelectorAll('input[type=range]').forEach(el => {
-    const handler = el.getAttribute('oninput') || '';
-    sliderMap.forEach(([key, val]) => {
-      if (handler.includes(key)) el.value = val;
-    });
-  });
-  // PREP toggle
-  const prepToggle = document.getElementById('prep-toggle') || document.querySelector('input[type=checkbox]');
-  if (prepToggle) prepToggle.checked = S.prepOn === 1;
-  // PREP price input
-  const prepInput = document.querySelector('input.prep-input');
-  if (prepInput && S.prepPrice > 0) prepInput.value = S.prepPrice;
-}
-
-// Auto-save on any slider or textarea change
-document.addEventListener('input', saveState);
-document.addEventListener('change', saveState);
-
-// Add reset button to header
-const resetBtn = document.createElement('button');
-resetBtn.textContent = 'Reset to Defaults';
-resetBtn.style.cssText = 'background:transparent;border:.5px solid var(--text-faint);color:var(--text-faint);font-family:Source Sans 3,sans-serif;font-size:10px;padding:4px 10px;border-radius:3px;cursor:pointer;margin-left:8px;';
-resetBtn.onclick = () => {
-  if(confirm('Reset all values and notes to defaults?')) {
-    localStorage.removeItem(STORE_KEY);
-    location.reload();
-  }
-};
-document.querySelector('.kpis').appendChild(resetBtn);
-
-// Load on startup
-loadState();
 </script>
 </body>
 </html>
