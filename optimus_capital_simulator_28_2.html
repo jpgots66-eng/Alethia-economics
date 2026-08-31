@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Capability Without Headcount — Optimus Capital</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=DM+Sans:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --prussian: #061535;
+  --prussian-mid: #0a1f42;
+  --prussian-light: #0f2850;
+  --gold: #CAA84C;
+  --white: #F4F1E8;
+  --gray: #8A9BB5;
+  --dim: #4A5A72;
+  --red: #E53E3E;
+  --amber: #ED8936;
+  --green: #38A169;
+  --blue: #4299E1;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { height:100%; overflow:hidden; }
+body {
+  background: var(--prussian);
+  color: var(--white);
+  font-family: 'DM Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.screen {
+  display: none;
+  width: 100vw;
+  height: 100vh;
+  padding: 40px 56px 28px;
+  flex-direction: column;
+}
+.screen.active { display: flex; }
+
+.screen-badge {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.28em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.screen-title { white-space:nowrap;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 52px;
+  font-weight: 600;
+  color: var(--white);
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+.screen-title em { color: var(--gold); font-style: italic; }
+
+.nav-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid rgba(202,168,76,0.1);
+}
+.nav-btn {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 14px 28px;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.nav-btn.primary { background: var(--gold); color: var(--prussian); }
+.nav-btn.secondary { background: transparent; border: 1px solid rgba(202,168,76,0.4); color: var(--gold); }
+.nav-btn:hover { opacity: 0.85; }
+
+.stage-dots { display: flex; gap: 8px; margin-left: 16px; }
+.stage-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--dim); transition: all 0.3s; }
+.stage-dot.active { background: var(--gold); transform: scale(1.2); }
+.stage-dot.done { background: rgba(202,168,76,0.5); }
+</style>
+</head>
+<body>
+
+<!-- SCREEN 0: HERO -->
+<div class="screen active" id="screen-0">
+  <div class="screen-badge">Capability Without Headcount · Optimus Capital · Anonymized</div>
+
+  <div style="font-family:'Cormorant Garamond',serif; font-size:60px; font-weight:500; line-height:1.1; margin-bottom:36px;">
+    <div style="color:var(--white); white-space:nowrap;">Brokers assumed he had a full team.</div>
+    <div style="color:var(--gold); font-style:italic;">He had one seat and an agentic AI operating system.</div>
+  </div>
+
+  <div style="display:flex; gap:2px; margin-bottom:32px;">
+    <div style="flex:1; background:var(--prussian-mid); padding:24px 28px; border-top:4px solid rgba(255,255,255,0.15);">
+      <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:0.18em; color:var(--gray); text-transform:uppercase; font-weight:700; margin-bottom:12px;">Engagement length</div>
+      <div style="font-family:'DM Sans',sans-serif; font-size:64px; font-weight:700; color:var(--white); line-height:1;">6</div>
+      <div style="font-family:'Space Mono',monospace; font-size:11px; color:var(--gray); letter-spacing:0.1em; text-transform:uppercase; margin-top:6px;">Months</div>
+    </div>
+    <div style="flex:1; background:var(--prussian-mid); padding:24px 28px; border-top:4px solid var(--gold);">
+      <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:0.18em; color:var(--gray); text-transform:uppercase; font-weight:700; margin-bottom:12px;">Capacity increase</div>
+      <div style="font-family:'DM Sans',sans-serif; font-size:64px; font-weight:700; color:var(--gold); line-height:1;">5x</div>
+      <div style="font-family:'Space Mono',monospace; font-size:11px; color:var(--gray); letter-spacing:0.1em; text-transform:uppercase; margin-top:6px;">Operator-attested</div>
+    </div>
+    <div style="flex:1; background:var(--prussian-mid); padding:24px 28px; border-top:4px solid var(--green);">
+      <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:0.18em; color:var(--gray); text-transform:uppercase; font-weight:700; margin-bottom:12px;">Diligence turnaround</div>
+      <div style="font-family:'DM Sans',sans-serif; font-size:40px; font-weight:700; color:var(--green); line-height:1.2; margin-top:4px;">Weeks to hours.</div>
+    </div>
+  </div>
+
+  <div style="font-size:24px; font-weight:700; color:var(--gray); line-height:1.5; margin-bottom:12px;">One operator. No team. Competing against firms with full staffs.</div>
+  <div style="font-size:28px; font-weight:700; color:var(--white); line-height:1.4;">Agentic AI closed the gap.</div>
+
+  <div class="nav-row">
+    <button class="nav-btn primary" onclick="goTo(1)">SEE THE TRANSFORMATION ▶</button>
+    <div class="stage-dots">
+      <div class="stage-dot active"></div>
+      <div class="stage-dot"></div>
+      <div class="stage-dot"></div>
+      <div class="stage-dot"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 1: THE STARTING CONDITION -->
+<div class="screen" id="screen-1">
+  <div class="screen-badge">Stage 01 · The Problem</div>
+  <div class="screen-title" style="white-space:nowrap;">One operator. Teams ten times larger.<br><em>The gap was structural.</em></div>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; flex:1; margin-top:28px;">
+
+    <!-- Left: The gap -->
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <div style="font-family:'Space Mono',monospace; font-size:14px; letter-spacing:0.14em; color:var(--red); text-transform:uppercase; font-weight:700; margin-bottom:2px;">The Starting Gap</div>
+
+      <div style="background:rgba(229,62,62,0.06); border:1px solid rgba(229,62,62,0.25); border-left:4px solid var(--red); padding:20px 28px; flex:1; display:flex; flex-direction:column; gap:12px; justify-content:center;">
+        <div style="font-size:30px; font-weight:700; color:var(--white); line-height:1.2;">One operator. No team.</div>
+        <div style="font-size:30px; font-weight:700; color:var(--red); line-height:1.2;">They had ten. He had none.</div>
+      </div>
+
+      <div style="background:rgba(229,62,62,0.06); border:1px solid rgba(229,62,62,0.25); border-left:4px solid var(--red); padding:20px 28px; flex:1; display:flex; flex-direction:column; gap:12px; justify-content:center;">
+        <div style="font-size:30px; font-weight:700; color:var(--white); line-height:1.2;">Every deal took weeks.</div>
+        <div style="font-size:30px; font-weight:700; color:var(--red); line-height:1.2;">Volume was impossible alone.</div>
+      </div>
+
+      <div style="background:rgba(229,62,62,0.06); border:1px solid rgba(229,62,62,0.25); border-left:4px solid var(--red); padding:20px 28px; flex:1; display:flex; flex-direction:column; gap:12px; justify-content:center;">
+        <div style="font-size:30px; font-weight:700; color:var(--white); line-height:1.2;">Institutional quality expected.</div>
+        <div style="font-size:30px; font-weight:700; color:var(--red); line-height:1.2;">No team to deliver it.</div>
+      </div>
+    </div>
+
+    <!-- Right: What was built -->
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <div style="font-family:'Space Mono',monospace; font-size:14px; letter-spacing:0.14em; color:var(--gold); text-transform:uppercase; font-weight:700; margin-bottom:2px;">What the Engagement Built</div>
+
+      <div style="background:rgba(202,168,76,0.06); border:1px solid rgba(202,168,76,0.2); border-left:4px solid var(--gold); padding:20px 28px; flex:1; display:flex; flex-direction:column; gap:12px; justify-content:center;">
+        <div style="font-size:30px; font-weight:700; color:var(--white); line-height:1.2;">An operating system.</div>
+        <div style="font-size:30px; font-weight:700; color:var(--gold); line-height:1.2;">Built around how Curtis works.</div>
+      </div>
+
+      <div style="background:rgba(202,168,76,0.06); border:1px solid rgba(202,168,76,0.2); border-left:4px solid var(--gold); padding:20px 28px; flex:1; display:flex; flex-direction:column; gap:12px; justify-content:center;">
+        <div style="font-size:30px; font-weight:700; color:var(--white); line-height:1.2;">Intelligence that compounds.</div>
+        <div style="font-size:30px; font-weight:700; color:var(--gold); line-height:1.2;">Every deal feeds the system.</div>
+      </div>
+
+      <div style="background:rgba(202,168,76,0.06); border:1px solid rgba(202,168,76,0.2); border-left:4px solid var(--gold); padding:20px 28px; flex:1; display:flex; flex-direction:column; gap:12px; justify-content:center;">
+        <div style="font-size:30px; font-weight:700; color:var(--white); line-height:1.2;">Operator stays in command.</div>
+        <div style="font-size:30px; font-weight:700; color:var(--gold); line-height:1.2;">AI surfaces. Curtis decides.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-row">
+    <button class="nav-btn secondary" onclick="goTo(0)">◀ BACK</button>
+    <button class="nav-btn primary" onclick="goTo(2)">SEE THE RESULT ▶</button>
+    <div class="stage-dots">
+      <div class="stage-dot done"></div>
+      <div class="stage-dot active"></div>
+      <div class="stage-dot"></div>
+      <div class="stage-dot"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 2: THE TRANSFORMATION -->
+<div class="screen" id="screen-2">
+  <div class="screen-badge">Stage 02 · The Transformation</div>
+  <div class="screen-title" style="white-space:nowrap;">Agentic AI. Properly implemented.<br><em>Six months. Gap closed.</em></div>
+
+  <div style="display:grid; grid-template-columns:1fr 2fr 100px 100px; gap:10px; flex:1; margin-top:16px; align-items:stretch;">
+
+    <!-- IMPACT column -->
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <div style="font-family:'Space Mono',monospace; font-size:13px; letter-spacing:0.14em; color:var(--gold); text-transform:uppercase; font-weight:700; text-align:center;">The Impact</div>
+      <div style="background:rgba(202,168,76,0.08); border:1px solid rgba(202,168,76,0.25); border-left:4px solid var(--gold); padding:20px 24px; flex:1; display:flex; flex-direction:column; justify-content:center;">
+        <div style="font-family:'Cormorant Garamond',serif; font-size:40px; font-weight:600; color:var(--gold); line-height:1.15;">Deal diligence cut from weeks to hours.</div>
+      </div>
+      <div style="background:rgba(202,168,76,0.08); border:1px solid rgba(202,168,76,0.25); border-left:4px solid var(--gold); padding:20px 24px; flex:1; display:flex; flex-direction:column; justify-content:center;">
+        <div style="font-family:'Cormorant Garamond',serif; font-size:40px; font-weight:600; color:var(--gold); line-height:1.15;">500% increase in operator capacity.</div>
+      </div>
+      <div style="background:rgba(202,168,76,0.08); border:1px solid rgba(202,168,76,0.25); border-left:4px solid var(--gold); padding:20px 24px; flex:1; display:flex; flex-direction:column; justify-content:center;">
+        <div style="font-family:'Cormorant Garamond',serif; font-size:40px; font-weight:600; color:var(--gold); line-height:1.15;">Work product upgraded to institutional grade.</div>
+      </div>
+    </div>
+
+    <!-- WHAT CLOSED THE GAP column -->
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <div style="font-family:'Space Mono',monospace; font-size:13px; letter-spacing:0.14em; color:var(--gray); text-transform:uppercase; font-weight:700; text-align:center;">What Closed the Gap</div>
+      <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(202,168,76,0.15); border-left:3px solid var(--gold); padding:18px 24px; flex:1; display:flex; flex-direction:column; justify-content:center; gap:12px;">
+        <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.14em; color:var(--gold); text-transform:uppercase; font-weight:700; margin-bottom:6px;">How they evaluated deals</div>
+        <div style="display:flex; align-items:flex-start; gap:10px;"><div style="color:var(--gold); font-weight:700; flex-shrink:0;">&#9656;</div><div style="font-size:18px; font-weight:700; color:var(--white); line-height:1.35;">AI reviewed customer data and flagged hidden concentration risk in hours</div></div>
+        <div style="display:flex; align-items:flex-start; gap:10px;"><div style="color:var(--gold); font-weight:700; flex-shrink:0;">&#9656;</div><div style="font-size:18px; font-weight:700; color:var(--white); line-height:1.35;">Each deal scored on entry. Weak ones rejected before wasting resources.</div></div>
+        <div style="display:flex; align-items:flex-start; gap:10px;"><div style="color:var(--gold); font-weight:700; flex-shrink:0;">&#9656;</div><div style="font-size:18px; font-weight:700; color:var(--white); line-height:1.35;">20 sectors pre-researched and ready before the first call</div></div>
+      </div>
+      <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(202,168,76,0.15); border-left:3px solid var(--gold); padding:18px 24px; flex:1; display:flex; flex-direction:column; justify-content:center; gap:12px;">
+        <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.14em; color:var(--gold); text-transform:uppercase; font-weight:700; margin-bottom:6px;">How the firm ran</div>
+        <div style="display:flex; align-items:flex-start; gap:10px;"><div style="color:var(--gold); font-weight:700; flex-shrink:0;">&#9656;</div><div style="font-size:18px; font-weight:700; color:var(--white); line-height:1.35;">System built around how Curtis actually works. Not a generic AI tool.</div></div>
+        <div style="display:flex; align-items:flex-start; gap:10px;"><div style="color:var(--gold); font-weight:700; flex-shrink:0;">&#9656;</div><div style="font-size:18px; font-weight:700; color:var(--white); line-height:1.35;">Agents handling research, analysis, and tracking across every deal stage</div></div>
+        <div style="display:flex; align-items:flex-start; gap:10px;"><div style="color:var(--gold); font-weight:700; flex-shrink:0;">&#9656;</div><div style="font-size:18px; font-weight:700; color:var(--white); line-height:1.35;">Every deal makes the next one faster. Knowledge compounds.</div></div>
+      </div>
+      <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(202,168,76,0.15); border-left:3px solid var(--gold); padding:18px 24px; flex:1; display:flex; flex-direction:column; justify-content:center; gap:12px;">
+        <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.14em; color:var(--gold); text-transform:uppercase; font-weight:700; margin-bottom:6px;">How the market saw them</div>
+        <div style="display:flex; align-items:flex-start; gap:10px;"><div style="color:var(--gold); font-weight:700; flex-shrink:0;">&#9656;</div><div style="font-size:18px; font-weight:700; color:var(--white); line-height:1.35;">Investor materials at institutional quality and speed</div></div>
+        <div style="display:flex; align-items:flex-start; gap:10px;"><div style="color:var(--gold); font-weight:700; flex-shrink:0;">&#9656;</div><div style="font-size:18px; font-weight:700; color:var(--white); line-height:1.35;">Brokers assumed Curtis had a full team behind him</div></div>
+        <div style="display:flex; align-items:flex-start; gap:10px;"><div style="color:var(--gold); font-weight:700; flex-shrink:0;">&#9656;</div><div style="font-size:18px; font-weight:700; color:var(--white); line-height:1.35;">Curtis owns and extends the system. No dependency on the engagement.</div></div>
+      </div>
+    </div>
+
+    <!-- BEFORE column -->
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <div style="font-family:'Space Mono',monospace; font-size:13px; letter-spacing:0.14em; color:var(--red); text-transform:uppercase; font-weight:700; text-align:center;">Before</div>
+      <div style="background:rgba(229,62,62,0.08); border:1px solid rgba(229,62,62,0.2); padding:14px 10px; flex:1; display:flex; flex-direction:column; justify-content:center; text-align:center; gap:6px;">
+        <div style="font-family:'DM Sans',sans-serif; font-size:36px; font-weight:700; color:var(--red); line-height:1;">1&ndash;2 wks</div>
+        <div style="font-size:11px; font-weight:700; color:var(--gray);">per deal</div>
+      </div>
+      <div style="background:rgba(229,62,62,0.08); border:1px solid rgba(229,62,62,0.2); padding:14px 10px; flex:1; display:flex; flex-direction:column; justify-content:center; text-align:center; gap:6px;">
+        <div style="font-family:'DM Sans',sans-serif; font-size:36px; font-weight:700; color:var(--red); line-height:1;">1x</div>
+        <div style="font-size:11px; font-weight:700; color:var(--gray);">capacity</div>
+      </div>
+      <div style="background:rgba(229,62,62,0.08); border:1px solid rgba(229,62,62,0.2); padding:14px 10px; flex:1; display:flex; flex-direction:column; justify-content:center; text-align:center; gap:6px;">
+        <div style="font-size:13px; font-weight:700; color:var(--red); line-height:1.3;">Lean startup<br>perception</div>
+      </div>
+    </div>
+
+    <!-- AFTER column -->
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <div style="font-family:'Space Mono',monospace; font-size:13px; letter-spacing:0.14em; color:var(--green); text-transform:uppercase; font-weight:700; text-align:center;">After</div>
+      <div style="background:rgba(56,161,105,0.08); border:1px solid rgba(56,161,105,0.25); border-left:3px solid var(--green); padding:14px 10px; flex:1; display:flex; flex-direction:column; justify-content:center; text-align:center; gap:6px;">
+        <div style="font-family:'DM Sans',sans-serif; font-size:36px; font-weight:700; color:var(--green); line-height:1;">1&ndash;2 hrs</div>
+        <div style="font-size:11px; font-weight:700; color:var(--gray);">per deal</div>
+      </div>
+      <div style="background:rgba(56,161,105,0.08); border:1px solid rgba(56,161,105,0.25); border-left:3px solid var(--green); padding:14px 10px; flex:1; display:flex; flex-direction:column; justify-content:center; text-align:center; gap:6px;">
+        <div style="font-family:'DM Sans',sans-serif; font-size:36px; font-weight:700; color:var(--green); line-height:1;">5x</div>
+        <div style="font-size:11px; font-weight:700; color:var(--gray);">capacity</div>
+      </div>
+      <div style="background:rgba(56,161,105,0.08); border:1px solid rgba(56,161,105,0.25); border-left:3px solid var(--green); padding:14px 10px; flex:1; display:flex; flex-direction:column; justify-content:center; text-align:center; gap:6px;">
+        <div style="font-size:13px; font-weight:700; color:var(--green); line-height:1.3;">Institutional<br>quality</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="nav-row">
+    <button class="nav-btn secondary" onclick="goTo(1)">◀ BACK</button>
+    <button class="nav-btn primary" onclick="goTo(3)">THE MOMENT IT PROVED ITSELF ▶</button>
+    <div class="stage-dots">
+      <div class="stage-dot done"></div>
+      <div class="stage-dot done"></div>
+      <div class="stage-dot active"></div>
+      <div class="stage-dot"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 3: THE PROOF -->
+<div class="screen" id="screen-3">
+  <div class="screen-badge">Stage 03 · The Proof</div>
+  <div class="screen-title" style="white-space:nowrap;">A live deal.<br><em>AI caught what the data hid.</em></div>
+
+  <div style="flex:1; display:flex; flex-direction:column; gap:10px; margin-top:16px;">
+
+    <!-- Four full-width cards — fixed row heights so both text lines lock to exact vertical positions -->
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px; flex:1;">
+
+      <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(202,168,76,0.1); border-top:4px solid var(--amber); padding:20px 24px; display:grid; grid-template-rows:36px 100px 100px; gap:0;">
+        <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.14em; color:var(--amber); text-transform:uppercase; font-weight:700; display:flex; align-items:center;">The Situation</div>
+        <div style="display:flex; align-items:center;">
+          <div style="font-size:22px; font-weight:700; color:var(--white); line-height:1.2;">Deal under acquisition review.</div>
+        </div>
+        <div style="display:flex; align-items:flex-start; padding-top:20px; border-top:1px solid rgba(255,255,255,0.06);">
+          <div style="font-size:22px; font-weight:700; color:var(--amber); line-height:1.2;">Customer base looked diversified.</div>
+        </div>
+      </div>
+
+      <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(202,168,76,0.1); border-top:4px solid var(--gold); padding:20px 24px; display:grid; grid-template-rows:36px 100px 100px; gap:0;">
+        <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.14em; color:var(--gold); text-transform:uppercase; font-weight:700; display:flex; align-items:center;">What the AI Found</div>
+        <div style="display:flex; align-items:center;">
+          <div style="font-size:22px; font-weight:700; color:var(--white); line-height:1.2;">Same parent. Different names.</div>
+        </div>
+        <div style="display:flex; align-items:flex-start; padding-top:20px; border-top:1px solid rgba(255,255,255,0.06);">
+          <div style="font-size:22px; font-weight:700; color:var(--gold); line-height:1.2;">Concentration risk hidden in the data.</div>
+        </div>
+      </div>
+
+      <div style="background:rgba(229,62,62,0.06); border:1px solid rgba(229,62,62,0.2); border-top:4px solid var(--red); padding:20px 24px; display:grid; grid-template-rows:36px 100px 100px; gap:0;">
+        <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.14em; color:var(--red); text-transform:uppercase; font-weight:700; display:flex; align-items:center;">The Decision</div>
+        <div style="display:flex; align-items:center;">
+          <div style="font-size:22px; font-weight:700; color:var(--white); line-height:1.2;">Curtis killed the deal.</div>
+        </div>
+        <div style="display:flex; align-items:flex-start; padding-top:20px; border-top:1px solid rgba(255,255,255,0.06);">
+          <div style="font-size:22px; font-weight:700; color:var(--red); line-height:1.2;">Before deeper diligence cost more.</div>
+        </div>
+      </div>
+
+      <div style="background:rgba(56,161,105,0.06); border:1px solid rgba(56,161,105,0.2); border-top:4px solid var(--green); padding:20px 24px; display:grid; grid-template-rows:36px 100px 100px; gap:0;">
+        <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.14em; color:var(--green); text-transform:uppercase; font-weight:700; display:flex; align-items:center;">The Principle</div>
+        <div style="display:flex; align-items:center;">
+          <div style="font-size:22px; font-weight:700; color:var(--white); line-height:1.2;">AI surfaced it. Curtis decided.</div>
+        </div>
+        <div style="display:flex; align-items:flex-start; padding-top:20px; border-top:1px solid rgba(255,255,255,0.06);">
+          <div style="font-size:22px; font-weight:700; color:var(--green); line-height:1.2;">That is the model.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Alethia standard -->
+    <div style="background:rgba(202,168,76,0.06); border:1px solid rgba(202,168,76,0.2); padding:24px 32px; display:flex; align-items:center; justify-content:space-between; gap:32px;">
+      <div>
+        <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.14em; color:var(--gold); text-transform:uppercase; font-weight:700; margin-bottom:10px;">The Standard Alethia Holds</div>
+        <div style="font-size:22px; font-weight:700; color:var(--white); line-height:1.4;">Human leaders remain accountable. The enterprise becomes progressively more intelligent.</div>
+      </div>
+      <div style="display:flex; align-items:center; gap:16px; flex-shrink:0;">
+        <div style="font-family:'DM Sans',sans-serif; font-size:72px; font-weight:700; color:var(--gold); line-height:1;">5x</div>
+        <div style="font-family:'Space Mono',monospace; font-size:12px; font-weight:700; letter-spacing:0.12em; color:var(--white); text-transform:uppercase; line-height:1.8;">More capacity.<br><span style="color:var(--gold);">Zero added headcount.</span></div>
+      </div>
+    </div>
+
+    <!-- Curtis quote -->
+    <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(202,168,76,0.15); border-left:4px solid var(--gold); padding:24px 32px;">
+      <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.14em; color:var(--gold); text-transform:uppercase; font-weight:700; margin-bottom:14px;">Curtis Eggemeyer · Optimus Capital</div>
+      <div style="font-family:'Cormorant Garamond',serif; font-size:20px; font-style:italic; color:var(--white); line-height:1.4; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">"Work that previously required weeks can now be completed in hours. The intelligence environment around my judgment expanded what I could command — without adding headcount."</div>
+    </div>
+
+  </div>
+
+  <div class="nav-row">
+    <button class="nav-btn secondary" onclick="goTo(2)">◀ BACK</button>
+    <div class="stage-dots">
+      <div class="stage-dot done"></div>
+      <div class="stage-dot done"></div>
+      <div class="stage-dot done"></div>
+      <div class="stage-dot active"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentScreen = 0;
+
+function goTo(n) {
+  document.getElementById('screen-' + currentScreen).classList.remove('active');
+  currentScreen = n;
+  document.getElementById('screen-' + n).classList.add('active');
+}
+</script>
+</body>
+</html>
