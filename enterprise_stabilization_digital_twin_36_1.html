@@ -1,0 +1,1468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alethia — Enterprise Stabilization</title>
+<style>
+/* LOCKED: hero always 2 lines, white line 1, gold italic line 2, white-space nowrap */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap');
+
+:root {
+  --prussian: #061535;
+  --prussian-mid: #0C2347;
+  --gold: #CAA84C;
+  --white: #FAFAF8;
+  --gray: #C4BFBA;
+  --dim: #3D4F6B;
+  --red: #E53E3E;
+  --amber: #ED8936;
+  --green: #38A169;
+  --human: #5B9BD5;
+  --structural: #E67E22;
+  --execution: #9B59B6;
+  --intel: #27AE60;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; overflow-x: hidden; }
+body { background:var(--prussian); color:var(--white); font-family:'DM Sans',sans-serif; overflow-x:hidden; }
+
+/* ── SCREEN SYSTEM ── */
+.screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 40px 48px 28px;
+  border-bottom: 1px solid rgba(202,168,76,0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── SCREEN HEADER ── */
+.screen-badge {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.28em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.screen-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(28px, 3.5vw, 48px);
+  font-weight: 500;
+  color: var(--white);
+  line-height: 1.1;
+  margin-bottom: 10px;
+  max-width: none;
+  white-space: nowrap;
+}
+
+.screen-title em { color: var(--gold); font-style: italic; }
+
+.screen-sub {
+  font-size: 17px;
+  color: var(--gray);
+  margin-bottom: 32px;
+  line-height: 1.5;
+}
+
+/* ── HERO HEADER (Screen 0) ── */
+.hero-screen {
+  background: linear-gradient(180deg, rgba(12,35,71,0.6) 0%, transparent 100%);
+  justify-content: flex-start;
+}
+
+.hero-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(32px, 4vw, 64px);
+  font-weight: 500;
+  color: var(--white);
+  line-height: 1.1;
+  margin-bottom: 24px;
+  max-width: none;
+  white-space: nowrap;
+}
+
+.hero-title em { color: var(--gold); font-style: italic; }
+
+.kpi-row {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 48px;
+  width: 100%;
+}
+
+.kpi-box {
+  background: var(--prussian-mid);
+  padding: 36px 28px;
+  text-align: center;
+  flex: 1;
+}
+
+.kpi-lbl { font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.2em; color:var(--gray); text-transform:uppercase; margin-bottom:16px; font-weight:700; }
+.kpi-val { font-family:'DM Sans',sans-serif; font-size:72px; font-weight:700; line-height:1; }
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(56,161,105,0.08);
+  border: 1px solid rgba(56,161,105,0.25);
+  padding: 6px 16px;
+  margin-bottom: 20px;
+}
+
+.badge-dot { width:6px;height:6px;background:var(--green);border-radius:50%;animation:blink 2s infinite; }
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.badge-txt { font-family:'Space Mono',monospace;font-size:8px;letter-spacing:0.18em;color:var(--green);text-transform:uppercase; }
+
+/* ── STAGE 1: DIAGNOSE ── */
+.sdx-banner {
+  background: rgba(202,168,76,0.06);
+  border: 1px solid rgba(202,168,76,0.2);
+  margin-bottom: 32px;
+  min-height: 160px;
+}
+
+.sdx-logo-big {
+  font-family: 'Space Mono', monospace;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--gold);
+  flex-shrink: 0;
+}
+
+.sdx-score-big {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 80px;
+  font-weight: 600;
+  color: var(--red);
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.sdx-score-context { flex: 1; }
+
+.sdx-score-lbl {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--gray);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.sdx-finding {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-style: italic;
+  color: var(--white);
+  line-height: 1.4;
+}
+
+/* Constraint groups */
+.arch-groups {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  flex: 1;
+  align-content: start;
+  min-width: 0;
+}
+
+.arch-group {
+  border-top: 5px solid;
+  padding: 28px 24px 24px;
+  background: rgba(255,255,255,0.02);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 100%;
+}
+
+.ag-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.ag-arch-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 48px;
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: 16px;
+  line-height: 1.0;
+}
+
+.constraint-pill {
+  padding: 14px 16px;
+  border-left: 4px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.03);
+}
+
+.cp-severity {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+.cp-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 4px;
+  line-height: 1.2;
+}
+
+.cp-finding {
+  font-size: 13px;
+  color: var(--gray);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ── STAGE 2: ARCHITECT ── */
+.arch-sequence {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  flex: 1;
+}
+
+.arch-seq-item {
+  display: grid;
+  grid-template-columns: 80px 1fr 180px;
+  align-items: center;
+  padding: 28px 36px;
+  border-left: 6px solid;
+  background: rgba(255,255,255,0.02);
+  transition: background 0.3s;
+}
+
+.arch-seq-item + .arch-seq-item {
+  border-top: 1px solid rgba(255,255,255,0.04);
+}
+
+.arch-seq-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 64px;
+  font-weight: 600;
+  opacity: 0.15;
+  line-height: 1;
+}
+
+.arch-seq-name {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 8px;
+  line-height: 1.1;
+}
+
+.arch-seq-what {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--gray);
+  line-height: 1.4;
+}
+
+.arch-seq-timing {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--dim);
+  text-transform: uppercase;
+  text-align: right;
+  white-space: nowrap;
+  line-height: 1.8;
+}
+
+/* ── ARCHITECT ROW ANIMATIONS ── */
+@keyframes rowIn {
+  from { opacity: 0; transform: translateX(-32px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.arch-row {
+  opacity: 0;
+  animation: rowIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.arch-row-1 { animation-delay: 0.2s; }
+.arch-row-2 { animation-delay: 0.9s; }
+.arch-row-3 { animation-delay: 1.6s; }
+.arch-row-4 { animation-delay: 2.3s; }
+.arch-row-callout { opacity:0; animation: rowIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards; animation-delay: 3.0s; }
+
+/* ── STAGE 3: IMPLEMENT ── */
+.impl-layout {
+  display: grid;
+  grid-template-columns: 1fr 260px;
+  gap: 32px;
+  flex: 1;
+  align-items: start;
+}
+
+.impl-timeline { flex: 1; }
+
+.tl-month-row {
+  display: flex;
+  margin-bottom: 8px;
+}
+
+.tl-mo {
+  flex: 1;
+  text-align: center;
+  font-family: 'Space Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 0.1em;
+  color: var(--dim);
+  text-transform: uppercase;
+  transition: color 0.3s;
+}
+
+.tl-mo.current { color: var(--gold); font-weight: 700; }
+
+.tl-bar-wrap {
+  position: relative;
+  height: 6px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 3px;
+  margin-bottom: 24px;
+}
+
+.tl-progress { height:100%; background:var(--gold); border-radius:3px; width:0%; transition:width 0.4s; }
+
+.tl-events { position:absolute; top:-8px; left:0; right:0; }
+
+.tl-event-marker {
+  position: absolute;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tl-dot {
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--prussian);
+  opacity: 0.2;
+  transition: all 0.4s;
+  flex-shrink: 0;
+}
+
+.tl-event-marker.active .tl-dot { opacity: 1; transform: scale(1.4); box-shadow: 0 0 0 4px rgba(255,255,255,0.07); }
+.tl-event-marker.done .tl-dot { opacity: 0.65; }
+
+.tl-event-lbl {
+  font-family: 'Space Mono', monospace;
+  font-size: 7px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 5px;
+  white-space: nowrap;
+  opacity: 0.2;
+  transition: opacity 0.4s;
+}
+
+.tl-event-marker.active .tl-event-lbl,
+.tl-event-marker.done .tl-event-lbl { opacity: 1; }
+
+/* ── THE PROPER CHART ── */
+.chart-wrap {
+  position: relative;
+  height: 520px;
+  margin-top: 16px;
+}
+
+/* Zero line sits in the MIDDLE */
+.chart-zero-line {
+  position: absolute;
+  left: 0; right: 0;
+  top: 50%;
+  height: 2px;
+  background: rgba(202,168,76,0.5);
+  z-index: 2;
+}
+
+.chart-zero-tag {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  color: var(--gold);
+  background: var(--prussian);
+  padding: 2px 6px;
+  z-index: 3;
+}
+
+.chart-pos-label {
+  position: absolute;
+  left: -40px;
+  top: 20%;
+  font-family: 'Space Mono', monospace;
+  font-size: 7px;
+  color: var(--green);
+  opacity: 0.6;
+  writing-mode: vertical-rl;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.chart-neg-label {
+  position: absolute;
+  left: -40px;
+  top: 65%;
+  font-family: 'Space Mono', monospace;
+  font-size: 7px;
+  color: var(--red);
+  opacity: 0.6;
+  writing-mode: vertical-rl;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.chart-bars-inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 40px 0 0;
+}
+
+.chart-col {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* Bars hang DOWN from center for neg, rise UP from center for pos */
+.bar-neg {
+  position: absolute;
+  top: 50%;
+  width: 80%;
+  background: linear-gradient(to bottom, rgba(229,62,62,0.9), rgba(229,62,62,0.4));
+  border-radius: 0 0 3px 3px;
+  transition: height 0.6s ease;
+}
+
+.bar-pos {
+  position: absolute;
+  bottom: 50%;
+  width: 80%;
+  background: linear-gradient(to top, rgba(56,161,105,0.9), rgba(56,161,105,0.4));
+  border-radius: 3px 3px 0 0;
+  transition: height 0.6s ease;
+}
+
+.bar-zero {
+  position: absolute;
+  top: 50%;
+  width: 80%;
+  height: 3px;
+  background: rgba(202,168,76,0.4);
+  transform: translateY(-50%);
+}
+
+.chart-mo-lbl {
+  position: absolute;
+  bottom: 6px;
+  font-family: 'Space Mono', monospace;
+  font-size: 7px;
+  color: var(--dim);
+  text-align: center;
+  width: 100%;
+}
+
+.chart-mo-lbl.gold { color: var(--gold); font-weight: 700; }
+
+/* Bar data labels */
+.bar-lbl-neg {
+  position: absolute;
+  top: 50%;
+  width: 80%;
+  text-align: center;
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  color: rgba(229,62,62,0.9);
+  letter-spacing: 0.06em;
+  transform: translateY(-110%);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.bar-lbl-pos {
+  position: absolute;
+  bottom: 50%;
+  width: 80%;
+  text-align: center;
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  color: rgba(56,161,105,0.9);
+  letter-spacing: 0.06em;
+  transform: translateY(110%);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* Milestone cards in stage 3 */
+.milestone-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ms-card {
+  padding: 14px 16px;
+  border-left: 3px solid;
+  background: rgba(255,255,255,0.02);
+  opacity: 0.2;
+  transition: opacity 0.4s;
+}
+
+.ms-card.active { opacity: 1; }
+
+.ms-card-num {
+  font-family: 'Space Mono', monospace;
+  font-size: 7px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.ms-card-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 3px;
+}
+
+.ms-card-result {
+  font-size: 12px;
+  color: var(--gray);
+  line-height: 1.4;
+}
+
+/* Big result */
+.big-result-box {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(202,168,76,0.12);
+  padding: 20px;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.big-result-lbl { font-family:'Space Mono',monospace; font-size:7px; letter-spacing:0.2em; color:var(--gold); text-transform:uppercase; margin-bottom:10px; }
+.big-result-num { font-family:'Cormorant Garamond',serif; font-size:56px; font-weight:600; line-height:1; transition:color 0.5s; }
+.big-result-note { font-size:11px; color:var(--gray); margin-top:6px; line-height:1.4; }
+
+/* ── STAGE 4: TEST ── */
+.test-screen {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  min-height: 100vh;
+}
+
+.test-question {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 42px;
+  font-weight: 500;
+  color: var(--white);
+  line-height: 1.3;
+  max-width: 700px;
+  margin: 0 auto 32px;
+}
+
+.test-answer {
+  font-size: 15px;
+  color: rgba(255,255,255,0.0);
+  max-width: 600px;
+  margin: 0 auto 40px;
+  line-height: 1.7;
+  transition: color 0.8s;
+}
+
+.test-answer.revealed { color: var(--gray); }
+
+.verdict-display {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 64px;
+  border: 1px solid rgba(255,255,255,0.06);
+  margin-bottom: 40px;
+  transition: all 0.6s;
+}
+
+.verdict-display.success {
+  border-color: rgba(56,161,105,0.4);
+  background: rgba(56,161,105,0.06);
+}
+
+.verdict-display.fail {
+  border-color: rgba(229,62,62,0.4);
+  background: rgba(229,62,62,0.06);
+}
+
+.verdict-word {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 72px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.1);
+  line-height: 1;
+  margin-bottom: 8px;
+  transition: color 0.5s;
+}
+
+.verdict-display.success .verdict-word { color: var(--green); }
+.verdict-display.fail .verdict-word { color: var(--red); }
+
+.verdict-note {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: var(--dim);
+  text-transform: uppercase;
+  transition: color 0.4s;
+}
+
+.verdict-display.success .verdict-note { color: var(--green); }
+
+/* ── NAV BUTTONS ── */
+.nav-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 32px;
+}
+
+.nav-btn {
+  background: var(--gold);
+  color: var(--prussian);
+  border: none;
+  padding: 14px 36px;
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-btn:hover { background: #E8C97A; }
+
+.nav-btn.secondary {
+  background: transparent;
+  color: var(--gray);
+  border: 1px solid rgba(202,168,76,0.25);
+}
+
+.nav-btn.secondary:hover { color: var(--gold); border-color: var(--gold); }
+
+.nav-btn.danger {
+  background: rgba(229,62,62,0.1);
+  color: rgba(255,255,255,0.5);
+  border: 1px solid rgba(229,62,62,0.3);
+}
+
+.nav-btn.danger:hover { background: rgba(229,62,62,0.2); color: var(--white); }
+.nav-btn.danger.fired { background: rgba(56,161,105,0.1); border-color: rgba(56,161,105,0.3); color: var(--green); }
+
+.nav-auto {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  color: var(--dim);
+  text-transform: uppercase;
+  margin-left: auto;
+}
+
+.stage-dots {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.stage-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  transition: all 0.3s;
+}
+
+.stage-dot.active { background: var(--gold); transform: scale(1.3); }
+.stage-dot.done { background: var(--green); }
+
+/* ── CLOSING ── */
+.closing {
+  padding: 64px 72px;
+  text-align: center;
+  border-top: 1px solid rgba(202,168,76,0.1);
+}
+
+.closing-title { font-family:'Cormorant Garamond',serif; font-size:42px; font-weight:500; color:var(--white); margin-bottom:12px; line-height:1.3; }
+.closing-sub { font-size:15px; color:var(--gray); max-width:480px; margin:0 auto 28px; line-height:1.6; }
+.cta { display:inline-block; background:var(--gold); color:var(--prussian); font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.22em; text-transform:uppercase; padding:18px 48px; text-decoration:none; font-weight:700; }
+
+</style>
+</head>
+<body>
+
+<!-- SCREEN 0: HERO -->
+<div class="screen hero-screen" id="screen-0">
+  <div class="hero-badge"><div class="badge-dot"></div><div class="badge-txt">Anonymized · Multi-Division Social Enterprise · $500M Organization · System Confirmed Intact 4 Months Post-Exit</div></div>
+  <div class="hero-title">Most Turnarounds Last Until the Consultant Leaves.<br><em>This One Held.</em></div>
+
+  <div class="kpi-row">
+    <div class="kpi-box" style="border-top:4px solid var(--red);"><div class="kpi-lbl">Entry Loss</div><div class="kpi-val" style="color:var(--red);">$3.8M</div></div>
+    <div class="kpi-box" style="border-top:4px solid var(--green);"><div class="kpi-lbl">Exit Result</div><div class="kpi-val" style="color:var(--green);">+$1.9M</div></div>
+    <div class="kpi-box" style="border-top:4px solid var(--gold);"><div class="kpi-lbl">Total Swing</div><div class="kpi-val" style="color:var(--gold);">$5.7M</div></div>
+    <div class="kpi-box" style="border-top:4px solid rgba(255,255,255,0.2);"><div class="kpi-lbl">Duration</div><div class="kpi-val" style="color:var(--white);">10 Months</div></div>
+  </div>
+
+  <div style="font-size:24px; font-weight:700; color:var(--white); opacity:0.85; margin-bottom:32px;">Walk through this Enterprise Turnaround. Move at your own pace or hit Auto Play.</div>
+
+  <!-- Context strip -->
+  <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:2px; margin-bottom:auto;">
+    <div style="background:rgba(202,168,76,0.06); border:1px solid rgba(202,168,76,0.12); padding:20px 24px;">
+      <div style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:0.18em; color:var(--gold); text-transform:uppercase; margin-bottom:8px;">Stage 01</div>
+      <div style="font-size:20px; font-weight:700; color:var(--white); margin-bottom:6px;">Diagnose</div>
+      <div style="font-size:14px; color:var(--gray);">Signal DX names it. The Campfire confirms it.</div>
+    </div>
+    <div style="background:rgba(202,168,76,0.06); border:1px solid rgba(202,168,76,0.12); padding:20px 24px;">
+      <div style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:0.18em; color:var(--gold); text-transform:uppercase; margin-bottom:8px;">Stage 02</div>
+      <div style="font-size:20px; font-weight:700; color:var(--white); margin-bottom:6px;">Architect</div>
+      <div style="font-size:14px; color:var(--gray);">Four systems. Fixed in sequence.</div>
+    </div>
+    <div style="background:rgba(202,168,76,0.06); border:1px solid rgba(202,168,76,0.12); padding:20px 24px;">
+      <div style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:0.18em; color:var(--gold); text-transform:uppercase; margin-bottom:8px;">Stage 03</div>
+      <div style="font-size:20px; font-weight:700; color:var(--white); margin-bottom:6px;">Implement</div>
+      <div style="font-size:14px; color:var(--gray);">The financial arc responds as the solution installs.</div>
+    </div>
+    <div style="background:rgba(202,168,76,0.06); border:1px solid rgba(202,168,76,0.12); padding:20px 24px;">
+      <div style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:0.18em; color:var(--gold); text-transform:uppercase; margin-bottom:8px;">Stage 04</div>
+      <div style="font-size:20px; font-weight:700; color:var(--white); margin-bottom:6px;">The Test</div>
+      <div style="font-size:14px; color:var(--gray);">Four months. No Travis. One call answered everything.</div>
+    </div>
+  </div>
+
+  <div class="nav-row" style="margin-top:32px;">
+    <button class="nav-btn" onclick="goTo(1)">BEGIN ▶</button>
+    <button class="nav-btn secondary" onclick="autoPlay()">AUTO PLAY</button>
+    <div class="stage-dots">
+      <div class="stage-dot active" id="dot-0"></div>
+      <div class="stage-dot" id="dot-1"></div>
+      <div class="stage-dot" id="dot-2"></div>
+      <div class="stage-dot" id="dot-3"></div>
+      <div class="stage-dot" id="dot-4"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 1: DIAGNOSE -->
+<div class="screen" id="screen-1" style="overflow:hidden;">
+  <div class="screen-badge">Stage 01 · Diagnose</div>
+  <div class="screen-title" style="white-space:nowrap;">Signal DX™ named what the board had been arguing around for years.</div>
+  <div style="margin-bottom:16px;"></div>
+
+  <!-- Signal DX Banner -->
+  <div class="sdx-banner" style="display:flex; flex-direction:column; padding:28px 40px; gap:20px;">
+
+    <!-- BIG LEAD: Five patterns statement -->
+    <div style="font-family:'Cormorant Garamond',serif; font-size:36px; font-weight:600; color:var(--white); line-height:1.2; border-bottom:1px solid rgba(202,168,76,0.2); padding-bottom:20px;">Five structural failure patterns identified before a single recommendation was made.</div>
+
+    <!-- INSTRUMENT LINE -->
+    <div style="display:flex; align-items:center; gap:0; border-bottom:1px solid rgba(202,168,76,0.1); padding-bottom:20px;">
+      <div style="font-family:'Space Mono',monospace; font-size:15px; font-weight:700; letter-spacing:0.1em; color:var(--gold); white-space:nowrap; flex-shrink:0;">SIGNAL DX™</div>
+      <div style="width:1px; background:rgba(202,168,76,0.4); height:32px; margin:0 32px; flex-shrink:0;"></div>
+      <div style="display:flex; align-items:center; gap:12px; white-space:nowrap; flex-shrink:0;">
+        <div style="font-family:'Cormorant Garamond',serif; font-size:48px; font-weight:600; color:var(--red); line-height:1;">93</div>
+        <div style="font-family:'Space Mono',monospace; font-size:13px; font-weight:700; letter-spacing:0.08em; color:var(--gold); text-transform:uppercase; white-space:nowrap;">/100 Concern Index · Lower is Better</div>
+      </div>
+    </div>
+
+    <!-- QUOTE -->
+    <div style="font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:600; font-style:italic; color:var(--white); line-height:1.45;">"The challenges are structural, not situational. The enterprise has accumulated more complexity than its operating architecture can carry."</div>
+  </div>
+
+  
+
+  <!-- 4 Architecture Groups with Constraints -->
+  <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px; flex:1; width:100%; min-width:0; overflow:hidden; align-content:stretch;">
+
+    <!-- HUMAN -->
+    <div style="border-top:5px solid var(--human); padding:16px 14px; background:rgba(255,255,255,0.02); min-width:0; overflow:hidden;">
+      <div style="font-family:'Space Mono',monospace; font-size:8px; letter-spacing:0.16em; color:var(--human); text-transform:uppercase; margin-bottom:6px; font-weight:700;">Architecture 01</div>
+      <div style="font-family:'Cormorant Garamond',serif; font-size:34px; font-weight:600; color:var(--human); margin-bottom:10px; line-height:1.0;">Human</div>
+      <div style="padding:14px 16px; border-left:4px solid rgba(229,62,62,0.5); background:rgba(255,255,255,0.03);">
+        <div style="font-family:'Space Mono',monospace; font-size:8px; font-weight:700; letter-spacing:0.1em; color:var(--red); text-transform:uppercase; margin-bottom:10px;">● Critical</div>
+        <div style="font-size:22px; font-weight:700; color:var(--white); margin-bottom:8px; line-height:1.15;">Leadership Capacity Exhausted</div>
+        <div style="font-size:15px; font-weight:600; color:var(--gray); line-height:1.3;">Six directors. No structure. No plan.</div>
+      </div>
+    </div>
+
+    <!-- STRUCTURAL -->
+    <div style="border-top:5px solid var(--structural); padding:16px 14px; background:rgba(255,255,255,0.02); min-width:0; overflow:hidden;">
+      <div style="font-family:'Space Mono',monospace; font-size:8px; letter-spacing:0.16em; color:var(--structural); text-transform:uppercase; margin-bottom:6px; font-weight:700;">Architecture 02</div>
+      <div style="font-family:'Cormorant Garamond',serif; font-size:34px; font-weight:600; color:var(--structural); margin-bottom:10px; line-height:1.0;">Structural</div>
+      <div style="padding:14px 16px; border-left:4px solid rgba(229,62,62,0.5); background:rgba(255,255,255,0.03); margin-bottom:8px;">
+        <div style="font-family:'Space Mono',monospace; font-size:8px; font-weight:700; letter-spacing:0.1em; color:var(--red); text-transform:uppercase; margin-bottom:10px;">● Critical</div>
+        <div style="font-size:22px; font-weight:700; color:var(--white); margin-bottom:8px; line-height:1.15;">Decision Architecture Collapsed</div>
+        <div style="font-size:15px; font-weight:600; color:var(--gray); line-height:1.3;">Responsibility without authority.</div>
+      </div>
+      <div style="padding:14px 16px; border-left:4px solid rgba(237,137,54,0.5); background:rgba(255,255,255,0.03);">
+        <div style="font-family:'Space Mono',monospace; font-size:8px; font-weight:700; letter-spacing:0.1em; color:var(--amber); text-transform:uppercase; margin-bottom:10px;">● Severe</div>
+        <div style="font-size:22px; font-weight:700; color:var(--white); margin-bottom:8px; line-height:1.15;">Fragmented Operating Model</div>
+        <div style="font-size:15px; font-weight:600; color:var(--gray); line-height:1.3;">Eight divisions. No shared system.</div>
+      </div>
+    </div>
+
+    <!-- EXECUTION -->
+    <div style="border-top:5px solid var(--execution); padding:16px 14px; background:rgba(255,255,255,0.02); min-width:0; overflow:hidden;">
+      <div style="font-family:'Space Mono',monospace; font-size:8px; letter-spacing:0.16em; color:var(--execution); text-transform:uppercase; margin-bottom:6px; font-weight:700;">Architecture 03</div>
+      <div style="font-family:'Cormorant Garamond',serif; font-size:34px; font-weight:600; color:var(--execution); margin-bottom:10px; line-height:1.0;">Execution</div>
+      <div style="padding:14px 16px; border-left:4px solid rgba(229,62,62,0.5); background:rgba(255,255,255,0.03); margin-bottom:8px;">
+        <div style="font-family:'Space Mono',monospace; font-size:8px; font-weight:700; letter-spacing:0.1em; color:var(--red); text-transform:uppercase; margin-bottom:10px;">● Critical</div>
+        <div style="font-size:22px; font-weight:700; color:var(--white); margin-bottom:8px; line-height:1.15;">No Operating Heartbeat</div>
+        <div style="font-size:15px; font-weight:600; color:var(--gray); line-height:1.3;">Effort never converted to results.</div>
+      </div>
+      <div style="padding:14px 16px; border-left:4px solid rgba(237,137,54,0.5); background:rgba(255,255,255,0.03);">
+        <div style="font-family:'Space Mono',monospace; font-size:8px; font-weight:700; letter-spacing:0.1em; color:var(--amber); text-transform:uppercase; margin-bottom:10px;">● Severe</div>
+        <div style="font-size:22px; font-weight:700; color:var(--white); margin-bottom:8px; line-height:1.15;">No One Saw It Coming</div>
+        <div style="font-size:15px; font-weight:600; color:var(--gray); line-height:1.3;">Losses explained. Never anticipated.</div>
+      </div>
+    </div>
+
+    <!-- INTELLIGENCE -->
+    <div style="border-top:5px solid var(--intel); padding:16px 14px; background:rgba(255,255,255,0.02); min-width:0; overflow:hidden;">
+      <div style="font-family:'Space Mono',monospace; font-size:8px; letter-spacing:0.16em; color:var(--intel); text-transform:uppercase; margin-bottom:6px; font-weight:700;">Architecture 04</div>
+      <div style="font-family:'Cormorant Garamond',serif; font-size:34px; font-weight:600; color:var(--intel); margin-bottom:10px; line-height:1.0;">Intelligence</div>
+      <div style="padding:14px 16px; border-left:4px solid rgba(237,137,54,0.5); background:rgba(255,255,255,0.03);">
+        <div style="font-family:'Space Mono',monospace; font-size:8px; font-weight:700; letter-spacing:0.1em; color:var(--amber); text-transform:uppercase; margin-bottom:10px;">● Severe</div>
+        <div style="font-size:22px; font-weight:700; color:var(--white); margin-bottom:8px; line-height:1.15;">No Early Warning Capability</div>
+        <div style="font-size:15px; font-weight:600; color:var(--gray); line-height:1.3;">Damage compounded before surfacing.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="nav-row">
+    <button class="nav-btn secondary" onclick="goTo(0)">◀ BACK</button>
+    <button class="nav-btn" onclick="goTo(2)">NEXT: ARCHITECT ▶</button>
+    <div class="stage-dots">
+      <div class="stage-dot done" id="dot-0b"></div>
+      <div class="stage-dot active" id="dot-1b"></div>
+      <div class="stage-dot" id="dot-2b"></div>
+      <div class="stage-dot" id="dot-3b"></div>
+      <div class="stage-dot" id="dot-4b"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 2: ARCHITECT -->
+<div class="screen" id="screen-2">
+  <div class="screen-badge">Stage 02 · Architect</div>
+  <div class="screen-title">Four architectures. Fixed in sequence.<br><em>The order is the intervention.</em></div>
+
+  <!-- Day axis labels -->
+  <div style="display:grid; grid-template-columns:280px 1fr; gap:0; margin-bottom:12px;">
+    <div></div>
+    <div style="position:relative; height:28px;">
+      <div style="position:absolute; left:8.9%; transform:translateX(-50%); font-family:'Space Mono',monospace; font-size:14px; font-weight:700; color:var(--gold); letter-spacing:0.08em;">DAY 8</div>
+      <div style="position:absolute; left:33.3%; transform:translateX(-50%); font-family:'Space Mono',monospace; font-size:14px; font-weight:700; color:var(--gold); letter-spacing:0.08em;">DAY 30</div>
+      <div style="position:absolute; left:66.6%; transform:translateX(-50%); font-family:'Space Mono',monospace; font-size:14px; font-weight:700; color:var(--gold); letter-spacing:0.08em;">DAY 60</div>
+      <div style="position:absolute; right:0%; font-family:'Space Mono',monospace; font-size:14px; font-weight:700; color:var(--gold); letter-spacing:0.08em;">DAY 90</div>
+    </div>
+  </div>
+
+  <!-- Gantt rows -->
+  <div style="flex:1; display:flex; flex-direction:column; gap:0; position:relative;">
+
+    <!-- HUMAN: Day 8–68 / 90 = left:8.9% right:24.4% -->
+    <div class="arch-row arch-row-1" style="display:grid; grid-template-columns:280px 1fr; gap:0; align-items:center; padding:16px 0;">
+      <div style="padding-right:24px; border-left:6px solid var(--human); padding-left:16px;">
+        <div style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:0.16em; color:var(--human); text-transform:uppercase; margin-bottom:8px; font-weight:700;">01 · Human</div>
+        <div style="font-size:26px; font-weight:700; color:var(--white); line-height:1.1; white-space:nowrap;">Leaders own outcomes.</div>
+      </div>
+      <div style="position:relative; height:68px;">
+        <div style="position:absolute; left:8.9%; right:24.4%; top:0; bottom:0; background:var(--human); border-radius:4px; display:flex; flex-direction:column; justify-content:center; padding:0 20px; gap:6px;">
+          <span style="font-family:'Space Mono',monospace; font-size:11px; font-weight:700; color:#061535; letter-spacing:0.08em; white-space:nowrap;">DAYS 8 – 68 · MONTHS 1–2</span>
+          <span style="font-size:15px; font-weight:700; color:#061535; line-height:1.2;">Six directors from survival mode to real accountability.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- STRUCTURAL: Day 18–72 / 90 = left:20% right:20% -->
+    <div class="arch-row arch-row-2" style="display:grid; grid-template-columns:280px 1fr; gap:0; align-items:center; padding:16px 0;">
+      <div style="padding-right:24px; border-left:6px solid var(--structural); padding-left:16px;">
+        <div style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:0.16em; color:var(--structural); text-transform:uppercase; margin-bottom:8px; font-weight:700;">02 · Structural</div>
+        <div style="font-size:26px; font-weight:700; color:var(--white); line-height:1.1; white-space:nowrap;">Authority goes where accountability is.</div>
+      </div>
+      <div style="position:relative; height:68px;">
+        <div style="position:absolute; left:20%; right:20%; top:0; bottom:0; background:var(--structural); border-radius:4px; display:flex; flex-direction:column; justify-content:center; padding:0 20px; gap:6px;">
+          <span style="font-family:'Space Mono',monospace; font-size:11px; font-weight:700; color:#061535; letter-spacing:0.08em; white-space:nowrap;">DAYS 18 – 72 · MONTHS 1–3</span>
+          <span style="font-size:15px; font-weight:700; color:#061535; line-height:1.2;">Decision rights mapped across all eight divisions. Escalation stops.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXECUTION: Day 30–78 / 90 = left:33.3% right:13.3% -->
+    <div class="arch-row arch-row-3" style="display:grid; grid-template-columns:280px 1fr; gap:0; align-items:center; padding:16px 0;">
+      <div style="padding-right:24px; border-left:6px solid var(--execution); padding-left:16px;">
+        <div style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:0.16em; color:var(--execution); text-transform:uppercase; margin-bottom:8px; font-weight:700;">03 · Execution</div>
+        <div style="font-size:26px; font-weight:700; color:var(--white); line-height:1.1; white-space:nowrap;">Commitments are made and kept.</div>
+      </div>
+      <div style="position:relative; height:68px;">
+        <div style="position:absolute; left:33.3%; right:13.3%; top:0; bottom:0; background:var(--execution); border-radius:4px; display:flex; flex-direction:column; justify-content:center; padding:0 20px; gap:6px;">
+          <span style="font-family:'Space Mono',monospace; font-size:11px; font-weight:700; color:#061535; letter-spacing:0.08em; white-space:nowrap;">DAYS 30 – 78 · MONTHS 1–3</span>
+          <span style="font-size:15px; font-weight:700; color:#061535; line-height:1.2;">Weekly cadence installed. Issues surface in days. Effort converts to results.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- INTELLIGENCE: Day 45–88 / 90 = left:50% right:2.2% -->
+    <div class="arch-row arch-row-4" style="display:grid; grid-template-columns:280px 1fr; gap:0; align-items:center; padding:16px 0;">
+      <div style="padding-right:24px; border-left:6px solid var(--intel); padding-left:16px;">
+        <div style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:0.16em; color:var(--intel); text-transform:uppercase; margin-bottom:8px; font-weight:700;">04 · Intelligence</div>
+        <div style="font-size:26px; font-weight:700; color:var(--white); line-height:1.1; white-space:nowrap;">Finance becomes a warning system.</div>
+      </div>
+      <div style="position:relative; height:68px;">
+        <div style="position:absolute; left:50%; right:2.2%; top:0; bottom:0; background:var(--intel); border-radius:4px; display:flex; flex-direction:column; justify-content:center; padding:0 20px; gap:6px;">
+          <span style="font-family:'Space Mono',monospace; font-size:11px; font-weight:700; color:#061535; letter-spacing:0.08em; white-space:nowrap;">DAYS 45 – 88 · MONTHS 2–3</span>
+          <span style="font-size:15px; font-weight:700; color:#061535; line-height:1.2;">Every director owns their numbers. Leaders see it before it costs them.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Overlap callout -->
+    <div class="arch-row-callout" style="margin-top:20px; background:rgba(202,168,76,0.08); border:1px solid rgba(202,168,76,0.25); padding:22px 32px; display:flex; align-items:center; gap:24px;">
+      <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; color:var(--gold); text-transform:uppercase; font-weight:700; white-space:nowrap;">The overlap is intentional.</div>
+      <div style="width:1px; height:32px; background:rgba(202,168,76,0.3); flex-shrink:0;"></div>
+      <div style="font-size:18px; font-weight:700; color:var(--white); line-height:1.4;">Each architecture starts before the previous one completes. Each one creates the conditions the next one requires.</div>
+    </div>
+
+  </div>
+
+  <div class="nav-row">
+    <button class="nav-btn secondary" onclick="goTo(1)">◀ BACK</button>
+    <button class="nav-btn" onclick="goTo(3)">NEXT: IMPLEMENT ▶</button>
+    <div class="stage-dots">
+      <div class="stage-dot done"></div>
+      <div class="stage-dot done"></div>
+      <div class="stage-dot active"></div>
+      <div class="stage-dot"></div>
+      <div class="stage-dot"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 3: IMPLEMENT -->
+<div class="screen" id="screen-3">
+  <div class="screen-badge">Stage 03 · Implement</div>
+  <div class="screen-title" style="white-space:nowrap;">Watch the financial arc respond as each architecture installs.</div>
+  <div class="screen-sub">Red bars below zero = losses. Green bars above zero = positive contribution. The inflection happens when all four architectures are installed and holding.</div>
+
+  <div class="impl-layout">
+    <div class="impl-timeline">
+
+      <!-- Month labels -->
+      <div class="tl-month-row">
+        <div class="tl-mo" id="im0">SEP</div><div class="tl-mo" id="im1">OCT</div>
+        <div class="tl-mo" id="im2">NOV</div><div class="tl-mo" id="im3">DEC</div>
+        <div class="tl-mo" id="im4">JAN</div><div class="tl-mo" id="im5">FEB</div>
+        <div class="tl-mo" id="im6">MAR</div><div class="tl-mo" id="im7">APR</div>
+        <div class="tl-mo" id="im8">MAY</div><div class="tl-mo" id="im9">JUN</div>
+      </div>
+
+      <!-- Timeline bar -->
+      <div class="tl-bar-wrap">
+        <div class="tl-progress" id="tl-prog"></div>
+        <div class="tl-events">
+          <div class="tl-event-marker" id="te0" style="left:2.7%;"><div class="tl-dot" style="background:var(--human);"></div><div class="tl-event-lbl" style="color:var(--human);">Human</div></div>
+          <div class="tl-event-marker" id="te1" style="left:6%;"><div class="tl-dot" style="background:var(--structural);"></div><div class="tl-event-lbl" style="color:var(--structural);">Structural</div></div>
+          <div class="tl-event-marker" id="te2" style="left:15%;"><div class="tl-dot" style="background:var(--execution);"></div><div class="tl-event-lbl" style="color:var(--execution);">Execution</div></div>
+          <div class="tl-event-marker" id="te3" style="left:25%;"><div class="tl-dot" style="background:var(--intel);"></div><div class="tl-event-lbl" style="color:var(--intel);">Intelligence</div></div>
+        </div>
+      </div>
+
+      <!-- PROPER CHART: bars go down for neg, up for pos from zero line -->
+      <div class="chart-wrap">
+        <div class="chart-zero-line"></div>
+        <div class="chart-zero-tag">$0</div>
+        <div class="chart-pos-label">POSITIVE ↑</div>
+        <div class="chart-neg-label">LOSS ↓</div>
+
+        <div class="chart-bars-inner">
+          <!-- FY25 baseline -->
+          <div class="chart-col">
+            <div class="bar-lbl-neg" id="lbl0"></div>
+            <div class="bar-neg" id="cb0" style="height:0px;"></div>
+            <div class="chart-mo-lbl">FY25</div>
+          </div>
+          <div class="chart-col">
+            <div class="bar-lbl-neg" id="lbl1"></div>
+            <div class="bar-neg" id="cb1" style="height:0px;"></div>
+            <div class="chart-mo-lbl">SEP</div>
+          </div>
+          <div class="chart-col">
+            <div class="bar-lbl-neg" id="lbl2"></div>
+            <div class="bar-neg" id="cb2" style="height:0px;"></div>
+            <div class="chart-mo-lbl">OCT</div>
+          </div>
+          <div class="chart-col">
+            <div class="bar-lbl-neg" id="lbl3"></div>
+            <div class="bar-neg" id="cb3" style="height:0px;"></div>
+            <div class="chart-mo-lbl">NOV</div>
+          </div>
+          <div class="chart-col">
+            <div class="bar-lbl-neg" id="lbl4"></div>
+            <div class="bar-neg" id="cb4" style="height:0px;"></div>
+            <div class="chart-mo-lbl">DEC</div>
+          </div>
+          <div class="chart-col">
+            <div class="bar-zero" id="cb5"></div>
+            <div class="chart-mo-lbl gold">JAN ↑</div>
+          </div>
+          <div class="chart-col">
+            <div class="bar-pos" id="cb6" style="height:0px;"></div>
+            <div class="bar-lbl-pos" id="lbl6"></div>
+            <div class="chart-mo-lbl">FEB</div>
+          </div>
+          <div class="chart-col">
+            <div class="bar-pos" id="cb7" style="height:0px;"></div>
+            <div class="bar-lbl-pos" id="lbl7"></div>
+            <div class="chart-mo-lbl">MAR</div>
+          </div>
+          <div class="chart-col">
+            <div class="bar-pos" id="cb8" style="height:0px;"></div>
+            <div class="bar-lbl-pos" id="lbl8"></div>
+            <div class="chart-mo-lbl">APR</div>
+          </div>
+          <div class="chart-col">
+            <div class="bar-pos" id="cb9" style="height:0px;"></div>
+            <div class="bar-lbl-pos" id="lbl9"></div>
+            <div class="chart-mo-lbl gold">MAY</div>
+          </div>
+          <div class="chart-col">
+            <div class="bar-pos" id="cb10" style="height:0px;"></div>
+            <div class="bar-lbl-pos" id="lbl10"></div>
+            <div class="chart-mo-lbl gold">JUN ✓</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right: Big number + milestone cards -->
+    <div>
+      <div class="big-result-box">
+        <div class="big-result-lbl">Operating Result</div>
+        <div class="big-result-num" id="impl-num" style="color:var(--red);">$(3.8M)</div>
+        <div class="big-result-note" id="impl-note">Entry state — FY2025</div>
+      </div>
+
+      <div style="margin-top:16px;">
+        <div class="milestone-cards">
+          <div class="ms-card" id="ms0" style="border-color:var(--human);">
+            <div class="ms-card-num" style="color:var(--human);">Human Arch Installed</div>
+            <div class="ms-card-title">Leaders own outcomes.</div>
+            <div class="ms-card-result">Six directors in survival mode. No structure. No plan.</div>
+          </div>
+          <div class="ms-card" id="ms1" style="border-color:var(--structural);">
+            <div class="ms-card-num" style="color:var(--structural);">Structural Arch Installed</div>
+            <div class="ms-card-title">Authority goes where accountability is.</div>
+            <div class="ms-card-result">Decisions migrated up. Responsibility without authority.</div>
+          </div>
+          <div class="ms-card" id="ms2" style="border-color:var(--execution);">
+            <div class="ms-card-num" style="color:var(--execution);">Execution Arch Installed</div>
+            <div class="ms-card-title">Commitments are made and kept.</div>
+            <div class="ms-card-result">Commitments didn't hold. Effort without results.</div>
+          </div>
+          <div class="ms-card" id="ms3" style="border-color:var(--intel);">
+            <div class="ms-card-num" style="color:var(--intel);">Intelligence Arch Installed</div>
+            <div class="ms-card-title">No one saw it coming.</div>
+            <div class="ms-card-result">$1.9M positive contribution. $5.7M documented swing. System complete.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-row">
+    <button class="nav-btn secondary" onclick="goTo(2)">◀ BACK</button>
+    <button class="nav-btn" id="play-impl-btn" onclick="playImplement()">▶ PLAY THE ARC</button>
+    <button class="nav-btn" onclick="goTo(4)">NEXT: THE TEST ▶</button>
+    <div class="stage-dots">
+      <div class="stage-dot done"></div>
+      <div class="stage-dot done"></div>
+      <div class="stage-dot done"></div>
+      <div class="stage-dot active"></div>
+      <div class="stage-dot"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 4: THE TEST -->
+<div class="screen" id="screen-4" style="padding:0; min-height:100vh; display:flex; flex-direction:column;">
+
+  <div style="flex:1; display:grid; grid-template-columns:1fr 1fr; min-height:0;">
+
+    <!-- LEFT: The question -->
+    <div style="display:flex; flex-direction:column; justify-content:space-between; padding:64px 56px; background:rgba(6,21,53,0.8); border-right:1px solid rgba(202,168,76,0.15);">
+
+      <div>
+        <div style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:0.28em; color:var(--gold); text-transform:uppercase; margin-bottom:32px;">Stage 04 · The Test</div>
+
+        <!-- 2-line title: white line 1, gold italic line 2 -->
+        <div style="font-family:'Cormorant Garamond',serif; font-size:clamp(36px,5vw,72px); font-weight:500; line-height:1.1; margin-bottom:40px; white-space:nowrap;">
+          <div style="color:var(--white);">Four months. No Travis.</div>
+          <div style="color:var(--gold); font-style:italic;">One call to the CFO.</div>
+        </div>
+
+        <div style="width:48px; height:3px; background:var(--gold); margin-bottom:36px;"></div>
+
+        <div style="font-size:22px; font-weight:600; color:var(--white); opacity:0.8; line-height:1.6; margin-bottom:40px;">Most consultants leave a project complete.<br>Travis left a system that ran itself.</div>
+
+        <div style="font-family:'Cormorant Garamond',serif; font-size:52px; font-weight:600; color:var(--gold); line-height:1.1; margin-bottom:40px; font-style:italic;">Did the system hold?</div>
+
+        <!-- The 4 things installed -->
+        <div style="display:flex; flex-direction:column; gap:16px;">
+          <div style="display:flex; align-items:center; gap:16px;">
+            <div style="width:10px; height:10px; border-radius:50%; background:var(--human); flex-shrink:0;"></div>
+            <div style="font-size:19px; font-weight:700; color:var(--gray);">Leaders own outcomes.</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:16px;">
+            <div style="width:10px; height:10px; border-radius:50%; background:var(--structural); flex-shrink:0;"></div>
+            <div style="font-size:19px; font-weight:700; color:var(--gray);">Authority goes where accountability is.</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:16px;">
+            <div style="width:10px; height:10px; border-radius:50%; background:var(--execution); flex-shrink:0;"></div>
+            <div style="font-size:19px; font-weight:700; color:var(--gray);">Commitments are made and kept.</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:16px;">
+            <div style="width:10px; height:10px; border-radius:50%; background:var(--intel); flex-shrink:0;"></div>
+            <div style="font-size:19px; font-weight:700; color:var(--gray);">No one saw it coming. Now they do.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT: The sealed dossier / reveal -->
+    <div style="display:flex; flex-direction:column; justify-content:center; align-items:center; padding:48px 56px; position:relative; background:rgba(12,35,71,0.4);">
+
+      <!-- Pre-reveal state -->
+      <div id="dossier-sealed" style="display:flex; flex-direction:column; align-items:center; text-align:center; width:100%;">
+        <div style="width:100%; border:1px solid rgba(202,168,76,0.3); background:rgba(202,168,76,0.04); padding:48px 40px; margin-bottom:40px; position:relative;">
+          <div style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:0.22em; color:var(--gold); text-transform:uppercase; margin-bottom:20px;">Signal DX · Pre-Engagement · Post-Engagement</div>
+          <div style="font-family:'Cormorant Garamond',serif; font-size:72px; font-weight:600; color:rgba(255,255,255,0.08); line-height:1; margin-bottom:20px;">?</div>
+          <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.2em; color:rgba(255,255,255,0.2); text-transform:uppercase;">Did the system hold?</div>
+        </div>
+        <button class="nav-btn" id="exit-btn" onclick="triggerTest()" style="font-size:13px; letter-spacing:0.18em; padding:18px 48px;">OPEN THE DEBRIEF</button>
+      </div>
+
+      <!-- Post-reveal state -->
+      <div id="dossier-revealed" style="display:none; flex-direction:column; align-items:stretch; width:100%; opacity:0; transition:opacity 0.8s;">
+
+        <!-- Before / After Signal DX panels -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:24px;">
+
+          <!-- BEFORE -->
+          <div style="background:rgba(229,62,62,0.08); border:1px solid rgba(229,62,62,0.3); padding:28px 24px;">
+            <div style="font-family:'Space Mono',monospace; font-size:8px; letter-spacing:0.2em; color:var(--red); text-transform:uppercase; margin-bottom:16px; font-weight:700;">Signal DX · Pre-Engagement</div>
+            <div style="font-family:'Cormorant Garamond',serif; font-size:80px; font-weight:600; color:var(--red); line-height:1; margin-bottom:8px;">93</div>
+            <div style="font-family:'Space Mono',monospace; font-size:10px; color:var(--gray); letter-spacing:0.12em; margin-bottom:20px;">/100 CONCERN INDEX</div>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 14px; background:rgba(229,62,62,0.08); border-left:3px solid var(--red);">
+                <span style="font-size:15px; font-weight:700; color:var(--white);">High-Confidence Hypotheses</span>
+                <span style="font-family:'Space Mono',monospace; font-size:20px; font-weight:700; color:var(--red);">11</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 14px; background:rgba(229,62,62,0.08); border-left:3px solid var(--red);">
+                <span style="font-size:15px; font-weight:700; color:var(--white);">Corroborated Strengths</span>
+                <span style="font-family:'Space Mono',monospace; font-size:20px; font-weight:700; color:var(--red);">0</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- AFTER -->
+          <div style="background:rgba(56,161,105,0.08); border:1px solid rgba(56,161,105,0.4); padding:28px 24px;">
+            <div style="font-family:'Space Mono',monospace; font-size:8px; letter-spacing:0.2em; color:var(--green); text-transform:uppercase; margin-bottom:16px; font-weight:700;">Signal DX · Post-Engagement</div>
+            <div style="font-family:'Cormorant Garamond',serif; font-size:80px; font-weight:600; color:var(--green); line-height:1; margin-bottom:8px;">13</div>
+            <div style="font-family:'Space Mono',monospace; font-size:10px; color:var(--gray); letter-spacing:0.12em; margin-bottom:20px;">/100 CONCERN INDEX</div>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 14px; background:rgba(56,161,105,0.08); border-left:3px solid var(--green);">
+                <span style="font-size:15px; font-weight:700; color:var(--white);">High-Confidence Hypotheses</span>
+                <span style="font-family:'Space Mono',monospace; font-size:20px; font-weight:700; color:var(--green);">0</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 14px; background:rgba(56,161,105,0.08); border-left:3px solid var(--green);">
+                <span style="font-size:15px; font-weight:700; color:var(--white);">Corroborated Strengths</span>
+                <span style="font-family:'Space Mono',monospace; font-size:20px; font-weight:700; color:var(--green);">13</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- HELD stamp -->
+        <div style="text-align:center; margin-bottom:16px;">
+          <div style="font-family:'Cormorant Garamond',serif; font-size:80px; font-weight:600; color:var(--green); line-height:1;">Held.</div>
+          <div style="font-family:'Space Mono',monospace; font-size:10px; letter-spacing:0.22em; color:var(--green); text-transform:uppercase; margin-top:6px;">CFO Confirmed · 4 Months Post-Exit</div>
+        </div>
+
+        <!-- CFO quote -->
+        <div style="border-left:3px solid var(--green); padding:18px 24px; background:rgba(56,161,105,0.06); margin-bottom:20px;">
+          <div style="font-family:'Cormorant Garamond',serif; font-size:18px; font-style:italic; color:var(--white); line-height:1.6; margin-bottom:10px;">"The operating rhythm was still intact. The six Program Directors were still executing against their commitments. The enterprise was running against its vision and mission — without him. The capability transferred."</div>
+          <div style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:0.15em; color:var(--gold); text-transform:uppercase;">Travis Roderick · Enterprise Stabilization Case Study · 2026</div>
+        </div>
+
+        <!-- $5.7M PUNCHLINE at bottom of right panel -->
+        <div style="border-top:1px solid rgba(202,168,76,0.2); padding-top:20px; display:flex; align-items:center; gap:24px;">
+          <div style="font-family:'Cormorant Garamond',serif; font-size:80px; font-weight:600; color:var(--gold); line-height:1; flex-shrink:0;">$5.7M</div>
+          <div style="display:flex; flex-direction:column; gap:4px;">
+            <div style="font-family:'Space Mono',monospace; font-size:13px; font-weight:700; letter-spacing:0.14em; color:var(--white); text-transform:uppercase;">Turnaround in 10 months.</div>
+            <div style="font-family:'Space Mono',monospace; font-size:13px; font-weight:700; letter-spacing:0.14em; color:var(--gold); text-transform:uppercase;">System still running.</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Nav -->
+  <div style="padding:20px 48px; display:flex; align-items:center; gap:12px; border-top:1px solid rgba(202,168,76,0.1);">
+    <button class="nav-btn secondary" onclick="goTo(3)">◀ BACK</button>
+    <div class="stage-dots" style="margin-left:16px;">
+      <div class="stage-dot done"></div>
+      <div class="stage-dot done"></div>
+      <div class="stage-dot done"></div>
+      <div class="stage-dot done"></div>
+      <div class="stage-dot active"></div>
+    </div>
+  </div>
+</div>
+
+<!-- CLOSING -->
+<div class="closing">
+  <div class="closing-title">Not a better month. A different enterprise.</div>
+  <div class="closing-sub">Signal DX identifies the constraint. The architecture removes it. The system holds after the team leaves. That is the difference.</div>
+  <a href="#" class="cta">TAKE SIGNAL DX</a>
+</div>
+
+<script>
+let currentScreen = 0;
+let exitFired = false;
+let implPlaying = false;
+let implTimer = null;
+let implDay = 0;
+const IMPL_TOTAL = 300;
+const ARCH_DAYS = [8, 18, 45, 75];
+
+// ── NAVIGATION ──
+function goTo(n) {
+  document.getElementById('screen-'+currentScreen).scrollIntoView({behavior:'smooth'});
+  currentScreen = n;
+  document.getElementById('screen-'+n).scrollIntoView({behavior:'smooth'});
+
+  // Restart architect animations every time screen 2 is entered
+  if (n === 2) {
+    const rows = document.querySelectorAll('.arch-row, .arch-row-callout');
+    rows.forEach(el => {
+      el.style.animation = 'none';
+      el.style.opacity = '0';
+      el.offsetHeight; // force reflow
+      el.style.animation = '';
+    });
+  }
+}
+
+// ── IMPLEMENT ANIMATION ──
+function playImplement() {
+  if (implPlaying) { stopImplement(); return; }
+  implPlaying = true;
+  implDay = 0;
+  document.getElementById('play-impl-btn').textContent = '⏸ PAUSE';
+  stepImpl();
+}
+
+function stopImplement() {
+  implPlaying = false;
+  if (implTimer) { clearTimeout(implTimer); implTimer = null; }
+  document.getElementById('play-impl-btn').textContent = '▶ PLAY THE ARC';
+}
+
+function stepImpl() {
+  if (!implPlaying) return;
+  if (implDay >= IMPL_TOTAL) { stopImplement(); return; }
+
+  // Advance - slow near arch events
+  let adv = 8;
+  for (const d of ARCH_DAYS) {
+    if (Math.abs(implDay - d) < 15) { adv = 3; break; }
+  }
+
+  implDay = Math.min(IMPL_TOTAL, implDay + adv);
+  renderImpl(implDay);
+  implTimer = setTimeout(stepImpl, 80);
+}
+
+function renderImpl(d) {
+  // Timeline progress (d runs 0-300, representing ~10 months)
+  const t = d / IMPL_TOTAL;
+  document.getElementById('tl-prog').style.width = (t*100) + '%';
+
+  // Month highlight (each month = 30 days)
+  const mi = Math.min(9, Math.floor(d/30));
+  for (let i=0;i<10;i++) {
+    document.getElementById('im'+i).className = 'tl-mo' + (i===mi?' current':'');
+  }
+
+  // Event markers
+  const archDaysFull = [8,18,45,75];
+  for (let i=0;i<4;i++) {
+    const el = document.getElementById('te'+i);
+    const started = d >= archDaysFull[i];
+    const nextD = i<3 ? archDaysFull[i+1] : IMPL_TOTAL;
+    const done = d >= nextD;
+    el.className = 'tl-event-marker' + (done?' done':started?' active':'');
+  }
+
+  // Milestone cards
+  for (let i=0;i<4;i++) {
+    const card = document.getElementById('ms'+i);
+    const threshold = [8,18,45,75][i];
+    card.className = 'ms-card' + (d >= threshold ? ' active' : '');
+  }
+
+  // CHART: each bar appears when its month is reached and STAYS
+  // Negative bars: cb0=FY25 baseline, cb1=SEP, cb2=OCT, cb3=NOV, cb4=DEC, cb5=JAN(breakeven)
+  // Each bar corresponds to ~30-day intervals. They appear sequentially and DO NOT shrink.
+  // Final heights represent the loss magnitude for that period.
+  const negFinal = [180, 150, 124, 96, 64, 28];  // FY25, SEP, OCT, NOV, DEC, JAN
+  const negThresh = [0, 30, 60, 90, 120, 150]; // day at which each bar appears
+
+  for (let i=0;i<6;i++) {
+    const bar = document.getElementById('cb'+i);
+    if (d >= negThresh[i]) {
+      // Bar has appeared — animate it in over ~20 days then lock
+      const progress = Math.min(1, (d - negThresh[i]) / 20);
+      bar.style.height = Math.round(negFinal[i] * progress) + 'px';
+    } else {
+      bar.style.height = '0px';
+    }
+  }
+
+  // Positive bars: cb6=FEB, cb7=MAR, cb8=APR, cb9=MAY, cb10=JUN
+  // Appear after breakeven (day 150+) and grow sequentially
+  const posFinal  = [36, 72, 108, 144, 180];
+  const posThresh = [150, 180, 210, 240, 270];
+
+  for (let i=0;i<5;i++) {
+    const bar = document.getElementById('cb'+(i+6));
+    if (d >= posThresh[i]) {
+      const progress = Math.min(1, (d - posThresh[i]) / 20);
+      bar.style.height = Math.round(posFinal[i] * progress) + 'px';
+    } else {
+      bar.style.height = '0px';
+    }
+  }
+
+  // Big result number — clean display tied to actual months
+  const num = document.getElementById('impl-num');
+  const note = document.getElementById('impl-note');
+  if (d < 30) {
+    num.textContent = '$(3.8M)';
+    num.style.color = 'var(--red)';
+    note.textContent = 'Entry state — FY2025';
+  } else if (d < 90) {
+    num.textContent = '$(2.9M)';
+    num.style.color = 'var(--red)';
+    note.textContent = 'Stabilizing — Human Architecture installing';
+  } else if (d < 150) {
+    num.textContent = '$(1.4M)';
+    num.style.color = 'var(--red)';
+    note.textContent = 'Structure installing — losses narrowing';
+  } else if (d < 180) {
+    num.textContent = 'Breakeven';
+    num.style.color = 'var(--amber)';
+    note.textContent = 'Inflection point — JAN';
+  } else if (d < 240) {
+    num.textContent = '+$600K';
+    num.style.color = 'var(--green)';
+    note.textContent = 'First consecutive positive months';
+  } else {
+    num.textContent = '+$1.9M';
+    num.style.color = 'var(--green)';
+    note.textContent = 'Four consecutive positive months — $5.7M swing';
+  }
+
+  // Neg bar labels
+  const negLabels = ['$(3.8M)', '$(2.9M)', '$(2.2M)', '$(1.6M)', '$(0.9M)'];
+  for (let i=0;i<5;i++) {
+    const lbl = document.getElementById('lbl'+i);
+    const bar = document.getElementById('cb'+i);
+    if (lbl && bar) lbl.textContent = parseInt(bar.style.height) > 8 ? negLabels[i] : '';
+  }
+
+  // Pos bar labels
+  const posLabels = ['+$300K','+$600K','+$950K','+$1.4M','+$1.9M'];
+  for (let i=0;i<5;i++) {
+    const lbl = document.getElementById('lbl'+(i+6));
+    const bar = document.getElementById('cb'+(i+6));
+    if (lbl && bar) lbl.textContent = parseInt(bar.style.height) > 8 ? posLabels[i] : '';
+  }
+}
+
+// ── EXIT TEST ──
+function triggerTest() {
+  const sealed = document.getElementById('dossier-sealed');
+  const revealed = document.getElementById('dossier-revealed');
+
+  sealed.style.display = 'none';
+  revealed.style.display = 'flex';
+  setTimeout(() => { revealed.style.opacity = '1'; }, 30);
+}
+
+// ── AUTO PLAY ──
+let autoTimer = null;
+function autoPlay() {
+  goTo(1);
+  setTimeout(() => { goTo(2); }, 4000);
+  setTimeout(() => { goTo(3); setTimeout(() => { playImplement(); }, 500); }, 8000);
+  setTimeout(() => { goTo(4); setTimeout(() => { triggerTest(); }, 2000); }, 18000);
+}
+
+// Init chart at entry state
+renderImpl(0);
+</script>
+</body>
+</html>
