@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Signal DX vs. Dedicated AI Diagnostic Tools — Alethia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --prussian: #061535;
+  --prussian-mid: #0a1f42;
+  --prussian-light: #0f2850;
+  --gold: #CAA84C;
+  --white: #F4F1E8;
+  --gray: #8A9BB5;
+  --dim: #4A5A72;
+  --red: #E53E3E;
+  --green: #38A169;
+  --amber: #ED8936;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--prussian);
+  color: var(--white);
+  font-family: 'DM Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.6;
+}
+
+/* LAYOUT */
+.container { max-width: 1100px; margin: 0 auto; padding: 0 48px; }
+section { padding: 80px 0; border-bottom: 1px solid rgba(202,168,76,0.1); }
+
+/* NAV */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(6,21,53,0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(202,168,76,0.15);
+  padding: 16px 48px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-logo { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.22em; color: var(--gold); text-transform: uppercase; }
+.nav-back { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.18em; color: var(--gray); text-transform: uppercase; text-decoration: none; transition: color 0.2s; }
+.nav-back:hover { color: var(--gold); }
+
+/* HERO */
+.hero { padding: 100px 0 80px; }
+.hero-badge {
+  font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.28em;
+  color: var(--gold); text-transform: uppercase; margin-bottom: 24px;
+}
+.hero-headline {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 72px; font-weight: 600; line-height: 1.05;
+  color: var(--white); margin-bottom: 32px; max-width: 900px;
+}
+.hero-assertion {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px; font-style: italic; color: var(--gray);
+  max-width: 720px; line-height: 1.5; margin-bottom: 48px;
+}
+
+/* SCOREBOARD */
+.scoreboard {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 2px;
+  margin-bottom: 20px;
+}
+.score-cell {
+  background: var(--prussian-mid); padding: 36px 32px;
+  text-align: center;
+}
+.score-cell.gold-top { border-top: 4px solid var(--gold); }
+.score-cell.gray-top { border-top: 4px solid var(--dim); }
+.score-cell.red-top { border-top: 4px solid var(--dim); }
+.score-number {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 96px; font-weight: 700; line-height: 1;
+  color: var(--gold); margin-bottom: 12px;
+}
+.score-number.gray { color: var(--gray); }
+.score-number.zero { color: var(--dim); }
+.score-label {
+  font-family: 'Space Mono', monospace; font-size: 11px;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--gray); margin-bottom: 6px;
+}
+.score-sub { font-size: 13px; color: var(--dim); }
+.scoreboard-caption {
+  font-family: 'Space Mono', monospace; font-size: 11px;
+  letter-spacing: 0.14em; color: var(--dim); text-transform: uppercase;
+  text-align: center; padding: 16px;
+}
+
+/* ASSERTION BAR */
+.assertion-bar {
+  background: rgba(202,168,76,0.06);
+  border: 1px solid rgba(202,168,76,0.2);
+  border-left: 4px solid var(--gold);
+  padding: 28px 36px; margin: 48px 0;
+}
+.assertion-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px; font-style: italic;
+  color: var(--white); line-height: 1.4;
+}
+
+/* SECTION HEADERS */
+.section-badge {
+  font-family: 'Space Mono', monospace; font-size: 10px;
+  letter-spacing: 0.28em; color: var(--gold); text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.section-headline {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 48px; font-weight: 600; line-height: 1.1;
+  color: var(--white); margin-bottom: 32px; max-width: 800px;
+}
+.section-body {
+  font-size: 17px; color: var(--gray); line-height: 1.7;
+  max-width: 680px; margin-bottom: 24px;
+}
+
+/* MECHANISM CARDS */
+.mechanism-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 40px; }
+.mechanism-card {
+  background: var(--prussian-mid); padding: 32px;
+  border-top: 3px solid rgba(202,168,76,0.3);
+}
+.mechanism-card-label {
+  font-family: 'Space Mono', monospace; font-size: 10px;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 14px;
+}
+.mechanism-card-title {
+  font-size: 18px; font-weight: 700; color: var(--white);
+  margin-bottom: 12px; line-height: 1.3;
+}
+.mechanism-card-body { font-size: 15px; color: var(--gray); line-height: 1.65; }
+
+/* WHY IT WINS */
+.why-list { display: flex; flex-direction: column; gap: 2px; margin-top: 40px; }
+.why-item {
+  display: grid; grid-template-columns: 48px 1fr;
+  gap: 0; background: var(--prussian-mid);
+}
+.why-number {
+  font-family: 'DM Sans', sans-serif; font-size: 32px; font-weight: 700;
+  color: rgba(202,168,76,0.25); padding: 28px 0 28px 24px;
+  display: flex; align-items: flex-start;
+}
+.why-content { padding: 28px 32px 28px 20px; border-left: 1px solid rgba(202,168,76,0.1); }
+.why-title {
+  font-family: 'Space Mono', monospace; font-size: 11px;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 10px;
+}
+.why-body { font-size: 16px; color: var(--gray); line-height: 1.65; }
+.why-body strong { color: var(--white); font-weight: 600; }
+
+/* INDUSTRY RESULTS */
+.industry-grid { display: flex; flex-direction: column; gap: 16px; margin-top: 40px; }
+.industry-card {
+  background: var(--prussian-mid);
+  border: 1px solid rgba(202,168,76,0.1);
+  overflow: hidden;
+}
+.industry-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 28px; border-bottom: 1px solid rgba(202,168,76,0.1);
+}
+.industry-name {
+  font-family: 'Space Mono', monospace; font-size: 10px;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--gray);
+}
+.industry-score {
+  font-family: 'DM Sans', sans-serif; font-size: 22px;
+  font-weight: 700; color: var(--gold);
+}
+.industry-score span { font-size: 13px; color: var(--gray); font-weight: 400; margin-left: 8px; }
+.industry-lenses {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  padding: 20px 28px; border-bottom: 1px solid rgba(202,168,76,0.08);
+}
+.lens-tag {
+  font-family: 'Space Mono', monospace; font-size: 10px;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  padding: 6px 12px; border-radius: 2px;
+}
+.lens-tag.win { background: rgba(202,168,76,0.1); color: var(--gold); border: 1px solid rgba(202,168,76,0.25); }
+.lens-tag.tie { background: rgba(138,155,181,0.08); color: var(--gray); border: 1px solid rgba(138,155,181,0.2); }
+.industry-divergence { padding: 20px 28px; }
+.divergence-label {
+  font-family: 'Space Mono', monospace; font-size: 10px;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--amber); margin-bottom: 10px;
+}
+.divergence-body { font-size: 15px; color: var(--gray); line-height: 1.65; }
+.divergence-body strong { color: var(--white); }
+
+/* PATTERN */
+.pattern-block {
+  background: rgba(202,168,76,0.04);
+  border-left: 4px solid var(--gold);
+  padding: 40px 48px; margin-top: 48px;
+}
+.pattern-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px; font-weight: 500; line-height: 1.4;
+  color: var(--white); max-width: 760px;
+}
+
+/* CTA */
+.cta-section { text-align: center; padding: 100px 0; border: none; }
+.cta-headline {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 52px; font-weight: 600; color: var(--white);
+  margin-bottom: 20px; line-height: 1.1;
+}
+.cta-sub { font-size: 18px; color: var(--gray); margin-bottom: 40px; }
+.cta-btn {
+  display: inline-block;
+  font-family: 'Space Mono', monospace; font-size: 12px;
+  font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+  background: var(--gold); color: var(--prussian);
+  padding: 18px 36px; text-decoration: none;
+  transition: opacity 0.2s;
+}
+.cta-btn:hover { opacity: 0.85; }
+.cta-secondary {
+  display: inline-block; margin-left: 16px;
+  font-family: 'Space Mono', monospace; font-size: 12px;
+  font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+  border: 1px solid rgba(202,168,76,0.4); color: var(--gold);
+  padding: 18px 36px; text-decoration: none;
+  transition: opacity 0.2s;
+}
+.cta-secondary:hover { opacity: 0.75; }
+
+/* FOOTER */
+footer {
+  background: var(--prussian-mid);
+  padding: 32px 48px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-top: 1px solid rgba(202,168,76,0.1);
+}
+.footer-left { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.18em; color: var(--dim); text-transform: uppercase; }
+.footer-right { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.14em; color: var(--dim); text-transform: uppercase; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Alethia Team LLC · Confidential</div>
+  <a href="javascript:history.back()" class="nav-back">← Back to Briefing</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" style="border-bottom:1px solid rgba(202,168,76,0.1);">
+  <div class="container">
+    <div class="hero-badge">The Record · Signal DX vs. Dedicated AI Diagnostic Tools</div>
+    <div class="hero-headline">15 Comparisons. 3 Industries. Signal DX Never Lost Once.</div>
+    <div class="hero-assertion">"AI tools identify that something is wrong. Signal DX identifies why — with enough precision that the intervention holds. That is a fundamentally different job."</div>
+
+    <div class="scoreboard">
+      <div class="score-cell gold-top">
+        <div class="score-number">9</div>
+        <div class="score-label">Signal DX Wins</div>
+        <div class="score-sub">Outright wins</div>
+      </div>
+      <div class="score-cell gray-top">
+        <div class="score-number gray">6</div>
+        <div class="score-label">Ties</div>
+        <div class="score-sub">Matched performance</div>
+      </div>
+      <div class="score-cell red-top">
+        <div class="score-number zero">0</div>
+        <div class="score-label">AI Tool Wins</div>
+        <div class="score-sub">Never once</div>
+      </div>
+    </div>
+    <div class="scoreboard-caption">15 head-to-head lens comparisons · 3 unrelated industries · 100% match-or-beat rate</div>
+  </div>
+</section>
+
+<!-- WHAT SIGNAL DX IS -->
+<section>
+  <div class="container">
+    <div class="section-badge">The Mechanism</div>
+    <div class="section-headline">What Signal DX actually is — and why it is built differently</div>
+    <div class="section-body">Signal DX is a deterministic diagnostic. A founder answers 20 structured questions. The system reads the pattern in those answers and surfaces what is actually constraining growth — not a generic assessment, but a specific read on this business against 13 known failure mechanisms.</div>
+    <div class="section-body">The scoring engine is deterministic. The framework is fixed. The questions were designed by Travis Roderick from 30 years of operator experience across the specific failure modes that founder-led businesses hit at scale.</div>
+
+    <div class="mechanism-grid">
+      <div class="mechanism-card">
+        <div class="mechanism-card-label">The Framework</div>
+        <div class="mechanism-card-title">Model-first, not data-first</div>
+        <div class="mechanism-card-body">Signal DX starts with 13 known paths — the finite set of mechanisms that actually constrain growth. Every question is designed to eliminate possibilities, not gather more information.</div>
+      </div>
+      <div class="mechanism-card">
+        <div class="mechanism-card-label">The Output</div>
+        <div class="mechanism-card-title">Root mechanism, not plausible narrative</div>
+        <div class="mechanism-card-body">The result is a causal finding checked against founder reality — not "most likely" with uncertainty remaining, but a specific mechanism ready to verify in a live conversation.</div>
+      </div>
+      <div class="mechanism-card">
+        <div class="mechanism-card-label">The Archetype System</div>
+        <div class="mechanism-card-title">Compound patterns, not stacked findings</div>
+        <div class="mechanism-card-body">5 primary archetypes and 3 fallback archetypes cover every known combination. None fires unless the exact question combination is present. Two constraints appearing together are often one underlying pattern.</div>
+      </div>
+      <div class="mechanism-card">
+        <div class="mechanism-card-label">The Standard</div>
+        <div class="mechanism-card-title">Seen, heard, understood — never let off the hook</div>
+        <div class="mechanism-card-body">Every finding is grounded in behavior, not adjectives. No jargon, no hedging, no language that lets a founder read a real finding and decide it does not apply to them.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY AI TOOLS FAIL -->
+<section>
+  <div class="container">
+    <div class="section-badge">The Structural Gap</div>
+    <div class="section-headline">Where dedicated AI tools fail — and why more data does not close the gap</div>
+    <div class="section-body">AI-powered diagnostic tools gather publicly available data — filings, reviews, market signals, leadership profiles — and synthesize it at speed. They identify that something is structurally wrong. That is a real capability. It is not the same capability as Signal DX.</div>
+    <div class="section-body">Public signal is the downstream exhaust of organizational dysfunction. By the time a constraint surfaces in a Glassdoor review or a margin trend, the organization has been living with that constraint for years. An AI tool that reads public data perfectly tells you that something is wrong. The gap — the one that determines whether the intervention works — is the why.</div>
+
+    <div class="why-list">
+      <div class="why-item">
+        <div class="why-number">1</div>
+        <div class="why-content">
+          <div class="why-title">Signal vs. Root Cause</div>
+          <div class="why-body">AI tools read what is publicly visible. Signal DX reads what is structurally true. <strong>A CEO with 20 years of tenure reads as stability from the outside.</strong> In three of our documented engagements, long tenure was the binding constraint — centralized control that had prevented any independent operating capability from developing. The public data found the right signal. It could not read it correctly.</div>
+        </div>
+      </div>
+      <div class="why-item">
+        <div class="why-number">2</div>
+        <div class="why-content">
+          <div class="why-title">Framework vs. Accumulation</div>
+          <div class="why-body">AI tools accumulate data and surface patterns. Signal DX narrows against a fixed, validated set of 13 known growth constraints. <strong>The value is not speed of analysis. The value is the prior.</strong> Every question was designed to eliminate a specific failure mode. More data does not improve on that. It produces more noise around the same signal.</div>
+        </div>
+      </div>
+      <div class="why-item">
+        <div class="why-number">3</div>
+        <div class="why-content">
+          <div class="why-title">Interpretation vs. Output</div>
+          <div class="why-body"><strong>The most dangerous output an AI diagnostic can produce is a confident misread.</strong> Across every engagement in our comparison set, the public data correctly identified that something was structurally wrong. In every case, the mechanism underneath — the actual root cause — required internal access and operator interpretation to surface. A diagnostic tool that produces a confident answer without internal access is producing a liability, not a diagnosis.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="assertion-bar" style="margin-top:40px;">
+      <div class="assertion-text">"The question is not whether AI tools are useful. The question is what they are useful for. They surface that something is wrong. Signal DX is built for the harder problem: determining why — with enough precision that the intervention holds."</div>
+    </div>
+  </div>
+</section>
+
+<!-- THE RECORD -->
+<section>
+  <div class="container">
+    <div class="section-badge">The Record</div>
+    <div class="section-headline">Three industries. Fifteen comparisons. One pattern.</div>
+    <div class="section-body">Signal DX was run as a pre-engagement proxy by a senior operator — using only what was known about the organization going in — and compared against a dedicated AI public signal report. Both were then measured against what the internal engagement actually confirmed. The same divergence appeared every time.</div>
+
+    <div class="industry-grid">
+
+      <div class="industry-card">
+        <div class="industry-header">
+          <div class="industry-name">Healthcare · Turnaround · Premier Surgical Institute</div>
+          <div class="industry-score">3&ndash;2&ndash;0 <span>Signal DX · Ties · AI</span></div>
+        </div>
+        <div class="industry-lenses">
+          <span class="lens-tag tie">Strategic · Tie</span>
+          <span class="lens-tag win">Structural · Signal DX</span>
+          <span class="lens-tag tie">Operational · Tie</span>
+          <span class="lens-tag win">Delivery · Signal DX</span>
+          <span class="lens-tag win">Cultural · Signal DX</span>
+        </div>
+        <div class="industry-divergence">
+          <div class="divergence-label">Key Divergence — Structural</div>
+          <div class="divergence-body">The AI read multi-site governance complexity and inferred no shared operating framework. Signal DX identified a compound pattern: a Leadership and Governance Gap where decisions were not sticking because the underlying decision structure was not consistently followed. <strong>The internal engagement confirmed no one owned the enterprise operating layer. The AI saw the surface. Signal DX named the mechanism.</strong></div>
+        </div>
+      </div>
+
+      <div class="industry-card">
+        <div class="industry-header">
+          <div class="industry-name">Veterinary · Ownership Alignment · Inova / ESMS</div>
+          <div class="industry-score">3&ndash;2&ndash;0 <span>Signal DX · Ties · AI</span></div>
+        </div>
+        <div class="industry-lenses">
+          <span class="lens-tag tie">Strategic · Tie</span>
+          <span class="lens-tag win">Structural · Signal DX</span>
+          <span class="lens-tag tie">Operational · Tie</span>
+          <span class="lens-tag win">Delivery · Signal DX</span>
+          <span class="lens-tag win">Cultural · Signal DX</span>
+        </div>
+        <div class="industry-divergence">
+          <div class="divergence-label">Key Divergence — Structural</div>
+          <div class="divergence-body">The AI inferred multi-owner governance complexity and no formal planning structure. Signal DX identified the Leadership and Governance Gap as a compound pattern — and surfaced what the AI could never see: <strong>"Every decision was defined by seniority, ego, and financial drivers, not by expertise."</strong> Twelve renegade equine vets and surgeons, each doing their own thing. The AI saw the shape of the problem. Signal DX named what was running it.</div>
+        </div>
+      </div>
+
+      <div class="industry-card">
+        <div class="industry-header">
+          <div class="industry-name">Social Services · Enterprise Stabilization · FedCap / Easterseals</div>
+          <div class="industry-score">3&ndash;2&ndash;0 <span>Signal DX · Ties · AI</span></div>
+        </div>
+        <div class="industry-lenses">
+          <span class="lens-tag tie">Strategic · Tie</span>
+          <span class="lens-tag win">Structural · Signal DX</span>
+          <span class="lens-tag win">Operational · Signal DX</span>
+          <span class="lens-tag tie">Delivery · Tie</span>
+          <span class="lens-tag win">Cultural · Signal DX</span>
+        </div>
+        <div class="industry-divergence">
+          <div class="divergence-label">Key Divergence — Structural</div>
+          <div class="divergence-body">The AI read long CEO tenure as continuity and organizational stability. Signal DX identified the Leadership and Governance Gap as a compound pattern and named the actual constraint: <strong>centralized control had prevented the organization from developing any independent operating capability across its eight divisions. Stability was entrenchment.</strong> The AI found the right signal. Only the operator could read it correctly.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="pattern-block">
+      <div class="pattern-text">Every gap between the two instruments showed up in the same place, every time. Where the AI could only see the surface, Signal DX named the actual mechanism underneath. Across fifteen comparisons in three unrelated industries, the AI never once outperformed Signal DX.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-headline">The board was wrong for three years.<br>Signal DX found out why in 10 minutes.</div>
+    <div class="cta-sub">Run the diagnostic. See what it finds.</div>
+    <a href="/consultation" class="cta-btn">Take Signal DX</a>
+    <a href="javascript:history.back()" class="cta-secondary">Back to Briefing</a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-left">Alethia Team LLC · Confidential · Prepared for Gary Kreissman</div>
+  <div class="footer-right">meetalethia.com</div>
+</footer>
+
+</body>
+</html>
